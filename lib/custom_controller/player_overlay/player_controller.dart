@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_player/custom_controller/material/dialog/player_material_bottom_sheet.dart';
 import 'package:flutter_native_player/method_manager/download_state.dart';
 import 'package:flutter_native_player/method_manager/playback_state.dart';
 import 'package:flutter_native_player/method_manager/player_method_manager.dart';
+
 import 'component_widget_player.dart';
-import 'material/player_material_bottom_sheet.dart';
 
 class PlayerController extends StatefulWidget {
   final PlayerMethodManager playerMethodManager;
@@ -180,7 +181,11 @@ class _PlayerController extends State<PlayerController> {
   @override
   void initState() {
     componentWidgetPlayer = ComponentWidgetPlayer();
-    playerMaterialBottomSheet = PlayerMaterialBottomSheet(context: context, fetchHlsMasterPlaylist: widget.playerMethodManager.fetchHlsMasterPlaylist,playerMethodManager: widget.playerMethodManager);
+    playerMaterialBottomSheet = PlayerMaterialBottomSheet(
+        context: context,
+        fetchHlsMasterPlaylist:
+            widget.playerMethodManager.fetchHlsMasterPlaylist,
+        playerMethodManager: widget.playerMethodManager);
     _handleDownloadEvent();
     _handlePlaybackStateEvent();
     super.initState();
@@ -336,10 +341,11 @@ class _PlayerController extends State<PlayerController> {
         children: [
           Expanded(
               child: componentWidgetPlayer.progressBar(
-                  widget.playerMethodManager,
-                  widget.playerMethodManager.isAbsorbing, (duration) {
-            widget.playerMethodManager.seekTo(duration.inMilliseconds);
-          })),
+                  playerMethodManager: widget.playerMethodManager,
+                  isAbsorbing: widget.playerMethodManager.isAbsorbing,
+                  onSeekListener: (duration) {
+                    widget.playerMethodManager.seekTo(duration.inMilliseconds);
+                  })),
           componentWidgetPlayer
               .countDownWidget(widget.playerMethodManager.streamDurationState)
         ],
@@ -350,25 +356,21 @@ class _PlayerController extends State<PlayerController> {
   Widget containerController() {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: (){
+      onTap: () {
         widget.onTouchListener.call();
       },
-      onScaleStart: (details){
+      onScaleStart: (details) {
         widget.onScaleStart(details);
       },
-      onScaleUpdate: (details){
+      onScaleUpdate: (details) {
         widget.onScaleUpdate(details);
       },
-      onScaleEnd: (details){
+      onScaleEnd: (details) {
         widget.onScaleEnd(details);
       },
       child: Wrap(
         runAlignment: WrapAlignment.spaceBetween,
-        children: [
-          controllerTop(),
-          controllerCenter(),
-          controllerBottom()
-        ],
+        children: [controllerTop(), controllerCenter(), controllerBottom()],
       ),
     );
   }

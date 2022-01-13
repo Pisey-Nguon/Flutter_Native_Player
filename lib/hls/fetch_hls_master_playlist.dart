@@ -13,7 +13,7 @@ import 'better_player_asms_utils.dart';
 
 class FetchHlsMasterPlaylist{
 
-  final List<SubtitleModel>? listSubtitle;
+  final List<PlayerSubtitle>? listSubtitle;
   List<QualityModel>? listQuality;
   final String titleMovie;
   final String urlMovie;
@@ -37,7 +37,7 @@ class FetchHlsMasterPlaylist{
     return listQuality;
   }
 
-  List<SubtitleModel> getListSubtitle(){
+  List<PlayerSubtitle> getListSubtitle(){
     return listSubtitle ?? [];
   }
 
@@ -82,7 +82,7 @@ class FetchHlsMasterPlaylist{
     // }
   }
 
-  List<BetterPlayerSubtitlesSource> getSubtitleDataSource(List<SubtitleModel>? listSubtitleVideo){
+  List<BetterPlayerSubtitlesSource> getSubtitleDataSource(List<PlayerSubtitle>? listSubtitleVideo){
     List<BetterPlayerSubtitlesSource> listSubtitle = [];
     listSubtitleVideo?.forEach((element) {
       listSubtitle.add(BetterPlayerSubtitlesSource(

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_player/custom_controller/component_widget_player.dart';
+import 'package:flutter_native_player/custom_controller/player_overlay/component_widget_player.dart';
 import 'package:flutter_native_player/method_manager/player_method_manager.dart';
 
 class PlayerLoading extends StatelessWidget {

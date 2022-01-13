@@ -1,6 +1,6 @@
-class SubtitleModel{
+class PlayerSubtitle{
   final String language;
   final String urlSubtitle;
 
-  SubtitleModel({required this.language, required this.urlSubtitle});
+  PlayerSubtitle({required this.language, required this.urlSubtitle});
 }

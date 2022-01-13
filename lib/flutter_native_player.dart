@@ -3,8 +3,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_player/custom_controller/player_loading.dart';
-import 'package:flutter_native_player/custom_controller/player_overlay_controller.dart';
+import 'package:flutter_native_player/custom_controller/configuration/player_progress_colors.dart';
+import 'package:flutter_native_player/custom_controller/player_overlay/player_loading.dart';
+import 'package:flutter_native_player/custom_controller/player_overlay/player_overlay_controller.dart';
 import 'package:flutter_native_player/flutter_native_getx_controller.dart';
 import 'package:flutter_native_player/model/subtitle_model.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_drawer.dart';
@@ -16,18 +17,18 @@ import 'method_manager/player_method_manager.dart';
 
 class FlutterNativePlayer extends StatelessWidget {
   final String url;
-  final List<SubtitleModel>? subtitles;
+  final List<PlayerSubtitle>? subtitles;
+  final PlayerProgressColors? progressColors;
   final double width;
   final double height;
 
-  const FlutterNativePlayer({Key? key, required this.url, this.subtitles, required this.width, required this.height}) : super(key: key);
+  const FlutterNativePlayer({Key? key, required this.url, this.subtitles,this.progressColors, required this.width, required this.height}) : super(key: key);
 
 
   Widget androidPlatform(Map<String,dynamic> creationParams) {
     return PlatformViewLink(
       viewType: Constant.MP_VIEW_TYPE,
-      surfaceFactory:
-          (BuildContext context, PlatformViewController controller) {
+      surfaceFactory: (BuildContext context, PlatformViewController controller) {
         return AndroidViewSurface(
           controller: controller as AndroidViewController,
           gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
@@ -55,7 +56,7 @@ class FlutterNativePlayer extends StatelessWidget {
         creationParamsCodec: const StandardMessageCodec());
   }
 
-  Widget crossPlatform({required PlayerMethodManager playerMethodManager}) {
+  Widget crossPlatform() {
     final creationParams = {
       Constant.MP_URL_STREAMING: url,
     };
@@ -80,14 +81,14 @@ class FlutterNativePlayer extends StatelessWidget {
           height: height,
           child: Stack(
             children: [
-              crossPlatform(playerMethodManager: controller.playerMethodManager),
+              crossPlatform(),
               BetterPlayerSubtitlesDrawer(
+                controller: controller,
                 subtitles: controller.fetchHlsMasterPlaylist.subtitlesLines,
-                playerMethodManager: controller.playerMethodManager,
                 width: double.infinity,
                 height: double.infinity,
               ),
-              PlayerOverlayController(controller: controller,playerMethodManager: controller.playerMethodManager, width: double.infinity, height: double.infinity),
+              PlayerOverlayController(controller: controller,playerMethodManager: controller.playerMethodManager,progressColors: progressColors, width: double.infinity, height: double.infinity),
               PlayerLoading(playerMethodManager: controller.playerMethodManager,)
             ],
           ),

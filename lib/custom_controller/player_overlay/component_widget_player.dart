@@ -1,12 +1,10 @@
 
-import 'dart:ffi';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_player/custom_controller/configuration/player_progress_colors.dart';
 import 'package:flutter_native_player/method_manager/player_method_manager.dart';
 import 'package:flutter_native_player/model/duration_state.dart';
 import 'package:flutter_native_player/utils/time_utils.dart';
-import 'material/audio_video_progress_bar.dart';
+import '../material/progress_bar/audio_video_progress_bar.dart';
 
 
 class ComponentWidgetPlayer {
@@ -67,7 +65,13 @@ class ComponentWidgetPlayer {
     );
   }
 
-  StreamBuilder<DurationState> progressBar(PlayerMethodManager playerMethodManager,bool isAbsorbing,void onSeekListener(Duration duration)) {
+  StreamBuilder<DurationState> progressBar({required PlayerMethodManager playerMethodManager,PlayerProgressColors? progressColors,required bool isAbsorbing,required void Function(Duration duration) onSeekListener}) {
+    PlayerProgressColors _progressColors;
+    if(progressColors != null){
+      _progressColors = progressColors;
+    }else{
+      _progressColors = PlayerProgressColors();
+    }
     return StreamBuilder<DurationState>(
       stream: playerMethodManager.streamDurationState,
       builder: (context, snapshot) {
@@ -92,12 +96,14 @@ class ComponentWidgetPlayer {
             onDragEnd: (){
               playerMethodManager.startListenerPosition();
             },
+            baseBarColor: _progressColors.baseBarColor,
+            progressBarColor: _progressColors.playedColor,
+            bufferedBarColor: _progressColors.bufferedColor,
             barHeight: 5,
-
             thumbRadius: 6,
             thumbGlowRadius: 12,
-            thumbGlowColor: Colors.blue,
-            thumbColor: Colors.blue,
+            thumbGlowColor: _progressColors.thumbColor,
+            thumbColor: _progressColors.thumbColor,
             timeLabelLocation: TimeLabelLocation.none,
           ),
         );

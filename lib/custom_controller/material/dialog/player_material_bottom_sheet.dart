@@ -8,8 +8,9 @@ import 'package:flutter_native_player/model/playback_speed_model.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
 import 'package:flutter_native_player/model/subtitle_model.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
-import 'better_player_clickable_widget.dart';
 import 'package:collection/collection.dart' show IterableExtension;
+
+import 'better_player_clickable_widget.dart';
 
 class PlayerMaterialBottomSheet{
   final BuildContext context;
@@ -232,7 +233,7 @@ class PlayerMaterialBottomSheet{
   //   _showModalBottomSheet(children);
   // }
 
-  void showSubtitlesSelectionWidget(List<SubtitleModel> listSubtitle) {
+  void showSubtitlesSelectionWidget(List<PlayerSubtitle> listSubtitle) {
     final subtitles = List.of(fetchHlsMasterPlaylist.getSubtitleDataSource(listSubtitle)).toList();
     // // final noneSubtitlesElementExists = subtitles.firstWhereOrNull(
     // //         (source) => source.type == BetterPlayerSubtitlesSourceType.none) != null;

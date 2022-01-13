@@ -21,7 +21,7 @@ class PlayerMethodManager{
   int? _totalDuration;
   int? _currentPosition;
   List<QualityModel>? _listQuality;
-  List<SubtitleModel>? _listSubtitle;
+  List<PlayerSubtitle>? _listSubtitle;
   double? _currentSpeed;
   Timer? _timer;
   int? _currentHeight;

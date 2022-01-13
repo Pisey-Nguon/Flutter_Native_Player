@@ -1,98 +1,23 @@
-// Dart imports:
-
-// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_native_player/method_manager/player_method_manager.dart';
+import 'package:flutter_native_player/flutter_native_getx_controller.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
 import 'better_player_subtitle.dart';
 import 'better_player_subtitles_configuration.dart';
 
-class BetterPlayerSubtitlesDrawer extends StatefulWidget {
+class BetterPlayerSubtitlesDrawer extends StatelessWidget {
+  final FlutterNativeGetxController controller;
   final List<BetterPlayerSubtitle> subtitles;
-  final PlayerMethodManager playerMethodManager;
-  final BetterPlayerSubtitlesConfiguration? betterPlayerSubtitlesConfiguration;
   final double width;
   final double height;
-
-  const BetterPlayerSubtitlesDrawer({
-    Key? key,
-    required this.subtitles,
-    required this.playerMethodManager,
-    this.betterPlayerSubtitlesConfiguration,
-    required this.width,
-    required this.height
-  }) : super(key: key);
-
-  @override
-  _BetterPlayerSubtitlesDrawerState createState() =>
-      _BetterPlayerSubtitlesDrawerState();
-}
-
-class _BetterPlayerSubtitlesDrawerState
-    extends State<BetterPlayerSubtitlesDrawer> {
   final RegExp htmlRegExp =
       // ignore: unnecessary_raw_strings
       RegExp(r"<[^>]*>", multiLine: true);
-  late TextStyle _innerTextStyle;
-  late TextStyle _outerTextStyle;
+  final BetterPlayerSubtitlesConfiguration configuration = const BetterPlayerSubtitlesConfiguration();
+  final bool _playerVisible = true;
 
-  Duration? _currentPosition;
-  BetterPlayerSubtitlesConfiguration? _configuration;
-  bool _playerVisible = true;
+  BetterPlayerSubtitlesDrawer({Key? key,required this.controller,required this.subtitles,required this.width,required this.height}) : super(key: key);
 
-  ///Stream used to detect if play controls are visible or not
-  // late StreamSubscription _visibilityStreamSubscription;
-
-  @override
-  void initState() {
-    // _visibilityStreamSubscription =
-    //     widget.playerVisibilityStream.listen((state) {
-    //   setState(() {
-    //     _playerVisible = state;
-    //   });
-    // });
-
-    if (widget.betterPlayerSubtitlesConfiguration != null) {
-      _configuration = widget.betterPlayerSubtitlesConfiguration;
-    } else {
-      _configuration = setupDefaultConfiguration();
-    }
-
-    widget.playerMethodManager.streamDurationState.listen((event) {
-      _updateState(event.progress.inMilliseconds);
-    });
-
-    _outerTextStyle = TextStyle(
-        fontSize: _configuration!.fontSize,
-        fontFamily: _configuration!.fontFamily,
-        foreground: Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = _configuration!.outlineSize
-          ..color = _configuration!.outlineColor);
-
-    _innerTextStyle = TextStyle(
-        fontFamily: _configuration!.fontFamily,
-        color: _configuration!.fontColor,
-        fontSize: _configuration!.fontSize);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // _visibilityStreamSubscription.cancel();
-    super.dispose();
-  }
-
-  ///Called when player state has changed, i.e. new player position, etc.
-  void _updateState(int currentPosition) {
-    if (mounted) {
-      setState(() {
-        _currentPosition = Duration(milliseconds: (currentPosition));
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,15 +26,15 @@ class _BetterPlayerSubtitlesDrawerState
         subtitles.map((text) => _buildSubtitleTextWidget(text)).toList();
 
     return SizedBox(
-      height: widget.height,
-      width: widget.width,
+      height: height,
+      width: width,
       child: Padding(
         padding: EdgeInsets.only(
             bottom: _playerVisible
-                ? _configuration!.bottomPadding + 30
-                : _configuration!.bottomPadding,
-            left: _configuration!.leftPadding,
-            right: _configuration!.rightPadding),
+                ? configuration.bottomPadding + 30
+                : configuration.bottomPadding,
+            left: configuration.leftPadding,
+            right: configuration.rightPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: textWidgets,
@@ -119,12 +44,12 @@ class _BetterPlayerSubtitlesDrawerState
   }
 
   List<String>? _getSubtitlesAtCurrentPosition() {
-    if (_currentPosition == null) {
+    if (controller.currentPosition == null) {
       return [];
     }
 
-    final Duration position = _currentPosition!;
-    for (final BetterPlayerSubtitle subtitle in widget.subtitles) {
+    final Duration position = controller.currentPosition!;
+    for (final BetterPlayerSubtitle subtitle in subtitles) {
       if (subtitle.start! <= position && subtitle.end! >= position) {
         return subtitle.texts;
       }
@@ -136,7 +61,7 @@ class _BetterPlayerSubtitlesDrawerState
     return Row(children: [
       Expanded(
         child: Align(
-          alignment: _configuration!.alignment,
+          alignment: configuration.alignment,
           child: _getTextWithStroke(subtitleText),
         ),
       ),
@@ -144,15 +69,26 @@ class _BetterPlayerSubtitlesDrawerState
   }
 
   Widget _getTextWithStroke(String subtitleText) {
+    final outerTextStyle = TextStyle(
+        fontSize: configuration.fontSize,
+        fontFamily: configuration.fontFamily,
+        foreground: Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = configuration.outlineSize
+          ..color = configuration.outlineColor);
+    final innerTextStyle = TextStyle(
+        fontFamily: configuration.fontFamily,
+        color: configuration.fontColor,
+        fontSize: configuration.fontSize);
     return Container(
-      color: _configuration!.backgroundColor,
+      color: configuration.backgroundColor,
       child: Stack(
         children: [
-          if (_configuration!.outlineEnabled)
-            _buildHtmlWidget(subtitleText, _outerTextStyle)
+          if (configuration.outlineEnabled)
+            _buildHtmlWidget(subtitleText, outerTextStyle)
           else
             const SizedBox(),
-          _buildHtmlWidget(subtitleText, _innerTextStyle)
+          _buildHtmlWidget(subtitleText, innerTextStyle)
         ],
       ),
     );

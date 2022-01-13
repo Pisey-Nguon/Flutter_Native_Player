@@ -18,17 +18,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String url = "https://d2cqvl54b1gtkt.cloudfront.net/PRODUCTION/5d85da3fa81ada4c66211a07/post/media/video/1616987127933-bfc1a13a-49c6-4272-8ffd-dc04b05eed2c/1616987128057-740d153b431660cf976789c1901192a961f0fd5b2a2af43e2388f671fa03c2aa/1616987128057-740d153b431660cf976789c1901192a961f0fd5b2a2af43e2388f671fa03c2aa.m3u8";
-  final listSubtitle = [
-    SubtitleModel(
-        language: "English",
-        urlSubtitle:
-        "https://milio-media-dev.s3.ap-southeast-1.amazonaws.com/Admin-Wallet/English_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
-       ),
-    SubtitleModel(
-        language: "Khmer",
-        urlSubtitle:
-        "https://milio-media-dev.s3.ap-southeast-1.amazonaws.com/Admin-Wallet/Khmer_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
-        )
+  final subtitles = [
+    PlayerSubtitle(
+      language: "English",
+      urlSubtitle:
+          "https://milio-media-dev.s3.ap-southeast-1.amazonaws.com/Admin-Wallet/English_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
+    ),
+    PlayerSubtitle(
+      language: "Khmer",
+      urlSubtitle:
+          "https://milio-media-dev.s3.ap-southeast-1.amazonaws.com/Admin-Wallet/Khmer_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
+    )
   ];
   @override
   void initState() {
@@ -42,7 +42,11 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Flutter Native Player'),
         ),
-        body: FlutterNativePlayer(url: url, subtitles: listSubtitle,width: double.infinity, height: 400),
+        body: FlutterNativePlayer(
+            url: url,
+            subtitles: subtitles,
+            width: double.infinity,
+            height: 400),
       ),
     );
   }
