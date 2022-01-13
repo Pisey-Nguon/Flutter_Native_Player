@@ -13,6 +13,7 @@ dependencies:
   stream_transform: ^2.0.0
   flutter_toastr: ^1.0.3
   flutter_widget_from_html_core: ^0.6.1+4
+  get: ^4.6.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
