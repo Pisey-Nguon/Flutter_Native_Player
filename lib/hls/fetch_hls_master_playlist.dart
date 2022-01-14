@@ -1,7 +1,8 @@
 
 
+import 'package:flutter_native_player/model/player_resource.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
-import 'package:flutter_native_player/model/subtitle_model.dart';
+import 'package:flutter_native_player/model/player_subtitle.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitle.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_factory.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
@@ -13,32 +14,31 @@ import 'better_player_asms_utils.dart';
 
 class FetchHlsMasterPlaylist{
 
-  final List<PlayerSubtitle>? listSubtitle;
+  final PlayerResource playerResource;
   List<QualityModel>? listQuality;
-  final String titleMovie;
-  final String urlMovie;
 
-  FetchHlsMasterPlaylist({required this.titleMovie, required this.urlMovie,required this.listSubtitle});
+
+  FetchHlsMasterPlaylist({required this.playerResource});
 
   Future<List<QualityModel>> getListQuality() async{
     final List<QualityModel> listQuality = [];
-    final result = await BetterPlayerAsmsUtils.getDataFromUrl(urlMovie,null);
+    final result = await BetterPlayerAsmsUtils.getDataFromUrl(playerResource.mediaUrl,null);
     if (result != null){
 
-      final BetterPlayerAsmsDataHolder _response = await BetterPlayerAsmsUtils.parse(result, urlMovie);
+      final BetterPlayerAsmsDataHolder _response = await BetterPlayerAsmsUtils.parse(result, playerResource.mediaUrl);
       _response.tracks?.forEach((element) {
-        listQuality.add(QualityModel(width: element.width ?? 0, height: element.height ?? 0, bitrate: element.bitrate ?? 0,urlQuality: element.urlQuality ?? urlMovie,urlMovie: urlMovie,titleMovie: titleMovie, trackIndex:element.id != "" ? int.parse(element.id!):0,isSelected: false));
+        listQuality.add(QualityModel(width: element.width ?? 0, height: element.height ?? 0, bitrate: element.bitrate ?? 0,urlQuality: element.urlQuality ?? playerResource.mediaUrl,urlMovie: playerResource.mediaUrl,titleMovie: playerResource.mediaName, trackIndex:element.id != "" ? int.parse(element.id!):0,isSelected: false));
       });
     }
-    if(listQuality.length == 0){
-      listQuality.add(QualityModel(width: 0, height: 0, bitrate: 0,urlQuality: urlMovie,urlMovie: urlMovie,titleMovie: titleMovie, trackIndex:0,isSelected: true));
+    if(listQuality.isEmpty){
+      listQuality.add(QualityModel(width: 0, height: 0, bitrate: 0,urlQuality: playerResource.mediaUrl,urlMovie: playerResource.mediaUrl,titleMovie: playerResource.mediaName, trackIndex:0,isSelected: true));
     }
     this.listQuality = listQuality;
     return listQuality;
   }
 
   List<PlayerSubtitle> getListSubtitle(){
-    return listSubtitle ?? [];
+    return playerResource.subtitles;
   }
 
 

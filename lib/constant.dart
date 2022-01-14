@@ -34,8 +34,10 @@ class Constant{
   static const KEY_BITRATE = "KEY_BITRATE";
   static const KEY_URL_QUALITY = "KEY_URL_QUALITY";
 
+  static const KEY_PLAYER_RESOURCE = "KEY_PLAYER_RESOURCE";
   static const KEY_TITLE_MOVIE = "KEY_TITLE_MOVIE";
   static const KEY_URL_MOVIE = "KEY_URL_MOVIE";
+  static const KEY_SUBTITLES = "KEY_SUBTITLES";
   static const KEY_TRACK_INDEX = "KEY_TRACK_INDEX";
 
   static const KEY_SUBTITLE_LABEL = "KEY_SUBTITLE_LABEL";

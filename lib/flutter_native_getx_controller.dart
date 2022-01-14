@@ -1,25 +1,24 @@
-import 'package:flutter_native_player/subtitles/better_player_subtitles_configuration.dart';
+import 'package:flutter_native_player/model/player_resource.dart';
 import 'package:get/get.dart';
 
 import 'hls/fetch_hls_master_playlist.dart';
 import 'method_manager/player_method_manager.dart';
-import 'model/subtitle_model.dart';
+import 'model/player_subtitle.dart';
 
 class FlutterNativeGetxController extends GetxController{
-  final String url;
-  final List<PlayerSubtitle>? subtitles;
+  final PlayerResource playerResource;
   late FetchHlsMasterPlaylist fetchHlsMasterPlaylist;
   late PlayerMethodManager playerMethodManager;
 
-  FlutterNativeGetxController({required this.url,required this.subtitles});
+  FlutterNativeGetxController({required this.playerResource});
 
   ///Duration for subtitle
   Duration? currentPosition;
 
   @override
   void onInit() {
-    subtitles?.insert(0, PlayerSubtitle(language: "Off", urlSubtitle: ""));
-    fetchHlsMasterPlaylist = FetchHlsMasterPlaylist(titleMovie: "", urlMovie: url, listSubtitle: subtitles);
+    playerResource.subtitles.insert(0, PlayerSubtitle(language: "Off", urlSubtitle: ""));
+    fetchHlsMasterPlaylist = FetchHlsMasterPlaylist(playerResource: playerResource);
     playerMethodManager = PlayerMethodManager(fetchHlsMasterPlaylist: fetchHlsMasterPlaylist);
 
     ///Called when player subtitle has changed, i.e user change from english to khmer

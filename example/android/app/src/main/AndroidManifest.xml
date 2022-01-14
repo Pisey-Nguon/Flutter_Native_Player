@@ -2,7 +2,7 @@
     package="com.pisey.flutter_native_player_example">
    <application
         android:label="flutter_native_player_example"
-        android:name="${applicationName}"
+       android:name="androidx.multidex.MultiDexApplication"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

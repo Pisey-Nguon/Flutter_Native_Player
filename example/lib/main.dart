@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:flutter_native_player/flutter_native_player.dart';
-import 'package:flutter_native_player/model/subtitle_model.dart';
+import 'package:flutter_native_player/model/player_resource.dart';
+import 'package:flutter_native_player/model/player_subtitle.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,8 +28,11 @@ class _MyAppState extends State<MyApp> {
           "https://milio-media-dev.s3.ap-southeast-1.amazonaws.com/Admin-Wallet/Khmer_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
     )
   ];
+
+  late PlayerResource playerResource;
   @override
   void initState() {
+    playerResource = PlayerResource(mediaName: "Tranformer", mediaUrl: url, subtitles: subtitles);
     super.initState();
   }
 
@@ -43,8 +44,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Flutter Native Player'),
         ),
         body: FlutterNativePlayer(
-            url: url,
-            subtitles: subtitles,
+            playerResource: playerResource,
             width: double.infinity,
             height: 400),
       ),

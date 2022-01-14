@@ -234,9 +234,7 @@ class _PlayerController extends State<PlayerController> {
                     //cancel download
                     widget.playerMethodManager.setCancelDownload();
                   } else {
-                    playerMaterialBottomSheet
-                        .showQualityDownloadSelectionWidget(
-                            widget.playerMethodManager.getListQuality());
+                    playerMaterialBottomSheet.showQualityDownloadSelectionWidget(widget.playerMethodManager.getListQuality(),widget.playerMethodManager.fetchHlsMasterPlaylist.playerResource);
                   }
                 },
               ),

@@ -1,14 +1,11 @@
-
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_native_player/hls/fetch_hls_master_playlist.dart';
 import 'package:flutter_native_player/method_manager/player_method_manager.dart';
 import 'package:flutter_native_player/model/playback_speed_model.dart';
+import 'package:flutter_native_player/model/player_resource.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
-import 'package:flutter_native_player/model/subtitle_model.dart';
+import 'package:flutter_native_player/model/player_subtitle.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 
 import 'better_player_clickable_widget.dart';
 
@@ -114,8 +111,8 @@ class PlayerMaterialBottomSheet{
               preferredName,
               style: _getOverflowMenuElementTextStyle(isSelected),
             ),
-            Expanded(child: const SizedBox()),
-            isSelected == true ? Icon(Icons.check) : SizedBox()
+            const Expanded(child: SizedBox()),
+            isSelected == true ? const Icon(Icons.check) : const SizedBox()
           ],
         ),
       ),
@@ -139,8 +136,8 @@ class PlayerMaterialBottomSheet{
               subtitlesSource.name ?? "",
               style: _getOverflowMenuElementTextStyle(isSelected),
             ),
-            Expanded(child: const SizedBox()),
-            isSelected == true ? Icon(Icons.check) : SizedBox()
+            const Expanded(child: SizedBox()),
+            isSelected == true ? const Icon(Icons.check) : const SizedBox()
           ],
         ),
       ),
@@ -149,8 +146,6 @@ class PlayerMaterialBottomSheet{
 
   Widget _buildSpeedRow(PlaybackSpeedModel playbackSpeedModel) {
     final bool isSelected = playerMethodManager.currentSpeed() == playbackSpeedModel.speedValue;
-
-    print("testSpeed currentSpeed ${playerMethodManager.currentSpeed()} buildspeed ${playbackSpeedModel.speedValue}");
     return BetterPlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
@@ -166,22 +161,22 @@ class PlayerMaterialBottomSheet{
               playbackSpeedModel.titleSpeed,
               style: _getOverflowMenuElementTextStyle(isSelected),
             ),
-            Expanded(child: const SizedBox()),
-            isSelected == true ? Icon(Icons.check) : SizedBox()
+            const Expanded(child: SizedBox()),
+            isSelected == true ? const Icon(Icons.check) : const SizedBox()
           ],
         ),
       ),
     );
   }
 
-  Widget _buildQualityDownloadRow(QualityModel itemQualitySelected, String preferredName) {
+  Widget _buildQualityDownloadRow(QualityModel itemQualitySelected,PlayerResource playerResource, String preferredName) {
 
-    final bool isSelected = false;
+    bool isSelected = false;
 
     return BetterPlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
-        playerMethodManager.startDownload(itemQualitySelected);
+        playerMethodManager.startDownload(playerResource,itemQualitySelected.trackIndex);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
@@ -192,8 +187,8 @@ class PlayerMaterialBottomSheet{
               preferredName,
               style: _getOverflowMenuElementTextStyle(isSelected),
             ),
-            Expanded(child: const SizedBox()),
-            isSelected == true ? Icon(Icons.check) : SizedBox()
+            const Expanded(child: SizedBox()),
+            isSelected == true ? const Icon(Icons.check) : const SizedBox()
           ],
         ),
       ),
@@ -292,7 +287,7 @@ class PlayerMaterialBottomSheet{
 
   }
 
-  void showQualityDownloadSelectionWidget(List<QualityModel>? listQuality){
+  void showQualityDownloadSelectionWidget(List<QualityModel>? listQuality,PlayerResource playerResource){
     if(listQuality == null){
       return;
     }
@@ -304,7 +299,7 @@ class PlayerMaterialBottomSheet{
       String preferredName;
       if (track.height != 0 && track.width != 0 && track.bitrate != 0) {
         preferredName = "${track.height}p";
-        childQuality.add(_buildQualityDownloadRow(track, preferredName));
+        childQuality.add(_buildQualityDownloadRow(track,playerResource, preferredName));
       }
 
     }

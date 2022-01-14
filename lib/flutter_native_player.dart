@@ -7,7 +7,8 @@ import 'package:flutter_native_player/custom_controller/configuration/player_pro
 import 'package:flutter_native_player/custom_controller/player_overlay/player_loading.dart';
 import 'package:flutter_native_player/custom_controller/player_overlay/player_overlay_controller.dart';
 import 'package:flutter_native_player/flutter_native_getx_controller.dart';
-import 'package:flutter_native_player/model/subtitle_model.dart';
+import 'package:flutter_native_player/model/player_resource.dart';
+import 'package:flutter_native_player/model/player_subtitle.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_drawer.dart';
 import 'package:get/get.dart';
 
@@ -16,13 +17,12 @@ import 'method_manager/player_method_manager.dart';
 
 
 class FlutterNativePlayer extends StatelessWidget {
-  final String url;
-  final List<PlayerSubtitle>? subtitles;
+  final PlayerResource playerResource;
   final PlayerProgressColors? progressColors;
   final double width;
   final double height;
 
-  const FlutterNativePlayer({Key? key, required this.url, this.subtitles,this.progressColors, required this.width, required this.height}) : super(key: key);
+  const FlutterNativePlayer({Key? key,required this.playerResource,this.progressColors, required this.width, required this.height}) : super(key: key);
 
 
   Widget androidPlatform(Map<String,dynamic> creationParams) {
@@ -58,7 +58,7 @@ class FlutterNativePlayer extends StatelessWidget {
 
   Widget crossPlatform() {
     final creationParams = {
-      Constant.MP_URL_STREAMING: url,
+      Constant.KEY_PLAYER_RESOURCE:playerResourceToJson(playerResource)
     };
     Widget platform;
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -74,7 +74,7 @@ class FlutterNativePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
-      init: FlutterNativeGetxController(url: url, subtitles: subtitles),
+      init: FlutterNativeGetxController(playerResource: playerResource),
       builder: (FlutterNativeGetxController controller) {
         return SizedBox(
           width: width,

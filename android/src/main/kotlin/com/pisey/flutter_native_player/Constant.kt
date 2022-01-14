@@ -37,8 +37,10 @@ object Constant {
     const val KEY_BITRATE = "KEY_BITRATE";
     const val KEY_URL_QUALITY = "KEY_URL_QUALITY";
 
+    const val KEY_PLAYER_RESOURCE = "KEY_PLAYER_RESOURCE"
     const val KEY_TITLE_MOVIE = "KEY_TITLE_MOVIE";
     const val KEY_URL_MOVIE = "KEY_URL_MOVIE";
+    const val KEY_SUBTITLES = "KEY_SUBTITLES"
     const val KEY_TRACK_INDEX = "KEY_TRACK_INDEX";
 
     const val KEY_SUBTITLE_LABEL = "KEY_SUBTITLE_LABEL";
@@ -69,4 +71,6 @@ object Constant {
     const val EVENT_TV_SHOW_BUTTON_CAST = "EVENT_TV_SHOW_BUTTON_CAST"
     const val EVENT_TV_DISCONNECTED = "EVENT_TV_DISCONNECTED"
     const val EVENT_TV_CONNECTED = "EVENT_TV_CONNECTED"
+
+    const val EXO_PLAYER_RESOURCE = "EXO_PLAYER_RESOURCE"
 }

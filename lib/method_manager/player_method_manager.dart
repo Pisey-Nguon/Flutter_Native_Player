@@ -6,22 +6,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_player/hls/fetch_hls_master_playlist.dart';
 import 'package:flutter_native_player/method_manager/playback_state.dart';
 import 'package:flutter_native_player/model/duration_state.dart';
+import 'package:flutter_native_player/model/player_resource.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
-import 'package:flutter_native_player/model/subtitle_model.dart';
+import 'package:flutter_native_player/model/player_subtitle.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
 import '../constant.dart';
 import 'download_state.dart';
 
 class PlayerMethodManager{
 
-  final methodChannel = MethodChannel(Constant.METHOD_CHANNEL_PLAYER);
-  final eventChannel = EventChannel(Constant.EVENT_CHANNEL_PLAYER);
+  final methodChannel = const MethodChannel(Constant.METHOD_CHANNEL_PLAYER);
+  final eventChannel = const EventChannel(Constant.EVENT_CHANNEL_PLAYER);
   FetchHlsMasterPlaylist fetchHlsMasterPlaylist;
   PlaybackState? _playbackState;
   int? _totalDuration;
   int? _currentPosition;
   List<QualityModel>? _listQuality;
-  List<PlayerSubtitle>? _listSubtitle;
+
   double? _currentSpeed;
   Timer? _timer;
   int? _currentHeight;
@@ -54,12 +55,10 @@ class PlayerMethodManager{
   }
 
 
-  Future<void>startDownload(QualityModel itemQualitySelected) async{
+  Future<void>startDownload(PlayerResource playerResource , int trackIndex) async{
     final map = HashMap();
-    map[Constant.KEY_URL_MOVIE] = itemQualitySelected.urlMovie;
-    map[Constant.KEY_TITLE_MOVIE] = itemQualitySelected.titleMovie;
-    map[Constant.KEY_TRACK_INDEX] = itemQualitySelected.trackIndex;
-    map[Constant.KEY_BITRATE] = itemQualitySelected.bitrate;
+    map[Constant.KEY_PLAYER_RESOURCE] = playerResourceToJson(playerResource);
+    map[Constant.KEY_TRACK_INDEX] = trackIndex;
     try{
       final String result = await methodChannel.invokeMethod(Constant.METHOD_START_DOWNLOAD,map);
       isDownloadStarted = true;
@@ -189,6 +188,7 @@ class PlayerMethodManager{
   List<QualityModel> getListQuality(){
     return _listQuality ?? List.empty();
   }
+
   int getCurrentHeight(){
     return _currentHeight ?? 0;
   }
@@ -205,14 +205,13 @@ class PlayerMethodManager{
   }
   void startListenerPosition(){
     _timer?.cancel();
-    _timer = Timer.periodic(Duration(milliseconds: 500), (Timer t) {
+    _timer = Timer.periodic(const Duration(milliseconds: 500), (Timer t) {
       _setPositionListener();
     });
   }
 
   Future<void> _startPlayerStateListener() async {
     _listQuality = await fetchHlsMasterPlaylist.getListQuality();
-    _listSubtitle = fetchHlsMasterPlaylist.getListSubtitle();
     eventChannel.receiveBroadcastStream().listen((event) {
       final data = event as LinkedHashMap;
       final eventType = data[Constant.KEY_EVENT_TYPE] as String;
