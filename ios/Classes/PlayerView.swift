@@ -176,7 +176,7 @@ class PlayerView: UIView,FlutterStreamHandler {
         case Constant.METHOD_START_DOWNLOAD:
             let data = call.arguments as! Dictionary<String,Any>
 //            let urlQuality = data[Constant.KEY_URL_QUALITY] as! String
-            let urlQuality = "https://d2cqvl54b1gtkt.cloudfront.net/PRODUCTION/5d85da3fa81ada4c66211a07/post/media/video/1616987127933-bfc1a13a-49c6-4272-8ffd-dc04b05eed2c/1616987128057-740d153b431660cf976789c1901192a961f0fd5b2a2af43e2388f671fa03c2aa/1616987128057-740d153b431660cf976789c1901192a961f0fd5b2a2af43e2388f671fa03c2aa.m3u8"
+            let urlQuality = ""
             let titleMovie = data[Constant.KEY_TITLE_MOVIE] as! String
             let bitrate = data[Constant.KEY_BITRATE] as! Int
             downloadManager?.setupAssetDownload(videoUrl: urlQuality, titleMovie: titleMovie,bitrate: bitrate)
@@ -188,18 +188,12 @@ class PlayerView: UIView,FlutterStreamHandler {
  
     
     func setupAVPlayer(){
-        print("\(TAG) check \(#keyPath(AVPlayerItem.status))")
         playerMethodManager.methodChannel(binaryMessenger: binaryMessenger, handler:methodHandler(call:result:))
         playerMethodManager.eventChannelPlayer(binaryMessenger: binaryMessenger,handler: self)
         downloadManager = DownloadManager(playerMethodManager: playerMethodManager)
         avPlayer = AVPlayer(playerItem: playerItem)
         avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options: NSKeyValueObservingOptions.new, context: nil)
-        avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.preferredPeakBitRate), options: NSKeyValueObservingOptions.new, context: nil)
-        avPlayer?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.new, context: nil)
-        avPlayer?.addObserver(self, forKeyPath: "loadedTimeRanges", options: NSKeyValueObservingOptions.new, context: nil)
-        avPlayer?.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: NSKeyValueObservingOptions.new, context: nil)
-        avPlayer?.addObserver(self, forKeyPath: "playbackBufferEmpty", options: NSKeyValueObservingOptions.new, context: nil)
-        avPlayer?.addObserver(self, forKeyPath: "playbackBufferFull", options: NSKeyValueObservingOptions.new, context: nil)
+        avPlayer?.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
      
     }
     func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
@@ -221,7 +215,7 @@ class PlayerView: UIView,FlutterStreamHandler {
     }
     
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "status" {
+        if keyPath == #keyPath(AVPlayerItem.status) {
             switch avPlayer?.status {
             case .readyToPlay:
      
@@ -247,18 +241,6 @@ class PlayerView: UIView,FlutterStreamHandler {
             }
             
             print("\(TAG) isLoading \(isLoading())")
-        }else if keyPath == "presentationSize" {
-            print("\(TAG) presentationSize")
-          
-        }else if keyPath == "loadedTimeRanges"{
-            print("\(TAG) loadedTimeRanges")
-        }else if keyPath == "playbackLikelyToKeepUp"{
-            print("\(TAG) playbackLikelyToKeepUp")
-        }else if keyPath == "playbackBufferEmpty"{
-            
-            print("\(TAG) playbackBufferEmpty")
-        }else if keyPath == "playbackBufferFull"{
-            print("\(TAG) playbackBufferFull")
         }
     }
     

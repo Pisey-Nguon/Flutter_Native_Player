@@ -30,9 +30,6 @@ class PlayerNativeView: NSObject,FlutterPlatformView {
             let playerResourceJsonString = dict.value(forKey: Constant.KEY_PLAYER_RESOURCE) as! String
             let playerResource = try! JSONDecoder().decode(PlayerResource.self, from: Data(playerResourceJsonString.utf8))
             print("playerResoure",playerResource)
-            
-            width = dict.value(forKey: Constant.MP_WIDTH) as? Double ?? nil
-            height = dict.value(forKey: Constant.MP_HEIGHT) as? Double ?? nil
             playerItem = AVPlayerItem(url: URL(string: playerResource.mediaUrl)!)
         }
     
