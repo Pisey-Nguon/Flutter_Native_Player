@@ -1,20 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_player/custom_controller/player_overlay/component_widget_player.dart';
-import 'package:flutter_native_player/method_manager/player_method_manager.dart';
+import 'package:flutter_native_player/flutter_native_getx_controller.dart';
 
 class PlayerLoading extends StatelessWidget {
-  final PlayerMethodManager playerMethodManager;
+  final FlutterNativeGetxController controller;
 
-  final componentWidgetPlayer = ComponentWidgetPlayer();
-
-  PlayerLoading({Key? key, required this.playerMethodManager}) : super(key: key);
+  const PlayerLoading({Key? key, required this.controller}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final view = SizedBox(
-      child: playerMethodManager.isShowLoading
+      child: controller.isShowLoading
           ? Align(
-              child: componentWidgetPlayer.loadingWidget(),
+              child: controller.playerWidget.loadingWidget(),
               alignment: Alignment.center,
             )
           : const SizedBox(),

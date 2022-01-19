@@ -5,15 +5,14 @@ import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.offline.DownloadHelper
+import com.google.android.exoplayer2.offline.DownloadRequest
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.ParametersBuilder
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.util.Util
 import com.google.gson.Gson
 import com.pisey.flutter_native_player.download.download_service.DownloadMethod
 import com.pisey.flutter_native_player.download.model.PlayerResource
@@ -27,14 +26,15 @@ import java.util.*
 
 @Suppress("UNCHECKED_CAST")
 @SuppressLint("InflateParams")
-class PlayerNativeView(private val context: Context,private val id: Int,private val binaryMessenger: BinaryMessenger, private val creationParams: Map<String, Any>):PlatformView {
+class PlayerNativeView(private val context: Context,private val binaryMessenger: BinaryMessenger, private val creationParams: Map<String, Any>):PlatformView {
     private val nativeView: View = LayoutInflater.from(context).inflate(R.layout.player_view,null)
     private val playerMethodManager = PlayerMethodManager()
     private val downloadMethod = DownloadMethod(context)
     private var eventChannelPlayer: EventChannel.EventSink? = null
+    private var downloadRequest:DownloadRequest? = null
     private lateinit var foregroundPlayer:View
     private lateinit var playerView:PlayerView
-    private lateinit var player:SimpleExoPlayer
+    private lateinit var player:ExoPlayer
     private lateinit var dataSourceFactory: DataSource.Factory
     private lateinit var trackSelector:DefaultTrackSelector
 
@@ -86,7 +86,7 @@ class PlayerNativeView(private val context: Context,private val id: Int,private 
     private fun setupNativeView(){
         trackSelector = DefaultTrackSelector(context)
         dataSourceFactory = PlayerUtil.getDataSourceFactory(context)
-        player = SimpleExoPlayer.Builder(context).setTrackSelector(trackSelector).build()
+        player = ExoPlayer.Builder(context).setTrackSelector(trackSelector).build()
         player.addListener(playerListener)
         foregroundPlayer = view.findViewById(R.id.foregroundPlayer)
         playerView = view.findViewById(R.id.playerView)
@@ -96,10 +96,10 @@ class PlayerNativeView(private val context: Context,private val id: Int,private 
     private fun validateDownloadRequest(){
         val playerResourceString = creationParams[Constant.KEY_PLAYER_RESOURCE] as String
         val playerResource = Gson().fromJson(playerResourceString,PlayerResource::class.java)
-        val downloadRequest = PlayerUtil.getDownloadTracker(context).getDownloadRequest(Uri.parse(playerResource.mediaUrl))
+        downloadRequest = PlayerUtil.getDownloadTracker(context).getDownloadRequest(Uri.parse(playerResource.mediaUrl))
 
         if (downloadRequest != null){
-            val mediaSource = DownloadHelper.createMediaSource(downloadRequest,dataSourceFactory)
+            val mediaSource = DownloadHelper.createMediaSource(downloadRequest!!,dataSourceFactory)
             mediaSource.let { player.setMediaSource(it) }
         }else{
             val mediaSource = StreamBuilder.buildVideoMediaSource(Uri.parse(playerResource.mediaUrl),dataSourceFactory)
@@ -119,17 +119,11 @@ class PlayerNativeView(private val context: Context,private val id: Int,private 
 
 
     private fun implementEventFromFlutter(){
-        playerMethodManager.methodChannel(binaryMessenger, MethodChannel.MethodCallHandler { call, result ->
-            when(call.method){
-                Constant.METHOD_PLAY -> {
-                    player.play()
-                }
-                Constant.METHOD_PAUSE -> {
-                    player.pause()
-                }
-                Constant.METHOD_SEEK_TO -> {
-                    player.seekTo((call.arguments as Int).toLong())
-                }
+        playerMethodManager.methodChannel(binaryMessenger) { call, result ->
+            when (call.method) {
+                Constant.METHOD_PLAY -> player.play()
+                Constant.METHOD_PAUSE -> player.pause()
+                Constant.METHOD_SEEK_TO -> player.seekTo((call.arguments as Int).toLong())
                 Constant.METHOD_RELEASE_PLAYER -> releasePlayer()
                 Constant.METHOD_INIT_PLAYER -> reInitPlayer()
                 Constant.METHOD_CHANGE_PLAYBACK_SPEED -> setSpeed((call.arguments as Double))
@@ -139,14 +133,17 @@ class PlayerNativeView(private val context: Context,private val id: Int,private 
                 Constant.METHOD_CANCEL_DOWNLOAD -> cancelDownloadVideo()
                 Constant.METHOD_SHOW_DEVICES -> {}
             }
-        })
+        }
         playerMethodManager.eventChannel(binaryMessenger,object :EventChannel.StreamHandler{
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 eventChannelPlayer = events
                 player.prepare()
                 downloadMethod.setEventChannelPlayer(eventChannelPlayer)
-                if (downloadMethod.isDownloaded(player.currentMediaItem?.playbackProperties?.uri.toString())){
-                    sendEvent(Constant.EVENT_DOWNLOAD_COMPLETED,null)
+                if (downloadMethod.isDownloaded(player.currentMediaItem?.localConfiguration?.uri.toString())){
+                    val playerResourceJsonString = downloadRequest?.data?.let { Util.fromUtf8Bytes(it) }
+                    sendEvent(Constant.EVENT_DOWNLOAD_COMPLETED,playerResourceJsonString)
+                }else{
+                    sendEvent(Constant.EVENT_DOWNLOAD_NOT_YET,null)
                 }
             }
 

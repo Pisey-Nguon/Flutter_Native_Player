@@ -10,6 +10,6 @@ import io.flutter.plugin.platform.PlatformViewFactory
 class PlayerNativeViewFactory(private val binaryMessenger: BinaryMessenger): PlatformViewFactory(StandardMessageCodec.INSTANCE) {
     override fun create(context: Context, viewId: Int, args: Any?): PlatformView {
         val creationParams = args as Map<String, Any>
-        return PlayerNativeView(context,viewId,binaryMessenger,creationParams)
+        return PlayerNativeView(context,binaryMessenger,creationParams)
     }
 }

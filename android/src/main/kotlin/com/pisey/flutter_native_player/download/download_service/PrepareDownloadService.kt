@@ -80,10 +80,8 @@ class PrepareDownloadService:Service() {
         val download = Download(request,Download.STATE_QUEUED,0,0,0,0,FAILURE_REASON_NONE)
         BroadcastSender.sendBroadcastDownloadStatus(this,download = download)
 
-        downloadSubtitles(playerResource,completed = {
-            val downloadRequest = getDownloadRequest(playerResource, trackIndexMovie!!)
-            downloadRequest.let { DownloadService.sendAddDownload(this@PrepareDownloadService, VideoDownloadService::class.java, it,false) }
-        })
+        val downloadRequest = getDownloadRequest(playerResource, trackIndexMovie!!)
+        downloadRequest.let { DownloadService.sendAddDownload(this@PrepareDownloadService, VideoDownloadService::class.java, it,false) }
         return super.onStartCommand(intent, flags, startId)
     }
 

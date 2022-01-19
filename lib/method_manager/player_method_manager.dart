@@ -8,8 +8,8 @@ import 'package:flutter_native_player/method_manager/playback_state.dart';
 import 'package:flutter_native_player/model/duration_state.dart';
 import 'package:flutter_native_player/model/player_resource.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
-import 'package:flutter_native_player/model/player_subtitle.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
+
 import '../constant.dart';
 import 'download_state.dart';
 
@@ -28,9 +28,9 @@ class PlayerMethodManager{
   int? _currentHeight;
   int? _currentWidth;
   bool isDownloadStarted = false;
-  bool isShowController = true;
-  bool isAbsorbing = false;
-  bool isShowLoading = false;
+
+  PlayerResource? _playerResource;
+  int? _trackIndex;
 
   final StreamController<DurationState> _streamControllerDurationState = StreamController.broadcast();
   final StreamController<PlaybackState> _streamControllerPlaybackState = StreamController.broadcast();
@@ -56,36 +56,39 @@ class PlayerMethodManager{
 
 
   Future<void>startDownload(PlayerResource playerResource , int trackIndex) async{
+    _playerResource = playerResource;
+    _trackIndex = trackIndex;
     final map = HashMap();
     map[Constant.KEY_PLAYER_RESOURCE] = playerResourceToJson(playerResource);
     map[Constant.KEY_TRACK_INDEX] = trackIndex;
     try{
-      final String result = await methodChannel.invokeMethod(Constant.METHOD_START_DOWNLOAD,map);
+      await methodChannel.invokeMethod(Constant.METHOD_START_DOWNLOAD,map);
       isDownloadStarted = true;
-    }on PlatformException catch (e){
-    }
+    }on PlatformException catch (_){}
+  }
+
+  Future<void>setRetryDownload() async{
+    startDownload(_playerResource!, _trackIndex!);
   }
 
   Future<void>setCancelDownload() async{
     try{
       await methodChannel.invokeMethod(Constant.METHOD_CANCEL_DOWNLOAD);
       isDownloadStarted = false;
-    }on PlatformException catch(e){
-
-    }
+    }on PlatformException catch(_){}
   }
 
 
   Future<void> play() async{
     try{
       await methodChannel.invokeMethod(Constant.METHOD_PLAY);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   Future<void> pause() async{
     try{
       await methodChannel.invokeMethod(Constant.METHOD_PAUSE);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   Future<void> replay() async{
@@ -95,7 +98,7 @@ class PlayerMethodManager{
     }
     try{
       await methodChannel.invokeMethod(Constant.METHOD_SEEK_TO,position);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   Future<void> forward() async{
@@ -107,36 +110,32 @@ class PlayerMethodManager{
     }
     try{
       await methodChannel.invokeMethod(Constant.METHOD_SEEK_TO,position);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   Future<void> seekTo(int position) async{
     try{
       await methodChannel.invokeMethod(Constant.METHOD_SEEK_TO,position);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   Future<void> setPlaybackSpeed(double speed) async{
     _currentSpeed = speed;
     try{
       await methodChannel.invokeMethod(Constant.METHOD_CHANGE_PLAYBACK_SPEED,speed);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   Future<void> releasePlayer() async{
     try{
       await methodChannel.invokeMethod(Constant.METHOD_RELEASE_PLAYER);
-    }on PlatformException catch(e){
-
-    }
+    }on PlatformException catch(_){}
   }
 
   Future<void> initPlayer() async{
     try{
       await methodChannel.invokeMethod(Constant.METHOD_INIT_PLAYER);
-    }on PlatformException catch(e){
-
-    }
+    }on PlatformException catch(_){}
   }
 
   Future<void> changeQuality(QualityModel itemQualitySelected) async{
@@ -149,7 +148,7 @@ class PlayerMethodManager{
       itemQualitySelectedHashMap[Constant.KEY_BITRATE] = itemQualitySelected.bitrate;
       itemQualitySelectedHashMap[Constant.KEY_URL_QUALITY] = itemQualitySelected.urlQuality;
       await methodChannel.invokeMethod(Constant.METHOD_CHANGE_QUALITY,itemQualitySelectedHashMap);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   
@@ -160,13 +159,13 @@ class PlayerMethodManager{
       itemSubtitleSelectedHashMap[Constant.KEY_SUBTITLE_INDEX] = itemSubtitleSelected.type?.index;
       await methodChannel.invokeMethod(Constant.METHOD_CHANGE_SUBTITLE,itemSubtitleSelectedHashMap);
       _subtitleSelectedListener?.call(itemSubtitleSelected);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   Future<void> showDevices() async{
     try{
       await methodChannel.invokeMethod(Constant.METHOD_SHOW_DEVICES);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
   bool isPlaying(){
@@ -205,7 +204,7 @@ class PlayerMethodManager{
   }
   void startListenerPosition(){
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(milliseconds: 500), (Timer t) {
+    _timer = Timer.periodic(const Duration(milliseconds: 1000), (Timer t) {
       _setPositionListener();
     });
   }
@@ -217,54 +216,42 @@ class PlayerMethodManager{
       final eventType = data[Constant.KEY_EVENT_TYPE] as String;
       switch (eventType){
         case (Constant.EVENT_READY_TO_PLAY):{
-          final readyToPlay = PlaybackState.readyToPlay;
+          const readyToPlay = PlaybackState.readyToPlay;
           _streamControllerPlaybackState.sink.add(readyToPlay);
           _playbackState = readyToPlay;
         }
         break;
         case (Constant.EVENT_PLAY):{
-          final play = PlaybackState.play;
+          const play = PlaybackState.play;
           _streamControllerPlaybackState.sink.add(play);
           _playbackState = play;
         }
         break;
         case (Constant.EVENT_PAUSE):{
-          final pause = PlaybackState.pause;
+          const pause = PlaybackState.pause;
           _streamControllerPlaybackState.sink.add(pause);
           _playbackState = pause;
         }
         break;
         case (Constant.EVENT_BUFFERING):{
-          final buffering = PlaybackState.buffering;
+          const buffering = PlaybackState.buffering;
           _streamControllerPlaybackState.sink.add(buffering);
           _playbackState = buffering;
         }
         break;
         case (Constant.EVENT_FINISH):{
-          final finish = PlaybackState.finish;
+          const finish = PlaybackState.finish;
           _streamControllerPlaybackState.sink.add(finish);
           _playbackState = finish;
         }
         break;
-        case Constant.EVENT_TV_SHOW_BUTTON_CAST:
-          final showButtonCast = PlaybackState.show_button_cast;
-          _streamControllerPlaybackState.sink.add(showButtonCast);
-          break;
-        case Constant.EVENT_TV_HIDE_BUTTON_CAST:
-          final hideButtonCast = PlaybackState.hide_button_cast;
-          _streamControllerPlaybackState.sink.add(hideButtonCast);
-          break;
-        case Constant.EVENT_TV_CONNECTED:
-          final tvConnected = PlaybackState.tv_connected;
-          _streamControllerPlaybackState.sink.add(tvConnected);
-        break;
-        case Constant.EVENT_TV_DISCONNECTED:
-          final tvDisconnected = PlaybackState.tv_disconnected;
-          _streamControllerPlaybackState.sink.add(tvDisconnected);
-          break;
         case (Constant.EVENT_PROGRESS_DOWNLOAD):{
           final value = data[Constant.KEY_VALUE_OF_EVENT] as double;
           _streamControllerProgressDownloadState.sink.add(value);
+        }
+        break;
+        case Constant.EVENT_DOWNLOAD_QUEUED : {
+          _streamControllerDownloadState.sink.add(DownloadState.downloadQueued);
         }
         break;
         case Constant.EVENT_DOWNLOAD_STARTED:{
@@ -291,6 +278,10 @@ class PlayerMethodManager{
           _streamControllerDownloadState.sink.add(DownloadState.downloadResumed);
         }
         break;
+        case Constant.EVENT_DOWNLOAD_NOT_YET:{
+          _streamControllerDownloadState.sink.add(DownloadState.downloadNotYet);
+        }
+        break;
       }
     });
   }
@@ -306,17 +297,17 @@ class PlayerMethodManager{
       final bufferUpdate = result[Constant.KEY_BUFFER_UPDATE] as int;
       final DurationState durationState  = DurationState(progress: Duration(milliseconds: _currentPosition ?? 0), buffered: Duration(milliseconds: bufferUpdate),total: Duration(milliseconds: _totalDuration ?? 0));
       _streamControllerDurationState.sink.add(durationState);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
-  Future<void>isDownloadCompleted(String url,void onData(bool isDownloadCompleted)) async{
+  Future<void>isDownloadCompleted(String url,void Function(bool isDownloadCompleted) onData) async{
     try{
       final bool result = await methodChannel.invokeMethod(Constant.METHOD_CHECK_IS_DOWNLOAD,url);
       onData.call(result);
-    }on PlatformException catch(e){}
+    }on PlatformException catch(_){}
   }
 
-  void setSubtitleSelectedListener(void onData(BetterPlayerSubtitlesSource source)){
+  void setSubtitleSelectedListener(void Function(BetterPlayerSubtitlesSource source) onData){
     _subtitleSelectedListener = onData;
   }
 

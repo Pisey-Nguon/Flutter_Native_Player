@@ -1,8 +1,8 @@
 
 
 import 'package:flutter_native_player/model/player_resource.dart';
-import 'package:flutter_native_player/model/quality_model.dart';
 import 'package:flutter_native_player/model/player_subtitle.dart';
+import 'package:flutter_native_player/model/quality_model.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitle.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_factory.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
@@ -14,7 +14,7 @@ import 'better_player_asms_utils.dart';
 
 class FetchHlsMasterPlaylist{
 
-  final PlayerResource playerResource;
+  PlayerResource playerResource;
   List<QualityModel>? listQuality;
 
 
@@ -38,7 +38,7 @@ class FetchHlsMasterPlaylist{
   }
 
   List<PlayerSubtitle> getListSubtitle(){
-    return playerResource.subtitles;
+    return playerResource.subtitles ?? [];
   }
 
 

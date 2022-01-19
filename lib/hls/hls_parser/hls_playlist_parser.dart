@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter_native_player/hls/hls_parser/playlist.dart';
 import 'package:flutter_native_player/hls/hls_parser/rendition.dart';
@@ -10,6 +9,7 @@ import 'package:flutter_native_player/hls/hls_parser/segment.dart';
 import 'package:flutter_native_player/hls/hls_parser/util.dart';
 import 'package:flutter_native_player/hls/hls_parser/variant.dart';
 import 'package:flutter_native_player/hls/hls_parser/variant_info.dart';
+
 import 'drm_init_data.dart';
 import 'exception.dart';
 import 'format.dart';

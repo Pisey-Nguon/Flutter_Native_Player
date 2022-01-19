@@ -1,8 +1,10 @@
 enum DownloadState{
+  downloadQueued,
   downloadStarted,
   downloadPaused,
   downloadResumed,
   downloadCanceled,
   downloadFailed,
-  downloadCompleted
+  downloadCompleted,
+  downloadNotYet
 }

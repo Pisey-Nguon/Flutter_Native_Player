@@ -3,8 +3,8 @@ import 'package:flutter_native_player/hls/fetch_hls_master_playlist.dart';
 import 'package:flutter_native_player/method_manager/player_method_manager.dart';
 import 'package:flutter_native_player/model/playback_speed_model.dart';
 import 'package:flutter_native_player/model/player_resource.dart';
-import 'package:flutter_native_player/model/quality_model.dart';
 import 'package:flutter_native_player/model/player_subtitle.dart';
+import 'package:flutter_native_player/model/quality_model.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
 
 import 'better_player_clickable_widget.dart';
@@ -50,7 +50,7 @@ class PlayerMaterialBottomSheet{
     Widget combineScrollView = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(child: scrollView1),
+        children1.isNotEmpty ? Expanded(child: scrollView1) : const SizedBox(),
         Expanded(child: scrollView2)
       ],
     );
@@ -72,28 +72,7 @@ class PlayerMaterialBottomSheet{
       color: Colors.black,
     );
   }
-  // Widget _buildResolutionSelectionRow(String name, String url) {
-  //   final bool isSelected =
-  //       url == _betterPlayerController.betterPlayerDataSource?.url;
-  //   return BetterPlayerMaterialClickableWidget(
-  //     onTap: () {
-  //       Navigator.of(context).pop();
-  //       // _betterPlayerController!.setResolution(url);
-  //     },
-  //     child: Padding(
-  //       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-  //       child: Row(
-  //         children: [
-  //           const SizedBox(width: 16),
-  //           Text(
-  //             name,
-  //             style: _getOverflowMenuElementTextStyle(isSelected),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+
   Widget _buildTrackRow(QualityModel itemQuality,String preferredName) {
     final bool isSelected = itemQuality.isSelected;
 
@@ -195,80 +174,37 @@ class PlayerMaterialBottomSheet{
     );
   }
 
-  // void showQualitiesSelectionWidget() {
-  //   // HLS / DASH
-  //   final List<String> asmsTrackNames = _betterPlayerController.betterPlayerDataSource!.asmsTrackNames ?? [];
-  //   final List<BetterPlayerAsmsTrack> asmsTracks = _betterPlayerController.betterPlayerAsmsTracks;
-  //   final List<Widget> children = [];
-  //   for (var index = 0; index < asmsTracks.length; index++) {
-  //     final track = asmsTracks[index];
-  //
-  //     String? preferredName;
-  //     if (track.height == 0 && track.width == 0 && track.bitrate == 0) {
-  //       preferredName = _betterPlayerController.translations.qualityAuto;
-  //     } else {
-  //       preferredName = asmsTrackNames.length > index ? asmsTrackNames[index] : null;
-  //     }
-  //     children.add(_buildTrackRow(asmsTracks[index], preferredName));
-  //   }
-  //
-  //   // // normal videos
-  //   // final resolutions = _betterPlayerController.betterPlayerDataSource!.resolutions;
-  //   // resolutions?.forEach((key, value) {
-  //   //   children.add(_buildResolutionSelectionRow(key, value));
-  //   // });
-  //
-  //   if (children.isEmpty) {
-  //     children.add(
-  //       _buildTrackRow(BetterPlayerAsmsTrack.defaultTrack(),
-  //           _betterPlayerController.translations.qualityAuto),
-  //     );
-  //   }
-  //
-  //   _showModalBottomSheet(children);
-  // }
-
   void showSubtitlesSelectionWidget(List<PlayerSubtitle> listSubtitle) {
     final subtitles = List.of(fetchHlsMasterPlaylist.getSubtitleDataSource(listSubtitle)).toList();
-    // // final noneSubtitlesElementExists = subtitles.firstWhereOrNull(
-    // //         (source) => source.type == BetterPlayerSubtitlesSourceType.none) != null;
-    // // if (!noneSubtitlesElementExists) {
-    // //   subtitles.add(BetterPlayerSubtitlesSource(type: BetterPlayerSubtitlesSourceType.none));
-    // // }
+    subtitles.insert(0,BetterPlayerSubtitlesSource(name: "Off"));
     _showModalBottomSheet(
         subtitles.map((source) => _buildSubtitlesSourceRow(source)).toList());
   }
 
 
-  void showMoreTypeSelectionWidget(List<QualityModel>? listQuality,int currentHeight){
-    // HLS / DASH
-    if(listQuality == null){
-      return;
-    }
-
+  void showMoreTypeSelectionWidget(List<QualityModel> listQuality,int currentHeight){
     final List<Widget> childQuality = [];
-    for (var index = 0; index < listQuality.length; index++) {
-      final track = listQuality[index];
+    // HLS / DASH
+    if(listQuality.isNotEmpty){
+      for (var index = 0; index < listQuality.length; index++) {
+        final track = listQuality[index];
 
-      String preferredName;
-      if (track.height == 0 && track.width == 0 && track.bitrate == 0) {
-        preferredName = "Auto";
-      } else {
-        preferredName = "${track.height}p";
+        String preferredName;
+        if (track.height == 0 && track.width == 0 && track.bitrate == 0) {
+          preferredName = "Auto";
+        } else {
+          preferredName = "${track.height}p";
+        }
+        if(currentHeight == track.height){
+          track.isSelected = true;
+        }else{
+          track.isSelected = false;
+        }
+        childQuality.add(_buildTrackRow(track, preferredName));
       }
-      if(currentHeight == track.height){
-        track.isSelected = true;
-      }else{
-        track.isSelected = false;
-      }
-      childQuality.add(_buildTrackRow(track, preferredName));
     }
 
-    // // normal videos
-    // final resolutions = _betterPlayerController.betterPlayerDataSource!.resolutions;
-    // resolutions?.forEach((key, value) {
-    //   childQuality.add(_buildResolutionSelectionRow(key, value));
-    // });
+
 
 
     List<PlaybackSpeedModel> listSpeed = [];

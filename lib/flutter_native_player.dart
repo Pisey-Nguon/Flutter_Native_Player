@@ -8,12 +8,10 @@ import 'package:flutter_native_player/custom_controller/player_overlay/player_lo
 import 'package:flutter_native_player/custom_controller/player_overlay/player_overlay_controller.dart';
 import 'package:flutter_native_player/flutter_native_getx_controller.dart';
 import 'package:flutter_native_player/model/player_resource.dart';
-import 'package:flutter_native_player/model/player_subtitle.dart';
 import 'package:flutter_native_player/subtitles/better_player_subtitles_drawer.dart';
 import 'package:get/get.dart';
 
 import 'constant.dart';
-import 'method_manager/player_method_manager.dart';
 
 
 class FlutterNativePlayer extends StatelessWidget {
@@ -74,7 +72,7 @@ class FlutterNativePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
-      init: FlutterNativeGetxController(playerResource: playerResource),
+      init: FlutterNativeGetxController(context: context,playerResource: playerResource),
       builder: (FlutterNativeGetxController controller) {
         return SizedBox(
           width: width,
@@ -89,7 +87,7 @@ class FlutterNativePlayer extends StatelessWidget {
                 height: double.infinity,
               ),
               PlayerOverlayController(controller: controller,playerMethodManager: controller.playerMethodManager,progressColors: progressColors, width: double.infinity, height: double.infinity),
-              PlayerLoading(playerMethodManager: controller.playerMethodManager,)
+              PlayerLoading(controller: controller,)
             ],
           ),
         );

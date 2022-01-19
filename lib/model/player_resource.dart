@@ -19,7 +19,7 @@ class PlayerResource {
 
   String mediaName;
   String mediaUrl;
-  List<PlayerSubtitle> subtitles;
+  List<PlayerSubtitle>? subtitles;
 
   factory PlayerResource.fromJson(Map<String, dynamic> json) => PlayerResource(
     mediaName: json["mediaName"],
@@ -30,7 +30,7 @@ class PlayerResource {
   Map<String, dynamic> toJson() => {
     "mediaName": mediaName,
     "mediaUrl": mediaUrl,
-    "subtitles": List<dynamic>.from(subtitles.map((x) => x.toJson())),
+    "subtitles": subtitles != null ? List<dynamic>.from(subtitles!.map((x) => x.toJson())): null,
   };
 }
 

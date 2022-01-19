@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.offline.Download
 import com.google.android.exoplayer2.offline.DownloadService
 import com.pisey.flutter_native_player.Constant
+import com.pisey.flutter_native_player.download.model.DownloadEventModel
 import com.pisey.flutter_native_player.download.model.PlayerResource
 import com.pisey.flutter_native_player.download.utils.PlayerUtil
 import com.pisey.flutter_native_player.download_hls.ConstantDownload
@@ -46,15 +48,17 @@ class DownloadMethod(private val context: Context) {
             override fun onReceive(context: Context?, intent: Intent?) {
                 when (intent?.action) {
                     ConstantDownload.ACTION_DOWNLOAD_PERCENTAGE -> {
-                        val percentageDownloaded = intent.getFloatExtra(ConstantDownload.DATA_DOWNLOAD_PERCENTAGE, 0.0f)
+                        val percentageDownloaded = intent.getIntExtra(ConstantDownload.DATA_DOWNLOAD_PERCENTAGE, 0)
                         sendEvent(eventSink,Constant.EVENT_PROGRESS_DOWNLOAD,percentageDownloaded.toDouble())
                     }
                     ConstantDownload.ACTION_DOWNLOAD_STATUS -> {
-                        when(intent.getStringExtra(ConstantDownload.DATA_DOWNLOAD_STATUS)){
-                            ConstantDownload.DOWNLOAD_COMPLETED -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_COMPLETED,null)
-                            ConstantDownload.DOWNLOAD_FAILED -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_FAILED,null)
-                            ConstantDownload.DOWNLOAD_CANCELED -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_CANCELED,null)
-                            ConstantDownload.DOWNLOAD_STARTED -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_STARTED,null)
+                        val downloadEventModel = intent.getParcelableExtra<DownloadEventModel>(ConstantDownload.DATA_DOWNLOAD_STATUS)
+                        when(downloadEventModel?.state){
+                            Download.STATE_COMPLETED -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_COMPLETED,null)
+                            Download.STATE_FAILED -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_FAILED,null)
+                            Download.STATE_STOPPED -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_CANCELED,null)
+                            Download.STATE_DOWNLOADING -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_STARTED,null)
+                            Download.STATE_QUEUED -> sendEvent(eventSink,Constant.EVENT_DOWNLOAD_QUEUED,null)
                         }
                     }
                     else -> {

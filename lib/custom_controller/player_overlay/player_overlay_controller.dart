@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_native_player/custom_controller/configuration/player_progress_colors.dart';
 import 'package:flutter_native_player/custom_controller/player_overlay/player_controller.dart';
 import 'package:flutter_native_player/flutter_native_getx_controller.dart';
@@ -17,27 +18,29 @@ class PlayerOverlayController extends StatelessWidget{
     return SizedBox(
       width: width,
       height: height,
-      child: AnimatedOpacity(
-        opacity: playerMethodManager.isShowController ? 1 : 0.0,
-        duration: const Duration(milliseconds: 300),
-        child: PlayerController(
-          playerMethodManager: playerMethodManager,
-          onTouchListener: () {
-            playerMethodManager.isShowController = !playerMethodManager.isShowController;
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: controller.isShowController ?
+        Container(
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            child: PlayerController(controller: controller,),
+            onTap: (){
+              controller.isShowController = false;
+              controller.update();
+            },
+          ),
+        )
+            :
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: (){
+            controller.isShowController = true;
+            controller.handleControllerTimeout();
             controller.update();
           },
-          onScaleStart: (details) {},
-          onScaleUpdate: (details) {},
-          onScaleEnd: (details) {},
-          onLoadingListener: (isLoading) {
-            playerMethodManager.isShowLoading = isLoading;
-            controller.update();
-          },
+          child: const SizedBox(width: double.infinity,height: double.infinity,),
         ),
-        onEnd: () {
-          playerMethodManager.isAbsorbing = !playerMethodManager.isAbsorbing;
-          controller.update();
-        },
       ),
     );
   }
