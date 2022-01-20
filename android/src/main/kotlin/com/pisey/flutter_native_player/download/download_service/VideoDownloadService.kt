@@ -17,8 +17,8 @@ import com.google.android.exoplayer2.util.NotificationUtil
 import com.google.android.exoplayer2.util.Util
 import com.pisey.flutter_native_player.download.notification.NotificationHelper
 import com.pisey.flutter_native_player.R
-import com.pisey.flutter_native_player.download.utils.BroadcastSender
-import com.pisey.flutter_native_player.download.utils.PlayerUtil
+import com.pisey.flutter_native_player.utils.BroadcastSender
+import com.pisey.flutter_native_player.utils.PlayerUtil
 
 /** A service for downloading media.  */
 class VideoDownloadService : DownloadService(

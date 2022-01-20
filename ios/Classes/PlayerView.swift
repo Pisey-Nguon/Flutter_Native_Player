@@ -186,7 +186,6 @@ class PlayerView: UIView,FlutterStreamHandler {
         
         playerItemBufferEmptyObserver = avPlayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: [.new]) { [weak self] (_, _) in
             guard let self = self else { return }
-            print("checkStatus Show Loading")
             self.sendEvent(eventType: Constant.EVENT_BUFFERING, valueOfEvent: nil)
         }
             
@@ -232,15 +231,6 @@ class PlayerView: UIView,FlutterStreamHandler {
             
             }
         
-            break
-        case "playbackBufferEmpty":
-            print("isPlaybackBufferEmpty")
-            break
-        case #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp):
-            print(TAG, "isPlaybackLikelyToKeepUp")
-            break
-        case #keyPath(AVPlayerItem.isPlaybackBufferFull):
-            print(TAG, "isPlaybackBufferFull")
             break
         case .none:
             break

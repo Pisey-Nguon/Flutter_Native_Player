@@ -1,4 +1,4 @@
-package com.pisey.flutter_native_player.download_hls
+package com.pisey.flutter_native_player.utils
 
 import android.net.Uri
 import com.google.android.exoplayer2.C

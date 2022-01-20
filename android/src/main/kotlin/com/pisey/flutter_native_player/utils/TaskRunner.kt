@@ -1,4 +1,4 @@
-package com.pisey.flutter_native_player.download.utils
+package com.pisey.flutter_native_player.utils
 
 import android.os.Handler
 import android.os.Looper

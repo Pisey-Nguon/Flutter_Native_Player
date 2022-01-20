@@ -1,4 +1,4 @@
-package com.pisey.flutter_native_player
+package com.pisey.flutter_native_player.constants
 
 object Constant {
 

@@ -14,10 +14,11 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.util.Util
 import com.google.gson.Gson
+import com.pisey.flutter_native_player.constants.Constant
 import com.pisey.flutter_native_player.download.download_service.DownloadMethod
 import com.pisey.flutter_native_player.download.model.PlayerResource
-import com.pisey.flutter_native_player.download.utils.PlayerUtil
-import com.pisey.flutter_native_player.download_hls.StreamBuilder
+import com.pisey.flutter_native_player.utils.PlayerUtil
+import com.pisey.flutter_native_player.utils.StreamBuilder
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel

@@ -1,5 +1,6 @@
 package com.pisey.flutter_native_player
 
+import com.pisey.flutter_native_player.constants.Constant
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel

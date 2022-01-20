@@ -1,4 +1,4 @@
-package com.pisey.flutter_native_player.download.utils
+package com.pisey.flutter_native_player.utils
 
 fun String.extension():String {
     return this.substring(this.lastIndexOf(".") + 1)

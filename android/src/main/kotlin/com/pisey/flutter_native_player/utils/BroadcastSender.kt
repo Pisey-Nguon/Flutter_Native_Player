@@ -1,10 +1,10 @@
-package com.pisey.flutter_native_player.download.utils
+package com.pisey.flutter_native_player.utils
 
 import android.content.Context
 import android.content.Intent
 import com.google.android.exoplayer2.offline.Download
 import com.pisey.flutter_native_player.download.model.DownloadEventModel
-import com.pisey.flutter_native_player.download_hls.ConstantDownload
+import com.pisey.flutter_native_player.constants.ConstantDownload
 
 object BroadcastSender {
     @JvmStatic

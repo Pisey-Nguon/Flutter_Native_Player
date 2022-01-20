@@ -185,7 +185,7 @@ class PlayerMaterialBottomSheet{
   void showMoreTypeSelectionWidget(List<QualityModel> listQuality,int currentHeight){
     final List<Widget> childQuality = [];
     // HLS / DASH
-    if(listQuality.isNotEmpty){
+    if(listQuality.length > 1){
       for (var index = 0; index < listQuality.length; index++) {
         final track = listQuality[index];
 

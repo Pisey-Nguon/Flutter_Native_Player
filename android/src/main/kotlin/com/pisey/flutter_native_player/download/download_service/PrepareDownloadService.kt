@@ -12,13 +12,13 @@ import com.google.android.exoplayer2.offline.StreamKey
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.NotificationUtil
 import com.google.gson.Gson
-import com.pisey.flutter_native_player.Constant
+import com.pisey.flutter_native_player.constants.Constant
 import com.pisey.flutter_native_player.R
 import com.pisey.flutter_native_player.download.model.PlayerResource
-import com.pisey.flutter_native_player.download.utils.BroadcastSender
-import com.pisey.flutter_native_player.download.utils.DownloadFile
-import com.pisey.flutter_native_player.download.utils.PlayerUtil
-import com.pisey.flutter_native_player.download.utils.TaskRunner
+import com.pisey.flutter_native_player.utils.BroadcastSender
+import com.pisey.flutter_native_player.utils.DownloadFile
+import com.pisey.flutter_native_player.utils.PlayerUtil
+import com.pisey.flutter_native_player.utils.TaskRunner
 
 class PrepareDownloadService:Service() {
 
