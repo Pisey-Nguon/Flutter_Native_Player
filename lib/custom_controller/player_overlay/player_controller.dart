@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_player/flutter_native_getx_controller.dart';
+import 'package:flutter_native_player/method_manager/playback_state.dart';
 
 class PlayerController extends StatelessWidget {
   final FlutterNativeGetxController controller;
@@ -15,13 +16,14 @@ class PlayerController extends StatelessWidget {
       height: 50,
       child: Row(
         children: [
-          controller.playerWidget.buttonClick(
-              const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              null,
-              () {}),
+          ///Will enable if configuration have be done
+          // controller.playerWidget.buttonClick(
+          //     const Icon(
+          //       Icons.arrow_back,
+          //       color: Colors.white,
+          //     ),
+          //     null,
+          //     () {}),
           Expanded(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -43,6 +45,7 @@ class PlayerController extends StatelessWidget {
               //     cancelDownload: () {
               //       controller.playerMethodManager.setCancelDownload();
               //     }),
+              controller.playerResource.subtitles != null ?
               controller.playerWidget.buttonClick(
                   const Icon(
                     Icons.subtitles_outlined,
@@ -53,7 +56,7 @@ class PlayerController extends StatelessWidget {
                     .showSubtitlesSelectionWidget(controller
                         .playerMethodManager.fetchHlsMasterPlaylist
                         .getListSubtitle());
-              }),
+              }):const SizedBox(),
               controller.playerWidget.buttonClick(
                   const Icon(
                     Icons.more_horiz_sharp,
@@ -76,6 +79,7 @@ class PlayerController extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         controller.playerWidget.buttonClick(
             const Icon(
@@ -91,22 +95,28 @@ class PlayerController extends StatelessWidget {
           height: 60,
           child: controller.isVisibleButtonPlay
               ? controller.playerWidget
-                  .buttonClick(controller.iconControlPlayer, 50, () {
-                  if (controller.playerMethodManager.isPlaying()) {
-                    controller.playerMethodManager.pause();
-                    controller.iconControlPlayer = const Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                    );
-                    controller.update();
-                  } else {
-                    controller.playerMethodManager.play();
-                    controller.iconControlPlayer = const Icon(
-                      Icons.pause,
-                      color: Colors.white,
-                    );
-                    controller.update();
-                  }
+                  .buttonClick(controller.iconControlPlayer,50, () {
+                    if(controller.playerMethodManager.getPlaybackState != PlaybackState.finish){
+                      if (controller.playerMethodManager.isPlaying()) {
+                        controller.playerMethodManager.pause();
+                        controller.iconControlPlayer = const Icon(
+                          Icons.play_arrow,
+                          color: Colors.white,
+                        );
+                        controller.update();
+                      } else {
+                        controller.playerMethodManager.play();
+                        controller.iconControlPlayer = const Icon(
+                          Icons.pause,
+                          color: Colors.white,
+                        );
+                        controller.update();
+                      }
+                    }else{
+                      controller.playerMethodManager.seekTo(0);
+                      controller.playerMethodManager.play();
+                    }
+
                 })
               : const SizedBox(),
         ),
@@ -120,11 +130,12 @@ class PlayerController extends StatelessWidget {
 
   Widget controllerBottom() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       alignment: Alignment.bottomCenter,
       height: 50,
       child: Row(
         children: [
+          controller.playerWidget.currentTimeWidget(controller.durationState),
           Expanded(
               child: controller.playerWidget.progressBar(
                   controller: controller,
@@ -132,7 +143,7 @@ class PlayerController extends StatelessWidget {
                     controller.playerMethodManager
                         .seekTo(duration.inMilliseconds);
                   })),
-          controller.playerWidget.countDownWidget(controller.durationState)
+          controller.playerWidget.totalTimeWidget(controller.durationState)
         ],
       ),
     );

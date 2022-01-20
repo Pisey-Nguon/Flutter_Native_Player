@@ -72,7 +72,9 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
             if (isPlaying){
                 sendEvent(Constant.EVENT_PLAY,null)
             }else{
-                sendEvent(Constant.EVENT_PAUSE,null)
+                if(player.currentPosition < player.duration){
+                    sendEvent(Constant.EVENT_PAUSE,null)
+                }
             }
         }
     }
@@ -103,7 +105,7 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
             mediaSource.let { player.setMediaSource(it) }
         }else{
             val mediaSource = StreamBuilder.buildVideoMediaSource(Uri.parse(playerResource.mediaUrl),dataSourceFactory)
-            mediaSource?.let { player.setMediaSource(it) }
+            mediaSource.let { player.setMediaSource(it) }
         }
     }
     private fun releasePlayer(){

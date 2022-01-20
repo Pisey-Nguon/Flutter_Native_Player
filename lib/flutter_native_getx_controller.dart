@@ -84,7 +84,6 @@ class FlutterNativeGetxController extends GetxController{
       Icons.pause_outlined,
       color: Colors.white,
     );
-    update();
   }
 
   void _updateEventTypePause() {
@@ -100,44 +99,37 @@ class FlutterNativeGetxController extends GetxController{
       Icons.replay,
       color: Colors.white,
     );
-    update();
   }
 
   void _handlePlaybackStateEvent() {
     playerMethodManager.streamPlaybackState.listen((event) {
       switch (event) {
-        case PlaybackState.readyToPlay:
-          {
+        case PlaybackState.readyToPlay:{
             isShowLoading = false;
             isVisibleButtonPlay = true;
-            update();
           }
           break;
-        case PlaybackState.play:
-          {
+        case PlaybackState.play:{
             handleControllerTimeout();
             _updateEventTypePlay();
           }
           break;
-        case PlaybackState.pause:
-          {
+        case PlaybackState.pause:{
             controllerTimeout?.cancel();
             _updateEventTypePause();
           }
           break;
-        case PlaybackState.buffering:
-          {
+        case PlaybackState.buffering:{
             isShowLoading = true;
             isVisibleButtonPlay = false;
-            update();
           }
           break;
-        case PlaybackState.finish:
-          {
+        case PlaybackState.finish:{
             _updateEventTypeFinished();
           }
           break;
       }
+      update();
     });
   }
 
@@ -158,7 +150,7 @@ class FlutterNativeGetxController extends GetxController{
   void handleControllerTimeout(){
     controllerTimeout?.cancel();
     controllerTimeout = Timer.periodic(const Duration(seconds: 8), (timer) {
-      isShowController = false;
+      // isShowController = false;
       update();
     });
   }

@@ -35,8 +35,37 @@ class PlayerWidget {
     );
   }
 
+  Widget currentTimeWidget(DurationState? durationState){
+    final time = TimeUtils.formatDurationCount(durationState?.progress.inMilliseconds ?? 0);
+    return Container(
+      padding: const EdgeInsets.only(right: 10),
+      alignment: Alignment.centerLeft,
+      height: 50,
+      constraints: const BoxConstraints(
+        minWidth: 45,
+      ),
+      child: textView(time),
+    );
+  }
+
+  Widget totalTimeWidget(DurationState? durationState){
+    final time = TimeUtils.formatDurationCount(durationState?.total?.inMilliseconds ?? 0);
+    return Container(
+      padding: const EdgeInsets.only(left: 10),
+      alignment: Alignment.centerRight,
+      height: 50,
+      constraints: const BoxConstraints(
+        minWidth: 45
+      ),
+      child: textView(time),
+    );
+  }
+
+
   Widget buttonClick(Icon icon, double? iconSize, VoidCallback press) {
     return IconButton(
+      padding: EdgeInsets.zero,
+      alignment: Alignment.center,
       onPressed: press,
       icon: icon,
       iconSize: iconSize ?? 24,
@@ -45,6 +74,7 @@ class PlayerWidget {
 
   Widget button(Icon icon, double? iconSize) {
     return IconButton(
+      padding: EdgeInsets.zero,
       onPressed: () {},
       icon: icon,
       iconSize: iconSize ?? 24,

@@ -188,6 +188,10 @@ class PlayerMethodManager{
     return _listQuality ?? List.empty();
   }
 
+  get getPlaybackState{
+    return _playbackState;
+  }
+
   int getCurrentHeight(){
     return _currentHeight ?? 0;
   }
@@ -204,7 +208,7 @@ class PlayerMethodManager{
   }
   void startListenerPosition(){
     _timer?.cancel();
-    _timer = Timer.periodic(const Duration(milliseconds: 1000), (Timer t) {
+    _timer = Timer.periodic(const Duration(milliseconds: 500), (Timer t) {
       _setPositionListener();
     });
   }

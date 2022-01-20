@@ -35,6 +35,9 @@ class PlayerView: UIView,FlutterStreamHandler {
     private var currentPosition = CMTime.init()
     private var wasPlaying:Bool = false
     private var currentStatusLoading = false
+    private var playerItemBufferEmptyObserver: NSKeyValueObservation?
+    private var playerItemBufferKeepUpObserver: NSKeyValueObservation?
+    private var playerItemBufferFullObserver: NSKeyValueObservation?
     public static override var layerClass: AnyClass {
         return AVPlayerLayer.self
     }
@@ -98,26 +101,6 @@ class PlayerView: UIView,FlutterStreamHandler {
             eventChannelPlayerSink!(data)
         }
     }
-    func checkEventLoading(){
-        if currentStatusLoading != isLoading(){
-            currentStatusLoading = isLoading()
-            if isLoading() {
-                sendEvent(eventType: Constant.EVENT_BUFFERING, valueOfEvent: nil)
-            }else{
-                sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
-            }
-            print("\(TAG) isLoading \(isLoading())")
-        }
-    }
-    func isLoading() -> Bool{
-        let playbackLikelyToKeepUp = avPlayer?.currentItem?.isPlaybackLikelyToKeepUp
-             if playbackLikelyToKeepUp == false{
-                return true
-             } else {
-                return false
-             }
-     }
-
     
     func getBuffer() -> Int64{
         var bufferPosition:Int64 = 0
@@ -169,17 +152,16 @@ class PlayerView: UIView,FlutterStreamHandler {
             data[Constant.KEY_CURRENT_POSITION] = currentPositionMs
             data[Constant.KEY_BUFFER_UPDATE] = bufferUpdate
             data[Constant.KEY_TOTAL_DURATION] = totalDurationMs
-            checkEventLoading()
             result(data)
             break
 
         case Constant.METHOD_START_DOWNLOAD:
-            let data = call.arguments as! Dictionary<String,Any>
+            ///Pending this feature
+//            let data = call.arguments as! Dictionary<String,Any>
 //            let urlQuality = data[Constant.KEY_URL_QUALITY] as! String
-            let urlQuality = ""
-            let titleMovie = data[Constant.KEY_TITLE_MOVIE] as! String
-            let bitrate = data[Constant.KEY_BITRATE] as! Int
-            downloadManager?.setupAssetDownload(videoUrl: urlQuality, titleMovie: titleMovie,bitrate: bitrate)
+//            let titleMovie = data[Constant.KEY_TITLE_MOVIE] as! String
+//            let bitrate = data[Constant.KEY_BITRATE] as! Int
+//            downloadManager?.setupAssetDownload(videoUrl: urlQuality, titleMovie: titleMovie,bitrate: bitrate)
             break
         default:
             break
@@ -192,57 +174,93 @@ class PlayerView: UIView,FlutterStreamHandler {
         playerMethodManager.eventChannelPlayer(binaryMessenger: binaryMessenger,handler: self)
         downloadManager = DownloadManager(playerMethodManager: playerMethodManager)
         avPlayer = AVPlayer(playerItem: playerItem)
-        avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options: NSKeyValueObservingOptions.new, context: nil)
+        
+        ///This observe can use if nessessary
+//        avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options: NSKeyValueObservingOptions.new, context: nil)
         avPlayer?.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                         selector: #selector(self.endPlay),
+                         name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                         object: avPlayer?.currentItem)
+        
+        playerItemBufferEmptyObserver = avPlayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: [.new]) { [weak self] (_, _) in
+            guard let self = self else { return }
+            print("checkStatus Show Loading")
+            self.sendEvent(eventType: Constant.EVENT_BUFFERING, valueOfEvent: nil)
+        }
+            
+        playerItemBufferKeepUpObserver = avPlayer?.currentItem?.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] (_, _) in
+            guard let self = self else { return }
+            self.sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
+        }
+            
+        playerItemBufferFullObserver = avPlayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferFull, options: [.new]) { [weak self] (_, _) in
+            guard let self = self else { return }
+            self.sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
+        }
      
     }
+    @objc func endPlay(){
+        sendEvent(eventType: Constant.EVENT_FINISH, valueOfEvent: nil)
+    }
+
     func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
         if eventChannelPlayerSink == nil {
             eventChannelPlayerSink = events
-            if avPlayer?.isPlaying == true {
-                sendEvent(eventType: Constant.EVENT_PLAY, valueOfEvent: nil)
-            }else{
-                sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
-            }
         }
         return nil
     }
     
     func onCancel(withArguments arguments: Any?) -> FlutterError? {
-
-        print("\(TAG) onCancel")
         return nil
     }
     
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == #keyPath(AVPlayerItem.status) {
-            switch avPlayer?.status {
-            case .readyToPlay:
-     
-                break
-            case .failed:
-                
-                break
-            case .unknown:
-                break
+        switch keyPath{
             
-            default: break
-                
-            }
+        case #keyPath(AVPlayerItem.status): break
             
-        }else if keyPath == "rate"{
+        case "rate":
             rate = avPlayer?.rate ?? 1
             if avPlayer?.isPlaying == true {
-                print("\(TAG) isPlaying")
                 sendEvent(eventType: Constant.EVENT_PLAY,valueOfEvent: nil)
             }else{
-                sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
-                print("\(TAG) isPause")
-            }
+                if avPlayer?.currentItem?.duration.seconds != avPlayer?.currentItem?.currentTime().seconds{
+                    sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
+                }
             
-            print("\(TAG) isLoading \(isLoading())")
+            }
+        
+            break
+        case "playbackBufferEmpty":
+            print("isPlaybackBufferEmpty")
+            break
+        case #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp):
+            print(TAG, "isPlaybackLikelyToKeepUp")
+            break
+        case #keyPath(AVPlayerItem.isPlaybackBufferFull):
+            print(TAG, "isPlaybackBufferFull")
+            break
+        case .none:
+            break
+        case .some(_):
+            break
         }
+    
     }
     
 
+    // Remove Observer
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        playerItemBufferEmptyObserver?.invalidate()
+        playerItemBufferEmptyObserver = nil
+            
+        playerItemBufferKeepUpObserver?.invalidate()
+        playerItemBufferKeepUpObserver = nil
+            
+        playerItemBufferFullObserver?.invalidate()
+        playerItemBufferFullObserver = nil
+    }
 }

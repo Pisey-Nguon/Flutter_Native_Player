@@ -29,7 +29,6 @@ class PlayerNativeView: NSObject,FlutterPlatformView {
             let dict = args as! NSDictionary
             let playerResourceJsonString = dict.value(forKey: Constant.KEY_PLAYER_RESOURCE) as! String
             let playerResource = try! JSONDecoder().decode(PlayerResource.self, from: Data(playerResourceJsonString.utf8))
-            print("playerResoure",playerResource)
             playerItem = AVPlayerItem(url: URL(string: playerResource.mediaUrl)!)
         }
     
