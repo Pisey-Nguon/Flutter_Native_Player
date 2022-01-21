@@ -40,13 +40,13 @@ class PrepareDownloadService:Service() {
     private fun downloadSubtitles(playerResource: PlayerResource?, completed:() -> Unit){
         val clone = playerResource?.copy()
         playerResource?.let { resource ->
-            resource.subtitles.forEachIndexed {index, subtitleModel ->
-                TaskRunner().executeAsync(DownloadFile(this, subtitleModel.urlSubtitle), object : TaskRunner.Callback<String?> {
+            resource.playerSubtitleResources.forEachIndexed { index, subtitleModel ->
+                TaskRunner().executeAsync(DownloadFile(this, subtitleModel.subtitleUrl), object : TaskRunner.Callback<String?> {
                     override fun onComplete(result: String?) {
                         if (result != null){
-                            clone?.subtitles?.get(index)?.urlSubtitle = result
+                            clone?.playerSubtitleResources?.get(index)?.subtitleUrl = result
                         }
-                        if (index == playerResource.subtitles.size - 1){
+                        if (index == playerResource.playerSubtitleResources.size - 1){
                             completed.invoke()
                         }
                     }
@@ -61,7 +61,7 @@ class PrepareDownloadService:Service() {
         val streamKeys = ArrayList<StreamKey>()
         streamKeys.add(StreamKey(0, 0, trackIndex))
         streamKeys.add(StreamKey(0, 1, 0))
-        return DownloadRequest.Builder(playerResource.mediaName, Uri.parse(playerResource.mediaUrl))
+        return DownloadRequest.Builder("No title", Uri.parse(playerResource.videoUrl))
             .setMimeType(MimeTypes.APPLICATION_M3U8)
             .setData(playerResourceGson.toByteArray())
             .setStreamKeys(streamKeys)
@@ -74,14 +74,17 @@ class PrepareDownloadService:Service() {
 
         val playerResource = intent?.getParcelableExtra<PlayerResource>(Constant.EXO_PLAYER_RESOURCE)
         val trackIndexMovie = intent?.getIntExtra(Constant.KEY_TRACK_INDEX,0)
-        val request =  DownloadRequest.Builder(playerResource!!.mediaName,Uri.parse(playerResource.mediaUrl))
+        val request =  DownloadRequest.Builder("No title",Uri.parse(playerResource?.videoUrl))
             .setMimeType(MimeTypes.APPLICATION_M3U8)
             .build()
         val download = Download(request,Download.STATE_QUEUED,0,0,0,0,FAILURE_REASON_NONE)
         BroadcastSender.sendBroadcastDownloadStatus(this,download = download)
 
-        val downloadRequest = getDownloadRequest(playerResource, trackIndexMovie!!)
-        downloadRequest.let { DownloadService.sendAddDownload(this@PrepareDownloadService, VideoDownloadService::class.java, it,false) }
+        val downloadRequest = playerResource?.let { getDownloadRequest(it, trackIndexMovie!!) }
+        downloadRequest.let { it?.let { it1 ->
+            DownloadService.sendAddDownload(this@PrepareDownloadService, VideoDownloadService::class.java,
+                it1,false)
+        } }
         return super.onStartCommand(intent, flags, startId)
     }
 

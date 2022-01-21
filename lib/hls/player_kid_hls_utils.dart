@@ -1,15 +1,13 @@
-
-
-import 'better_player_asms_data_holder.dart';
-import 'better_player_asms_track.dart';
+import 'player_kid_data_holder.dart';
+import 'player_kid_track.dart';
 import 'hls_parser/hls_master_playlist.dart';
 import 'hls_parser/hls_playlist_parser.dart';
 
 ///HLS helper class
-class BetterPlayerHlsUtils {
-  static Future<BetterPlayerAsmsDataHolder> parse(
+class PlayerKidHlsUtils {
+  static Future<PlayerKidDataHolder> parse(
       String data, String masterPlaylistUrl) async {
-    List<BetterPlayerAsmsTrack> tracks = [];
+    List<PlayerKidTrack> tracks = [];
     // List<BetterPlayerAsmsSubtitle> subtitles = [];
     // List<BetterPlayerAsmsAudioTrack> audios = [];
     try {
@@ -18,26 +16,26 @@ class BetterPlayerHlsUtils {
         // parseSubtitles(data, masterPlaylistUrl),
         // parseLanguages(data, masterPlaylistUrl)
       ]);
-      tracks = list[0] as List<BetterPlayerAsmsTrack>;
+      tracks = list[0] as List<PlayerKidTrack>;
       // subtitles = list[1] as List<BetterPlayerAsmsSubtitle>;
       // audios = list[2] as List<BetterPlayerAsmsAudioTrack>;
     } catch (exception) {
       print("Exception on hls parse: $exception");
     }
-    return BetterPlayerAsmsDataHolder(
+    return PlayerKidDataHolder(
         tracks: tracks);
   }
 
-  static Future<List<BetterPlayerAsmsTrack>> parseTracks(
+  static Future<List<PlayerKidTrack>> parseTracks(
       String data, String masterPlaylistUrl) async {
-    final List<BetterPlayerAsmsTrack> tracks = [];
+    final List<PlayerKidTrack> tracks = [];
     try {
       final parsedPlaylist = await HlsPlaylistParser.create()
           .parseString(Uri.parse(masterPlaylistUrl), data);
       if (parsedPlaylist is HlsMasterPlaylist) {
         parsedPlaylist.variants.forEach(
           (variant) {
-            tracks.add(BetterPlayerAsmsTrack(variant.format.id, variant.format.width,
+            tracks.add(PlayerKidTrack(variant.format.id, variant.format.width,
                 variant.format.height, variant.format.bitrate,variant.url.toString(), 0, '', ''));
           },
         );
@@ -45,7 +43,7 @@ class BetterPlayerHlsUtils {
 
       //For auto quality
       if (tracks.isNotEmpty) {
-        tracks.insert(0,BetterPlayerAsmsTrack("0", 0,
+        tracks.insert(0,PlayerKidTrack("0", 0,
             0, 0,parsedPlaylist.baseUri, 0, '', ''));
       }
     } catch (exception) {

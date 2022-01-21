@@ -8,7 +8,7 @@ import 'package:flutter_native_player/custom_controller/player_overlay/player_lo
 import 'package:flutter_native_player/custom_controller/player_overlay/player_overlay_controller.dart';
 import 'package:flutter_native_player/flutter_native_getx_controller.dart';
 import 'package:flutter_native_player/model/player_resource.dart';
-import 'package:flutter_native_player/subtitles/better_player_subtitles_drawer.dart';
+import 'package:flutter_native_player/subtitles/player_kid_subtitles_drawer.dart';
 import 'package:get/get.dart';
 
 import 'constant.dart';
@@ -82,7 +82,7 @@ class FlutterNativePlayer extends StatelessWidget {
           child: Stack(
             children: [
               crossPlatform(),
-              BetterPlayerSubtitlesDrawer(
+              PlayerKidSubtitlesDrawer(
                 controller: controller,
                 subtitles: controller.fetchHlsMasterPlaylist.subtitlesLines,
                 width: double.infinity,

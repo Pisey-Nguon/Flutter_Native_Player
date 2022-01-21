@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_player/hls/fetch_hls_master_playlist.dart';
 import 'package:flutter_native_player/method_manager/player_method_manager.dart';
-import 'package:flutter_native_player/model/playback_speed_model.dart';
+import 'package:flutter_native_player/model/playback_speed.dart';
 import 'package:flutter_native_player/model/player_resource.dart';
-import 'package:flutter_native_player/model/player_subtitle.dart';
+import 'package:flutter_native_player/model/player_subtitle_resource.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
-import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
+import 'package:flutter_native_player/subtitles/player_kid_subtitles_source.dart';
 
 import 'better_player_clickable_widget.dart';
 
@@ -98,7 +98,7 @@ class PlayerMaterialBottomSheet{
     );
   }
 
-  Widget _buildSubtitlesSourceRow(BetterPlayerSubtitlesSource subtitlesSource) {
+  Widget _buildSubtitlesSourceRow(PlayerKidSubtitlesSource subtitlesSource) {
     final selectedSourceType = fetchHlsMasterPlaylist.betterPlayerSubtitlesSource;
     final bool isSelected = (subtitlesSource.name == selectedSourceType?.name);
     return BetterPlayerMaterialClickableWidget(
@@ -123,7 +123,7 @@ class PlayerMaterialBottomSheet{
     );
   }
 
-  Widget _buildSpeedRow(PlaybackSpeedModel playbackSpeedModel) {
+  Widget _buildSpeedRow(PlaybackSpeed playbackSpeedModel) {
     final bool isSelected = playerMethodManager.currentSpeed() == playbackSpeedModel.speedValue;
     return BetterPlayerMaterialClickableWidget(
       onTap: () {
@@ -174,9 +174,9 @@ class PlayerMaterialBottomSheet{
     );
   }
 
-  void showSubtitlesSelectionWidget(List<PlayerSubtitle> listSubtitle) {
+  void showSubtitlesSelectionWidget(List<PlayerSubtitleResource> listSubtitle) {
     final subtitles = List.of(fetchHlsMasterPlaylist.getSubtitleDataSource(listSubtitle)).toList();
-    subtitles.insert(0,BetterPlayerSubtitlesSource(name: "Off"));
+    subtitles.insert(0,PlayerKidSubtitlesSource(name: "Off"));
     _showModalBottomSheet(
         subtitles.map((source) => _buildSubtitlesSourceRow(source)).toList());
   }
@@ -207,15 +207,15 @@ class PlayerMaterialBottomSheet{
 
 
 
-    List<PlaybackSpeedModel> listSpeed = [];
-    listSpeed.add(PlaybackSpeedModel(titleSpeed: "0.25x", speedValue: 0.25));
-    listSpeed.add(PlaybackSpeedModel(titleSpeed: "0.5x", speedValue: 0.5));
-    listSpeed.add(PlaybackSpeedModel(titleSpeed: "0.75x", speedValue: 0.75));
-    listSpeed.add(PlaybackSpeedModel(titleSpeed: "Normal",speedValue: 1));
-    listSpeed.add(PlaybackSpeedModel(titleSpeed: "1.25x",speedValue: 1.25));
-    listSpeed.add(PlaybackSpeedModel(titleSpeed: "1.5x",speedValue: 1.5));
-    listSpeed.add(PlaybackSpeedModel(titleSpeed: "1.75x",speedValue: 1.75));
-    listSpeed.add(PlaybackSpeedModel(titleSpeed: "2x", speedValue: 2));
+    List<PlaybackSpeed> listSpeed = [];
+    listSpeed.add(PlaybackSpeed(titleSpeed: "0.25x", speedValue: 0.25));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "0.5x", speedValue: 0.5));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "0.75x", speedValue: 0.75));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "Normal",speedValue: 1));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "1.25x",speedValue: 1.25));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "1.5x",speedValue: 1.5));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "1.75x",speedValue: 1.75));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "2x", speedValue: 2));
 
     final childPlaybackSpeed = listSpeed.map((e) => _buildSpeedRow(e)).toList();
 

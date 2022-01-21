@@ -102,13 +102,13 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
         val playerResourceString = creationParams[Constant.KEY_PLAYER_RESOURCE] as String
         playWhenReady = creationParams[Constant.KEY_PLAY_WHEN_READY] as Boolean
         val playerResource = Gson().fromJson(playerResourceString,PlayerResource::class.java)
-        downloadRequest = PlayerUtil.getDownloadTracker(context).getDownloadRequest(Uri.parse(playerResource.mediaUrl))
+        downloadRequest = PlayerUtil.getDownloadTracker(context).getDownloadRequest(Uri.parse(playerResource.videoUrl))
 
         if (downloadRequest != null){
             val mediaSource = DownloadHelper.createMediaSource(downloadRequest!!,dataSourceFactory)
             mediaSource.let { player.setMediaSource(it) }
         }else{
-            val mediaSource = StreamBuilder.buildVideoMediaSource(Uri.parse(playerResource.mediaUrl),dataSourceFactory)
+            val mediaSource = StreamBuilder.buildVideoMediaSource(Uri.parse(playerResource.videoUrl),dataSourceFactory)
             mediaSource.let { player.setMediaSource(it) }
         }
     }

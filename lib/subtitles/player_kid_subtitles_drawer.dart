@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_player/flutter_native_getx_controller.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 
-import 'better_player_subtitle.dart';
-import 'better_player_subtitles_configuration.dart';
+import 'player_kid_subtitle.dart';
+import 'player_kid_subtitles_configuration.dart';
 
-class BetterPlayerSubtitlesDrawer extends StatelessWidget {
+class PlayerKidSubtitlesDrawer extends StatelessWidget {
   final FlutterNativeGetxController controller;
-  final List<BetterPlayerSubtitle> subtitles;
+  final List<PlayerKidSubtitle> subtitles;
   final double width;
   final double height;
   final RegExp htmlRegExp =
       // ignore: unnecessary_raw_strings
       RegExp(r"<[^>]*>", multiLine: true);
-  final BetterPlayerSubtitlesConfiguration configuration = const BetterPlayerSubtitlesConfiguration();
+  final PlayerKidSubtitlesConfiguration configuration = const PlayerKidSubtitlesConfiguration();
   final bool _playerVisible = true;
 
-  BetterPlayerSubtitlesDrawer({Key? key,required this.controller,required this.subtitles,required this.width,required this.height}) : super(key: key);
+  PlayerKidSubtitlesDrawer({Key? key,required this.controller,required this.subtitles,required this.width,required this.height}) : super(key: key);
 
 
   @override
@@ -49,7 +49,7 @@ class BetterPlayerSubtitlesDrawer extends StatelessWidget {
     }
 
     final Duration position = controller.currentPosition!;
-    for (final BetterPlayerSubtitle subtitle in subtitles) {
+    for (final PlayerKidSubtitle subtitle in subtitles) {
       if (subtitle.start! <= position && subtitle.end! >= position) {
         return subtitle.texts;
       }
@@ -101,7 +101,7 @@ class BetterPlayerSubtitlesDrawer extends StatelessWidget {
     );
   }
 
-  BetterPlayerSubtitlesConfiguration setupDefaultConfiguration() {
-    return const BetterPlayerSubtitlesConfiguration();
+  PlayerKidSubtitlesConfiguration setupDefaultConfiguration() {
+    return const PlayerKidSubtitlesConfiguration();
   }
 }

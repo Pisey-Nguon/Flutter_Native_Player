@@ -8,7 +8,7 @@ import 'package:flutter_native_player/method_manager/playback_state.dart';
 import 'package:flutter_native_player/model/duration_state.dart';
 import 'package:flutter_native_player/model/player_resource.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
-import 'package:flutter_native_player/subtitles/better_player_subtitles_source.dart';
+import 'package:flutter_native_player/subtitles/player_kid_subtitles_source.dart';
 
 import '../constant.dart';
 import 'download_state.dart';
@@ -44,7 +44,7 @@ class PlayerMethodManager{
   Stream<DownloadState> get streamDownloadState => _streamControllerDownloadState.stream;
   Stream<double> get streamProgressDownloadState => _streamControllerProgressDownloadState.stream;
 
-  Function(BetterPlayerSubtitlesSource source)? _subtitleSelectedListener;
+  Function(PlayerKidSubtitlesSource source)? _subtitleSelectedListener;
 
 
   PlayerMethodManager({required this.fetchHlsMasterPlaylist,required this.playWhenReady}):super(){
@@ -57,7 +57,7 @@ class PlayerMethodManager{
     startListenerPosition();
   }
   void initCurrentUrlQuality(){
-    _currentUrlQuality = fetchHlsMasterPlaylist.playerResource.mediaUrl;
+    _currentUrlQuality = fetchHlsMasterPlaylist.playerResource.videoUrl;
   }
 
 
@@ -194,7 +194,7 @@ class PlayerMethodManager{
   }
 
   
-  Future<void> changeSubtitle(BetterPlayerSubtitlesSource itemSubtitleSelected) async{
+  Future<void> changeSubtitle(PlayerKidSubtitlesSource itemSubtitleSelected) async{
     try{
       final itemSubtitleSelectedHashMap = HashMap();
       itemSubtitleSelectedHashMap[Constant.KEY_SUBTITLE_LABEL] = itemSubtitleSelected.name;
@@ -357,7 +357,7 @@ class PlayerMethodManager{
     }on PlatformException catch(_){}
   }
 
-  void setSubtitleSelectedListener(void Function(BetterPlayerSubtitlesSource source) onData){
+  void setSubtitleSelectedListener(void Function(PlayerKidSubtitlesSource source) onData){
     _subtitleSelectedListener = onData;
   }
 

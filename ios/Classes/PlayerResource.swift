@@ -13,13 +13,13 @@ import Foundation
 
 // MARK: - PlayerResource
 struct PlayerResource: Codable {
-    let mediaName, mediaUrl: String
-    let subtitles: [Subtitle]
+    let videoUrl: String
+    let playerSubtitleResource: [PlayerSubtitleResource]
 
 
 }
 
 // MARK: - Subtitle
-struct Subtitle: Codable {
-    let urlSubtitle, language: String
+struct PlayerSubtitleResource: Codable {
+    let subtitleUrl, language: String
 }

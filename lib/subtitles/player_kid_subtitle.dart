@@ -1,5 +1,5 @@
 
-class BetterPlayerSubtitle {
+class PlayerKidSubtitle {
   static const String timerSeparator = ' --> ';
   final int? index;
   final Duration? start;
@@ -9,7 +9,7 @@ class BetterPlayerSubtitle {
   ///VTT OR SRT
   final String? type;
 
-  BetterPlayerSubtitle._({
+  PlayerKidSubtitle._({
     this.index,
     this.start,
     this.end,
@@ -17,7 +17,7 @@ class BetterPlayerSubtitle {
     this.type,
   });
 
-  factory BetterPlayerSubtitle(String value, bool isWebVTT) {
+  factory PlayerKidSubtitle(String value, bool isWebVTT) {
     try {
       final scanner = value.split('\n');
       if (scanner.length == 2) {
@@ -26,29 +26,29 @@ class BetterPlayerSubtitle {
       if (scanner.length > 2) {
         return _handle3LinesAndMoreSubtitles(scanner, isWebVTT);
       }
-      return BetterPlayerSubtitle._();
+      return PlayerKidSubtitle._();
     } catch (exception) {
       print("Failed to parse subtitle line: $value");
-      return BetterPlayerSubtitle._();
+      return PlayerKidSubtitle._();
     }
   }
 
-  static BetterPlayerSubtitle _handle2LinesSubtitles(List<String> scanner) {
+  static PlayerKidSubtitle _handle2LinesSubtitles(List<String> scanner) {
     try {
       final timeSplit = scanner[0].split(timerSeparator);
       final start = _stringToDuration(timeSplit[0]);
       final end = _stringToDuration(timeSplit[1]);
       final texts = scanner.sublist(1, scanner.length);
 
-      return BetterPlayerSubtitle._(
+      return PlayerKidSubtitle._(
           index: -1, start: start, end: end, texts: texts);
     } catch (exception) {
       print("Failed to parse subtitle line: $scanner");
-      return BetterPlayerSubtitle._();
+      return PlayerKidSubtitle._();
     }
   }
 
-  static BetterPlayerSubtitle _handle3LinesAndMoreSubtitles(
+  static PlayerKidSubtitle _handle3LinesAndMoreSubtitles(
       List<String> scanner, bool isWebVTT) {
     try {
       int? index = -1;
@@ -66,11 +66,11 @@ class BetterPlayerSubtitle {
       final start = _stringToDuration(timeSplit[0]);
       final end = _stringToDuration(timeSplit[1]);
       final texts = scanner.sublist(firstLineOfText, scanner.length);
-      return BetterPlayerSubtitle._(
+      return PlayerKidSubtitle._(
           index: index, start: start, end: end, texts: texts);
     } catch (exception) {
       print("Failed to parse subtitle line: $scanner");
-      return BetterPlayerSubtitle._();
+      return PlayerKidSubtitle._();
     }
   }
 

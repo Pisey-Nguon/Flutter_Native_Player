@@ -1,4 +1,3 @@
-
 class QualityModel{
   final int width;
   final int height;

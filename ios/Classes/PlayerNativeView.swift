@@ -29,7 +29,7 @@ class PlayerNativeView: NSObject,FlutterPlatformView {
             let playerResourceJsonString = dict.value(forKey: Constant.KEY_PLAYER_RESOURCE) as! String
             playWhenReady = dict.value(forKey: Constant.KEY_PLAY_WHEN_READY) as! Bool
             let playerResource = try! JSONDecoder().decode(PlayerResource.self, from: Data(playerResourceJsonString.utf8))
-            playerItem = AVPlayerItem(url: URL(string: playerResource.mediaUrl)!)
+            playerItem = AVPlayerItem(url: URL(string: playerResource.videoUrl)!)
         }
     
     }

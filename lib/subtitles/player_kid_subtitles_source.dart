@@ -1,14 +1,12 @@
-// Project imports:
+import 'package:flutter_native_player/subtitles/player_kid_subtitle_segment.dart';
 
-import 'package:flutter_native_player/asms/better_player_asms_subtitle_segment.dart';
-
-import 'better_player_subtitles_source_type.dart';
+import 'player_kid_subtitles_source_type.dart';
 
 ///Representation of subtitles source. Used to define subtitles in Better
 /// Player.
-class BetterPlayerSubtitlesSource {
+class PlayerKidSubtitlesSource {
   ///Source type
-  final BetterPlayerSubtitlesSourceType? type;
+  final PlayerKidSubtitlesSourceType? type;
 
   ///Name of the subtitles, default value is "Default subtitles"
   final String? name;
@@ -36,9 +34,9 @@ class BetterPlayerSubtitlesSource {
 
   ///List of segments (start,end,url of the segment). This shouldn't be
   ///configured manually.
-  final List<BetterPlayerAsmsSubtitleSegment>? asmsSegments;
+  final List<PlayerKidSubtitleSegment>? asmsSegments;
 
-  BetterPlayerSubtitlesSource({
+  PlayerKidSubtitlesSource({
     this.type,
     this.name = "Default subtitles",
     this.urls,
@@ -51,8 +49,8 @@ class BetterPlayerSubtitlesSource {
   });
 
   ///Creates list with only one subtitles
-  static List<BetterPlayerSubtitlesSource> single({
-    BetterPlayerSubtitlesSourceType? type,
+  static List<PlayerKidSubtitlesSource> single({
+    PlayerKidSubtitlesSourceType? type,
     String name = "Default subtitles",
     String? url,
     String? content,
@@ -60,7 +58,7 @@ class BetterPlayerSubtitlesSource {
     Map<String, String>? headers,
   }) =>
       [
-        BetterPlayerSubtitlesSource(
+        PlayerKidSubtitlesSource(
           type: type,
           name: name,
           urls: [url],

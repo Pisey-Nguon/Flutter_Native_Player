@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:flutter_native_player/model/player_subtitle.dart';
+import 'package:flutter_native_player/model/player_subtitle_resource.dart';
 
 PlayerResource playerResourceFromJson(String str) => PlayerResource.fromJson(json.decode(str));
 
@@ -12,25 +12,21 @@ String playerResourceToJson(PlayerResource data) => json.encode(data.toJson());
 
 class PlayerResource {
   PlayerResource({
-    required this.mediaName,
-    required this.mediaUrl,
-    required this.subtitles,
+    required this.videoUrl,
+    required this.playerSubtitleResource,
   });
 
-  String mediaName;
-  String mediaUrl;
-  List<PlayerSubtitle>? subtitles;
+  String videoUrl;
+  List<PlayerSubtitleResource>? playerSubtitleResource;
 
   factory PlayerResource.fromJson(Map<String, dynamic> json) => PlayerResource(
-    mediaName: json["mediaName"],
-    mediaUrl: json["mediaUrl"],
-    subtitles: List<PlayerSubtitle>.from(json["subtitles"].map((x) => PlayerSubtitle.fromJson(x))),
+    videoUrl: json["videoUrl"],
+    playerSubtitleResource: List<PlayerSubtitleResource>.from(json["playerSubtitleResource"].map((x) => PlayerSubtitleResource.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "mediaName": mediaName,
-    "mediaUrl": mediaUrl,
-    "subtitles": subtitles != null ? List<dynamic>.from(subtitles!.map((x) => x.toJson())): null,
+    "videoUrl": videoUrl,
+    "playerSubtitleResource": playerSubtitleResource != null ? List<dynamic>.from(playerSubtitleResource!.map((x) => x.toJson())): null,
   };
 }
 

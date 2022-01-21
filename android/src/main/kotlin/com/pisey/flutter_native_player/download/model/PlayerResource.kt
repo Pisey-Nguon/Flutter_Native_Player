@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class PlayerResource(val mediaName:String, val mediaUrl:String,var subtitles:ArrayList<PlayerSubtitle> = ArrayList()):Parcelable
+data class PlayerResource(val videoUrl:String, var playerSubtitleResources:ArrayList<PlayerSubtitleResource> = ArrayList()):Parcelable
