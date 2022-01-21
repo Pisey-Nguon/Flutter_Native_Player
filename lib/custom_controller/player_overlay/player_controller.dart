@@ -66,7 +66,7 @@ class PlayerController extends StatelessWidget {
                 controller.playerMaterialBottomSheet
                     .showMoreTypeSelectionWidget(
                         controller.playerMethodManager.getListQuality(),
-                        controller.playerMethodManager.getCurrentHeight());
+                        controller.playerMethodManager.getCurrentUrlQuality());
               }),
             ],
           ))
@@ -96,26 +96,7 @@ class PlayerController extends StatelessWidget {
           child: controller.isVisibleButtonPlay
               ? controller.playerWidget
                   .buttonClick(controller.iconControlPlayer,50, () {
-                    if(controller.playerMethodManager.getPlaybackState != PlaybackState.finish){
-                      if (controller.playerMethodManager.isPlaying()) {
-                        controller.playerMethodManager.pause();
-                        controller.iconControlPlayer = const Icon(
-                          Icons.play_arrow,
-                          color: Colors.white,
-                        );
-                        controller.update();
-                      } else {
-                        controller.playerMethodManager.play();
-                        controller.iconControlPlayer = const Icon(
-                          Icons.pause,
-                          color: Colors.white,
-                        );
-                        controller.update();
-                      }
-                    }else{
-                      controller.playerMethodManager.seekTo(0);
-                      controller.playerMethodManager.play();
-                    }
+                    controller.playerMethodManager.playType();
 
                 })
               : const SizedBox(),

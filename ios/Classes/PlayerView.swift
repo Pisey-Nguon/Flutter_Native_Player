@@ -13,7 +13,7 @@ import MediaPlayer
 
 class PlayerView: UIView,FlutterStreamHandler {
     let TAG:String = "flutterPlayerIOS"
-    var avPlayer: AVPlayer? {
+    var avplayer: AVPlayer? {
         get {
             return playerLayer?.player
         }
@@ -56,43 +56,44 @@ class PlayerView: UIView,FlutterStreamHandler {
     }
     
     func play() {
-        avPlayer?.play()
-        avPlayer?.rate = rate
+        avplayer?.play()
+        avplayer?.rate = rate
         wasPlaying = true
     }
     
     func pause() {
-        avPlayer?.pause()
+        avplayer?.pause()
         wasPlaying = false
     }
+    
+    func restart(){
+        seek(to: 0)
+        avplayer?.play()
+    }
     func seek(to location: Int) {
-        ///When player is playing, pause video, seek to new position and start again. This will prevent issues with seekbar jumps.
-//        if wasPlaying == true {
-//            avPlayer?.pause()
-//        }
-
-        avPlayer?.seek(
+        avplayer?.seek(
             to: CMTimeMake(value: Int64(location), timescale: 1000),
             toleranceBefore: .zero,
             toleranceAfter: .zero) { finished in
             if self.wasPlaying == true{
-                self.avPlayer?.rate = self.rate
+                self.avplayer?.rate = self.rate
             }
             }
     }
     func setPlaybackSpeed(to speed:Double) {
-        avPlayer?.rate = Float(speed)
+        avplayer?.rate = Float(speed)
         if wasPlaying == false {
-            avPlayer?.pause()
+            avplayer?.pause()
         }
     }
     func setTrackParameter(urlQuality:String) {
         let avPlayerItem = AVPlayerItem(url: URL(string: urlQuality)!)
-        avPlayer?.replaceCurrentItem(with: avPlayerItem)
-        avPlayer?.seek(to: currentPosition)
-        avPlayer?.rate = rate
+        avplayer?.replaceCurrentItem(with: avPlayerItem)
+        avplayer?.seek(to: currentPosition)
+        avplayer?.rate = rate
     }
     
+    ///Use to send event to flutter
     func sendEvent(eventType:String,valueOfEvent:Any?){
         var data = Dictionary<String,Any>()
         data[Constant.KEY_EVENT_TYPE] = eventType
@@ -104,12 +105,12 @@ class PlayerView: UIView,FlutterStreamHandler {
     
     func getBuffer() -> Int64{
         var bufferPosition:Int64 = 0
-        for rangeValue in avPlayer!.currentItem!.loadedTimeRanges {
+        for rangeValue in avplayer!.currentItem!.loadedTimeRanges {
             let range = rangeValue.timeRangeValue
             let start = BetterPlayerTimeUtils.fltcmTime(toMillis: (range.start))
             var end = start + BetterPlayerTimeUtils.fltcmTime(toMillis: (range.duration))
-            if !CMTIME_IS_INVALID(avPlayer!.currentItem!.forwardPlaybackEndTime) {
-                let endTime = BetterPlayerTimeUtils.fltcmTime(toMillis: (avPlayer!.currentItem!.forwardPlaybackEndTime))
+            if !CMTIME_IS_INVALID(avplayer!.currentItem!.forwardPlaybackEndTime) {
+                let endTime = BetterPlayerTimeUtils.fltcmTime(toMillis: (avplayer!.currentItem!.forwardPlaybackEndTime))
                 if end > endTime {
                     end = endTime
                 }
@@ -117,6 +118,14 @@ class PlayerView: UIView,FlutterStreamHandler {
             bufferPosition = end
         }
         return bufferPosition
+    }
+    
+    func validateEventIsPlay(){
+        if self.avplayer?.isPlaying == true{
+            self.sendEvent(eventType: Constant.EVENT_PLAY, valueOfEvent: nil)
+        }else{
+            self.sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
+        }
     }
     func methodHandler(call: FlutterMethodCall, result: @escaping FlutterResult) -> Void{
         // Note: this method is invoked on the UI thread.
@@ -127,6 +136,10 @@ class PlayerView: UIView,FlutterStreamHandler {
             
         case Constant.METHOD_PAUSE:
             pause()
+            break
+            
+        case Constant.METHOD_RESTART:
+            restart()
             break
         case Constant.METHOD_SEEK_TO:
             let positionMs = call.arguments as! Int
@@ -144,9 +157,9 @@ class PlayerView: UIView,FlutterStreamHandler {
             break
             
         case Constant.METHOD_GET_DURATION_STATE:
-            let currentPositionMs = Int(CMTimeConvertScale(avPlayer?.currentTime() ?? CMTime.init(), timescale: 1000, method: CMTimeRoundingMethod.roundHalfAwayFromZero).value)
-            let totalDurationMs = Int(CMTimeConvertScale(avPlayer?.currentItem?.duration ?? CMTime.init(), timescale: 1000, method: CMTimeRoundingMethod.roundHalfAwayFromZero).value)
-            currentPosition = avPlayer?.currentTime() ?? CMTime.init()
+            let currentPositionMs = Int(CMTimeConvertScale(avplayer?.currentTime() ?? CMTime.init(), timescale: 1000, method: CMTimeRoundingMethod.roundHalfAwayFromZero).value)
+            let totalDurationMs = Int(CMTimeConvertScale(avplayer?.currentItem?.duration ?? CMTime.init(), timescale: 1000, method: CMTimeRoundingMethod.roundHalfAwayFromZero).value)
+            currentPosition = avplayer?.currentTime() ?? CMTime.init()
             var data = Dictionary<String,Any>()
             let bufferUpdate = getBuffer()
             data[Constant.KEY_CURRENT_POSITION] = currentPositionMs
@@ -163,6 +176,9 @@ class PlayerView: UIView,FlutterStreamHandler {
 //            let bitrate = data[Constant.KEY_BITRATE] as! Int
 //            downloadManager?.setupAssetDownload(videoUrl: urlQuality, titleMovie: titleMovie,bitrate: bitrate)
             break
+        case Constant.METHOD_IS_PLAYING:
+            result(avplayer?.isPlaying)
+            break
         default:
             break
         }
@@ -173,30 +189,32 @@ class PlayerView: UIView,FlutterStreamHandler {
         playerMethodManager.methodChannel(binaryMessenger: binaryMessenger, handler:methodHandler(call:result:))
         playerMethodManager.eventChannelPlayer(binaryMessenger: binaryMessenger,handler: self)
         downloadManager = DownloadManager(playerMethodManager: playerMethodManager)
-        avPlayer = AVPlayer(playerItem: playerItem)
-        
+        avplayer = AVPlayer(playerItem: playerItem)
         ///This observe can use if nessessary
-//        avPlayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options: NSKeyValueObservingOptions.new, context: nil)
-        avPlayer?.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
+        avplayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options: NSKeyValueObservingOptions.new, context: nil)
+        avplayer?.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
         
         NotificationCenter.default.addObserver(self,
                          selector: #selector(self.endPlay),
                          name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                         object: avPlayer?.currentItem)
+                         object: avplayer?.currentItem)
         
-        playerItemBufferEmptyObserver = avPlayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: [.new]) { [weak self] (_, _) in
+        playerItemBufferEmptyObserver = avplayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferEmpty, options: [.new]) { [weak self] (_, _) in
             guard let self = self else { return }
-            self.sendEvent(eventType: Constant.EVENT_BUFFERING, valueOfEvent: nil)
+            self.sendEvent(eventType: Constant.EVENT_LOADING, valueOfEvent: nil)
         }
             
-        playerItemBufferKeepUpObserver = avPlayer?.currentItem?.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] (_, _) in
+        playerItemBufferKeepUpObserver = avplayer?.currentItem?.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] (_, _) in
             guard let self = self else { return }
             self.sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
+            self.validateEventIsPlay()
         }
             
-        playerItemBufferFullObserver = avPlayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferFull, options: [.new]) { [weak self] (_, _) in
+        playerItemBufferFullObserver = avplayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferFull, options: [.new]) { [weak self] (_, _) in
             guard let self = self else { return }
             self.sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
+            self.validateEventIsPlay()
+        
         }
      
     }
@@ -208,6 +226,7 @@ class PlayerView: UIView,FlutterStreamHandler {
         if eventChannelPlayerSink == nil {
             eventChannelPlayerSink = events
         }
+        validateEventIsPlay()
         return nil
     }
     
@@ -218,15 +237,44 @@ class PlayerView: UIView,FlutterStreamHandler {
     override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         switch keyPath{
             
-        case #keyPath(AVPlayerItem.status): break
+        case #keyPath(AVPlayerItem.status):
+            switch avplayer?.status {
+            case .readyToPlay:
+                sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
+                break
+            case .failed:
+                
+                break
+            case .unknown:
+                break
+            
+            default: break
+                
+            }
+            break
             
         case "rate":
-            rate = avPlayer?.rate ?? 1
-            if avPlayer?.isPlaying == true {
+            rate = avplayer?.rate ?? 1
+            if avplayer?.isPlaying == true {
                 sendEvent(eventType: Constant.EVENT_PLAY,valueOfEvent: nil)
             }else{
-                if avPlayer?.currentItem?.duration.seconds != avPlayer?.currentItem?.currentTime().seconds{
-                    sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
+          
+                ///Check with this because we need to prevent send event pause when player is end
+                if playerItem.isPlaybackBufferFull == false{
+                    sendEvent(eventType: Constant.EVENT_PAUSE,valueOfEvent: nil)
+                }
+                
+                switch avplayer!.timeControlStatus{
+                    
+                case .paused:
+                    sendEvent(eventType: Constant.EVENT_PAUSE,valueOfEvent: nil)
+                    break
+                case .waitingToPlayAtSpecifiedRate:
+                    break
+                case .playing:
+                    break
+                @unknown default:
+                    break
                 }
             
             }

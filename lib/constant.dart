@@ -1,20 +1,14 @@
 class Constant{
   static const MP_VIEW_TYPE = "player_cross_platform";
-  static const MP_URL_STREAMING = "url_streaming";
-  static const MP_WIDTH = "MP_WIDTH";
-  static const MP_HEIGHT = "MP_HEIGHT";
-
 
   static const METHOD_CHANNEL_PLAYER = "METHOD_CHANNEL_PLAYER";
   static const EVENT_CHANNEL_PLAYER = "EVENT_CHANNEL_PLAYER";
   static const EVENT_CHANNEL_PERCENTAGE_DOWNLOADED = "EVENT_CHANNEL_PERCENTAGE_DOWNLOADED";
   static const EVENT_CHANNEL_DOWNLOAD_STATUS = "EVENT_CHANNEL_DOWNLOAD_STATUS";
 
-  static const METHOD_READY_TO_PLAY = "METHOD_READY_TO_PLAY";
   static const METHOD_PLAY = "METHOD_PLAY";
   static const METHOD_PAUSE = "METHOD_PAUSE";
-  static const METHOD_BUFFERING = "METHOD_BUFFERING";
-  static const METHOD_FINISH = "METHOD_FINISH";
+  static const METHOD_RESTART = "METHOD_RESTART";
 
   static const METHOD_GET_LIST_QUALITY_VIDEO = "METHOD_GET_QUALITY_VIDEO";
   static const METHOD_GET_DURATION_STATE = "METHOD_GET_DURATION_STATE";
@@ -28,12 +22,14 @@ class Constant{
   static const METHOD_SHOW_DEVICES = "METHOD_SHOW_DEVICES";
   static const METHOD_RELEASE_PLAYER = "METHOD_RELEASE_PLAYER";
   static const METHOD_INIT_PLAYER = "METHOD_INIT_PLAYER";
+  static const METHOD_IS_PLAYING = "METHOD_IS_PLAYING";
 
   static const KEY_WIDTH = "KEY_WIDTH";
   static const KEY_HEIGHT = "KEY_HEIGHT";
   static const KEY_BITRATE = "KEY_BITRATE";
   static const KEY_URL_QUALITY = "KEY_URL_QUALITY";
 
+  static const KEY_PLAY_WHEN_READY = "KEY_PLAY_WHEN_READY";
   static const KEY_PLAYER_RESOURCE = "KEY_PLAYER_RESOURCE";
   static const KEY_TITLE_MOVIE = "KEY_TITLE_MOVIE";
   static const KEY_URL_MOVIE = "KEY_URL_MOVIE";
@@ -63,7 +59,7 @@ class Constant{
   static const EVENT_READY_TO_PLAY = "EVENT_READY_TO_PLAY";
   static const EVENT_PLAY = "EVENT_PLAY";
   static const EVENT_PAUSE = "EVENT_PAUSE";
-  static const EVENT_BUFFERING = "EVENT_BUFFERING";
+  static const EVENT_LOADING = "EVENT_LOADING";
   static const EVENT_FINISH = "EVENT_FINISH";
 
 

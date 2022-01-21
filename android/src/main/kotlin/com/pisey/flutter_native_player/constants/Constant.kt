@@ -3,21 +3,15 @@ package com.pisey.flutter_native_player.constants
 object Constant {
 
     const val MP_VIEW_TYPE = "player_cross_platform";
-    const val MP_URL_STREAMING = "url_streaming";
-    const val MP_WIDTH = "MP_WIDTH";
-    const val MP_HEIGHT = "MP_HEIGHT";
-
 
     const val METHOD_CHANNEL_PLAYER = "METHOD_CHANNEL_PLAYER";
     const val EVENT_CHANNEL_PLAYER = "EVENT_CHANNEL_PLAYER";
     const val EVENT_CHANNEL_PERCENTAGE_DOWNLOADED = "EVENT_CHANNEL_PERCENTAGE_DOWNLOADED";
     const val EVENT_CHANNEL_DOWNLOAD_STATUS = "EVENT_CHANNEL_DOWNLOAD_STATUS";
 
-    const val METHOD_READY_TO_PLAY = "METHOD_READY_TO_PLAY";
     const val METHOD_PLAY = "METHOD_PLAY";
     const val METHOD_PAUSE = "METHOD_PAUSE";
-    const val METHOD_BUFFERING = "METHOD_BUFFERING";
-    const val METHOD_FINISH = "METHOD_FINISH";
+    const val METHOD_RESTART = "METHOD_RESTART";
 
     const val METHOD_GET_LIST_QUALITY_VIDEO = "METHOD_GET_QUALITY_VIDEO";
     const val METHOD_GET_DURATION_STATE = "METHOD_GET_DURATION_STATE";
@@ -31,12 +25,14 @@ object Constant {
     const val METHOD_SHOW_DEVICES = "METHOD_SHOW_DEVICES"
     const val METHOD_RELEASE_PLAYER = "METHOD_RELEASE_PLAYER"
     const val METHOD_INIT_PLAYER = "METHOD_INIT_PLAYER"
+    const val METHOD_IS_PLAYING = "METHOD_IS_PLAYING"
 
     const val KEY_WIDTH = "KEY_WIDTH";
     const val KEY_HEIGHT = "KEY_HEIGHT";
     const val KEY_BITRATE = "KEY_BITRATE";
     const val KEY_URL_QUALITY = "KEY_URL_QUALITY";
 
+    const val KEY_PLAY_WHEN_READY = "KEY_PLAY_WHEN_READY"
     const val KEY_PLAYER_RESOURCE = "KEY_PLAYER_RESOURCE"
     const val KEY_TITLE_MOVIE = "KEY_TITLE_MOVIE";
     const val KEY_URL_MOVIE = "KEY_URL_MOVIE";
@@ -66,7 +62,7 @@ object Constant {
     const val EVENT_READY_TO_PLAY = "EVENT_READY_TO_PLAY";
     const val EVENT_PLAY = "EVENT_PLAY";
     const val EVENT_PAUSE = "EVENT_PAUSE";
-    const val EVENT_BUFFERING = "EVENT_BUFFERING";
+    const val EVENT_LOADING = "EVENT_LOADING";
     const val EVENT_FINISH = "EVENT_FINISH";
 
     const val EVENT_TV_HIDE_BUTTON_CAST = "EVENT_TV_HIDE_BUTTON_CAST"

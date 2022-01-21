@@ -16,15 +16,15 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late PlayerResource playerResource;
-  String url = "https://html5demos.com/assets/dizzy.mp4";
+  String url = "https://p-events-delivery.akamaized.net/2109isftrwvmiekgrjkbbhxhfbkxjkoj/m3u8/vod_index.m3u8";
   final subtitles = [
     PlayerSubtitle(
       language: "English",
-      urlSubtitle: "https://storage.googleapis.com/exoplayer-test-media-1/webvtt/numeric-lines.vtt",
+      urlSubtitle: "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/%5BEnglish%5D%20Apple%20Event%20%E2%80%94%20October%2013%20%5BDownSub.com%5D.srt",
     ),
     PlayerSubtitle(
       language: "Japanese",
-      urlSubtitle: "https://storage.googleapis.com/exoplayer-test-media-1/webvtt/japanese.vtt",
+      urlSubtitle: "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/%5BJapanese%5D%20Apple%20Event%20%E2%80%94%20October%2013%20%5BDownSub.com%5D.srt",
     )
   ];
 
@@ -43,6 +43,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: FlutterNativePlayer(
             playerResource: playerResource,
+            playWhenReady: false,
             width: double.infinity,
             height: 400),
       ),

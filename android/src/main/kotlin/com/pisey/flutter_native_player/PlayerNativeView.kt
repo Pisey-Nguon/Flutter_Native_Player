@@ -33,6 +33,7 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
     private val downloadMethod = DownloadMethod(context)
     private var eventChannelPlayer: EventChannel.EventSink? = null
     private var downloadRequest:DownloadRequest? = null
+    private var playWhenReady = true
     private lateinit var foregroundPlayer:View
     private lateinit var playerView:PlayerView
     private lateinit var player:ExoPlayer
@@ -59,7 +60,7 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
                         sendEvent(Constant.EVENT_PAUSE,null)
                     }
                 }
-                Player.STATE_BUFFERING -> sendEvent(Constant.EVENT_BUFFERING,null)
+                Player.STATE_BUFFERING -> sendEvent(Constant.EVENT_LOADING,null)
                 Player.STATE_ENDED -> sendEvent(Constant.EVENT_FINISH,null)
                 Player.STATE_IDLE -> {}
             }
@@ -88,16 +89,18 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
 
     private fun setupNativeView(){
         trackSelector = DefaultTrackSelector(context)
+        trackSelector.parameters = ParametersBuilder(context).setRendererDisabled(C.TRACK_TYPE_VIDEO, true).build()
         dataSourceFactory = PlayerUtil.getDataSourceFactory(context)
         player = ExoPlayer.Builder(context).setTrackSelector(trackSelector).build()
         player.addListener(playerListener)
         foregroundPlayer = view.findViewById(R.id.foregroundPlayer)
         playerView = view.findViewById(R.id.playerView)
         playerView.player = player
-        playerView.player?.playWhenReady = true
+        playerView.player?.playWhenReady = playWhenReady
     }
     private fun validateDownloadRequest(){
         val playerResourceString = creationParams[Constant.KEY_PLAYER_RESOURCE] as String
+        playWhenReady = creationParams[Constant.KEY_PLAY_WHEN_READY] as Boolean
         val playerResource = Gson().fromJson(playerResourceString,PlayerResource::class.java)
         downloadRequest = PlayerUtil.getDownloadTracker(context).getDownloadRequest(Uri.parse(playerResource.mediaUrl))
 
@@ -109,15 +112,14 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
             mediaSource.let { player.setMediaSource(it) }
         }
     }
+
+    private fun restart(){
+        player.seekTo(0)
+        player.playWhenReady = true
+    }
     private fun releasePlayer(){
         player.release()
         foregroundPlayer.visibility = View.VISIBLE
-    }
-    private fun reInitPlayer(){
-        foregroundPlayer.visibility = View.GONE
-        setupNativeView()
-        validateDownloadRequest()
-        player.prepare()
     }
 
 
@@ -128,13 +130,14 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
                 Constant.METHOD_PAUSE -> player.pause()
                 Constant.METHOD_SEEK_TO -> player.seekTo((call.arguments as Int).toLong())
                 Constant.METHOD_RELEASE_PLAYER -> releasePlayer()
-                Constant.METHOD_INIT_PLAYER -> reInitPlayer()
                 Constant.METHOD_CHANGE_PLAYBACK_SPEED -> setSpeed((call.arguments as Double))
                 Constant.METHOD_CHANGE_QUALITY -> setTrackParameters(call.arguments)
                 Constant.METHOD_GET_DURATION_STATE -> setResultCurrentPositionAndBuffer(result)
                 Constant.METHOD_START_DOWNLOAD -> startDownloadVideo(call.arguments)
                 Constant.METHOD_CANCEL_DOWNLOAD -> cancelDownloadVideo()
                 Constant.METHOD_SHOW_DEVICES -> {}
+                Constant.METHOD_IS_PLAYING -> result.success(player.isPlaying)
+                Constant.METHOD_RESTART -> restart()
             }
         }
         playerMethodManager.eventChannel(binaryMessenger,object :EventChannel.StreamHandler{

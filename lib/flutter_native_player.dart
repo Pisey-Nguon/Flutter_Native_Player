@@ -17,10 +17,11 @@ import 'constant.dart';
 class FlutterNativePlayer extends StatelessWidget {
   final PlayerResource playerResource;
   final PlayerProgressColors? progressColors;
+  final bool playWhenReady;
   final double width;
   final double height;
 
-  const FlutterNativePlayer({Key? key,required this.playerResource,this.progressColors, required this.width, required this.height}) : super(key: key);
+  const FlutterNativePlayer({Key? key,required this.playerResource,this.progressColors,this.playWhenReady = true, required this.width, required this.height}) : super(key: key);
 
 
   Widget androidPlatform(Map<String,dynamic> creationParams) {
@@ -56,7 +57,8 @@ class FlutterNativePlayer extends StatelessWidget {
 
   Widget crossPlatform() {
     final creationParams = {
-      Constant.KEY_PLAYER_RESOURCE:playerResourceToJson(playerResource)
+      Constant.KEY_PLAYER_RESOURCE:playerResourceToJson(playerResource),
+      Constant.KEY_PLAY_WHEN_READY:playWhenReady
     };
     Widget platform;
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -72,7 +74,7 @@ class FlutterNativePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
-      init: FlutterNativeGetxController(context: context,playerResource: playerResource),
+      init: FlutterNativeGetxController(context: context,playerResource: playerResource,playWhenReady: playWhenReady),
       builder: (FlutterNativeGetxController controller) {
         return SizedBox(
           width: width,

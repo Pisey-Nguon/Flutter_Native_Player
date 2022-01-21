@@ -8,21 +8,15 @@
 import Foundation
 struct Constant {
     static let MP_VIEW_TYPE = "player_cross_platform"
-    static let MP_URL_STREAMING = "url_streaming"
-    static let MP_WIDTH = "MP_WIDTH"
-    static let MP_HEIGHT = "MP_HEIGHT"
-
 
     static let METHOD_CHANNEL_PLAYER = "METHOD_CHANNEL_PLAYER"
     static let EVENT_CHANNEL_PLAYER = "EVENT_CHANNEL_PLAYER"
     static let EVENT_CHANNEL_PERCENTAGE_DOWNLOADED = "EVENT_CHANNEL_PERCENTAGE_DOWNLOADED"
     static let EVENT_CHANNEL_DOWNLOAD_STATUS = "EVENT_CHANNEL_DOWNLOAD_STATUS"
 
-    static let METHOD_READY_TO_PLAY = "METHOD_READY_TO_PLAY"
     static let METHOD_PLAY = "METHOD_PLAY"
     static let METHOD_PAUSE = "METHOD_PAUSE"
-    static let METHOD_BUFFERING = "METHOD_BUFFERING"
-    static let METHOD_FINISH = "METHOD_FINISH"
+    static let METHOD_RESTART = "METHOD_RESTART"
 
     static let METHOD_GET_LIST_QUALITY_VIDEO = "METHOD_GET_QUALITY_VIDEO"
     static let METHOD_GET_DURATION_STATE = "METHOD_GET_DURATION_STATE"
@@ -33,12 +27,14 @@ struct Constant {
     static let METHOD_CHANGE_QUALITY = "METHOD_CHANGE_QUALITY"
     static let METHOD_CHANGE_PLAYBACK_SPEED = "METHOD_CHANGE_PLAYBACK_SPEED"
     static let METHOD_CHANGE_SUBTITLE = "METHOD_CHANGE_SUBTITLE"
+    static let METHOD_IS_PLAYING = "METHOD_IS_PLAYING"
 
     static let KEY_WIDTH = "KEY_WIDTH"
     static let KEY_HEIGHT = "KEY_HEIGHT"
     static let KEY_BITRATE = "KEY_BITRATE"
     static let KEY_URL_QUALITY = "KEY_URL_QUALITY"
 
+    static let KEY_PLAY_WHEN_READY = "KEY_PLAY_WHEN_READY"
     static let KEY_PLAYER_RESOURCE = "KEY_PLAYER_RESOURCE"
     static let KEY_TITLE_MOVIE = "KEY_TITLE_MOVIE"
     static let KEY_URL_MOVIE = "KEY_URL_MOVIE"
@@ -65,7 +61,7 @@ struct Constant {
     static let EVENT_READY_TO_PLAY = "EVENT_READY_TO_PLAY"
     static let EVENT_PLAY = "EVENT_PLAY"
     static let EVENT_PAUSE = "EVENT_PAUSE"
-    static let EVENT_BUFFERING = "EVENT_BUFFERING"
+    static let EVENT_LOADING = "EVENT_LOADING"
     static let EVENT_FINISH = "EVENT_FINISH"
 
 }

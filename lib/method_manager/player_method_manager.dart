@@ -18,7 +18,8 @@ class PlayerMethodManager{
   final methodChannel = const MethodChannel(Constant.METHOD_CHANNEL_PLAYER);
   final eventChannel = const EventChannel(Constant.EVENT_CHANNEL_PLAYER);
   FetchHlsMasterPlaylist fetchHlsMasterPlaylist;
-  PlaybackState? _playbackState;
+  bool playWhenReady;
+  PlaybackState _playbackState = PlaybackState.loading;
   int? _totalDuration;
   int? _currentPosition;
   List<QualityModel>? _listQuality;
@@ -27,6 +28,7 @@ class PlayerMethodManager{
   Timer? _timer;
   int? _currentHeight;
   int? _currentWidth;
+  late String _currentUrlQuality;
   bool isDownloadStarted = false;
 
   PlayerResource? _playerResource;
@@ -45,13 +47,17 @@ class PlayerMethodManager{
   Function(BetterPlayerSubtitlesSource source)? _subtitleSelectedListener;
 
 
-  PlayerMethodManager({required this.fetchHlsMasterPlaylist}):super(){
+  PlayerMethodManager({required this.fetchHlsMasterPlaylist,required this.playWhenReady}):super(){
     initPlayerListener();
+    initCurrentUrlQuality();
   }
 
   void initPlayerListener(){
     _startPlayerStateListener();
     startListenerPosition();
+  }
+  void initCurrentUrlQuality(){
+    _currentUrlQuality = fetchHlsMasterPlaylist.playerResource.mediaUrl;
   }
 
 
@@ -101,6 +107,41 @@ class PlayerMethodManager{
     }on PlatformException catch(_){}
   }
 
+  Future<void> restart() async{
+    try{
+      await methodChannel.invokeMethod(Constant.METHOD_RESTART);
+    }on PlatformException catch(_){}
+  }
+
+  void playType()async{
+    switch(_playbackState) {
+
+      case PlaybackState.readyToPlay:
+        if (await isPlaying()){
+          pause();
+        }else{
+          play();
+        }
+        break;
+      case PlaybackState.play:
+        pause();
+        break;
+      case PlaybackState.pause:
+        play();
+        break;
+      case PlaybackState.loading:
+        if (await isPlaying()){
+          pause();
+        }else{
+          play();
+        }
+        break;
+      case PlaybackState.finish:
+        restart();
+        break;
+    }
+  }
+
   Future<void> forward() async{
     int position = (_currentPosition ?? 0) + 10000;
     if(_totalDuration != null){
@@ -141,6 +182,7 @@ class PlayerMethodManager{
   Future<void> changeQuality(QualityModel itemQualitySelected) async{
     _currentHeight = itemQualitySelected.height;
     _currentWidth = itemQualitySelected.width;
+    _currentUrlQuality = itemQualitySelected.urlQuality;
     try{
       final HashMap<String,dynamic> itemQualitySelectedHashMap = HashMap();
       itemQualitySelectedHashMap[Constant.KEY_WIDTH] = itemQualitySelected.width;
@@ -168,10 +210,10 @@ class PlayerMethodManager{
     }on PlatformException catch(_){}
   }
 
-  bool isPlaying(){
-    if(_playbackState == PlaybackState.play){
-      return true;
-    }else{
+  Future<bool> isPlaying() async{
+    try{
+      return await methodChannel.invokeMethod(Constant.METHOD_IS_PLAYING);
+    }on PlatformException catch(_){
       return false;
     }
   }
@@ -197,6 +239,10 @@ class PlayerMethodManager{
   }
   int getCurrentWidth(){
     return _currentWidth ?? 0;
+  }
+
+  String getCurrentUrlQuality(){
+    return _currentUrlQuality;
   }
 
   StreamController<DurationState> getStreamControllerDurationState(){
@@ -237,10 +283,10 @@ class PlayerMethodManager{
           _playbackState = pause;
         }
         break;
-        case (Constant.EVENT_BUFFERING):{
-          const buffering = PlaybackState.buffering;
-          _streamControllerPlaybackState.sink.add(buffering);
-          _playbackState = buffering;
+        case (Constant.EVENT_LOADING):{
+          const loading = PlaybackState.loading;
+          _streamControllerPlaybackState.sink.add(loading);
+          _playbackState = loading;
         }
         break;
         case (Constant.EVENT_FINISH):{

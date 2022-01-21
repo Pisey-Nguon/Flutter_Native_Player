@@ -182,7 +182,7 @@ class PlayerMaterialBottomSheet{
   }
 
 
-  void showMoreTypeSelectionWidget(List<QualityModel> listQuality,int currentHeight){
+  void showMoreTypeSelectionWidget(List<QualityModel> listQuality,String currentUrlQuality){
     final List<Widget> childQuality = [];
     // HLS / DASH
     if(listQuality.length > 1){
@@ -195,7 +195,7 @@ class PlayerMaterialBottomSheet{
         } else {
           preferredName = "${track.height}p";
         }
-        if(currentHeight == track.height){
+        if(currentUrlQuality == track.urlQuality){
           track.isSelected = true;
         }else{
           track.isSelected = false;
