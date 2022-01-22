@@ -113,7 +113,7 @@ class PlayerMethodManager{
     }on PlatformException catch(_){}
   }
 
-  void playType()async{
+  void playByState()async{
     switch(_playbackState) {
 
       case PlaybackState.readyToPlay:

@@ -12,7 +12,7 @@ import 'method_manager/download_state.dart';
 import 'method_manager/playback_state.dart';
 import 'method_manager/player_method_manager.dart';
 
-class FlutterNativeGetxController extends GetxController{
+class FlutterNativeGetxController extends  SuperController {
   final BuildContext context;
   final PlayerResource playerResource;
   final bool playWhenReady;
@@ -184,4 +184,16 @@ class FlutterNativeGetxController extends GetxController{
       update();
     });
   }
+
+  @override
+  void onDetached() {}
+
+  @override
+  void onInactive() {}
+
+  @override
+  void onPaused() {playerMethodManager.pause();}
+
+  @override
+  void onResumed() {}
 }

@@ -96,7 +96,7 @@ class PlayerController extends StatelessWidget {
           child: controller.isVisibleButtonPlay
               ? controller.playerWidget
                   .buttonClick(controller.iconControlPlayer,50, () {
-                    controller.playerMethodManager.playType();
+                    controller.playerMethodManager.playByState();
 
                 })
               : const SizedBox(),
