@@ -67,7 +67,7 @@ Copy and paste to dependencies:
 **Configuration:**
 
  1. **playWhenReady** if it's true it's going to play immediately after fetching data success but if it's false that after fetching data success it's not played.
- 2. **playerResource** if null or empty list it's going to hide subtitle button.
+ 2. **playerSubtitleResource** if null or empty list it's going to hide subtitle button.
 
 ## Supported Formats
 -   For Android, the backing player is  [ExoPlayer](https://google.github.io/ExoPlayer/), please refer  [here](https://google.github.io/ExoPlayer/supported-formats.html)  for list of supported formats.
