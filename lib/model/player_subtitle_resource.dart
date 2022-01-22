@@ -1,6 +1,9 @@
 import 'dart:convert';
-String playerSubtitleToJson(PlayerSubtitleResource data) => json.encode(data.toJson());
-PlayerSubtitleResource playerSubtitleFromJson(String str) => PlayerSubtitleResource.fromJson(json.decode(str));
+
+String playerSubtitleToJson(PlayerSubtitleResource data) =>
+    json.encode(data.toJson());
+PlayerSubtitleResource playerSubtitleFromJson(String str) =>
+    PlayerSubtitleResource.fromJson(json.decode(str));
 
 class PlayerSubtitleResource {
   PlayerSubtitleResource({
@@ -11,13 +14,14 @@ class PlayerSubtitleResource {
   String subtitleUrl;
   String language;
 
-  factory PlayerSubtitleResource.fromJson(Map<String, dynamic> json) => PlayerSubtitleResource(
-    subtitleUrl: json["subtitleUrl"],
-    language: json["language"],
-  );
+  factory PlayerSubtitleResource.fromJson(Map<String, dynamic> json) =>
+      PlayerSubtitleResource(
+        subtitleUrl: json["subtitleUrl"],
+        language: json["language"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "subtitleUrl": subtitleUrl,
-    "language": language,
-  };
+        "subtitleUrl": subtitleUrl,
+        "language": language,
+      };
 }

@@ -9,14 +9,16 @@ import 'package:flutter_native_player/subtitles/player_kid_subtitles_source.dart
 
 import 'player_clickable_widget.dart';
 
-class PlayerMaterialBottomSheet{
+class PlayerMaterialBottomSheet {
   final BuildContext context;
 
   final PlayerMethodManager playerMethodManager;
   final FetchHlsMasterPlaylist fetchHlsMasterPlaylist;
 
-  PlayerMaterialBottomSheet({required this.context,required this.playerMethodManager,required this.fetchHlsMasterPlaylist});
-
+  PlayerMaterialBottomSheet(
+      {required this.context,
+      required this.playerMethodManager,
+      required this.fetchHlsMasterPlaylist});
 
   void _showModalBottomSheet(List<Widget> children) {
     showModalBottomSheet<void>(
@@ -35,7 +37,8 @@ class PlayerMaterialBottomSheet{
     );
   }
 
-  void _showTwoSingleScrollViewBottomSheet(List<Widget> children1,List<Widget> children2){
+  void _showTwoSingleScrollViewBottomSheet(
+      List<Widget> children1, List<Widget> children2) {
     Widget scrollView1 = SingleChildScrollView(
       child: Column(
         children: children1,
@@ -54,16 +57,17 @@ class PlayerMaterialBottomSheet{
         Expanded(child: scrollView2)
       ],
     );
-    Widget safeArea = SafeArea(child: combineScrollView,top: false,);
-    showModalBottomSheet<void>(
-      backgroundColor: Colors.white,
-      context: context,
-      builder: (context){
-        return safeArea;
-      }
+    Widget safeArea = SafeArea(
+      child: combineScrollView,
+      top: false,
     );
+    showModalBottomSheet<void>(
+        backgroundColor: Colors.white,
+        context: context,
+        builder: (context) {
+          return safeArea;
+        });
   }
-
 
   TextStyle _getOverflowMenuElementTextStyle(bool isSelected) {
     return TextStyle(
@@ -73,7 +77,7 @@ class PlayerMaterialBottomSheet{
     );
   }
 
-  Widget _buildTrackRow(QualityModel itemQuality,String preferredName) {
+  Widget _buildTrackRow(QualityModel itemQuality, String preferredName) {
     final bool isSelected = itemQuality.isSelected;
 
     return PlayerMaterialClickableWidget(
@@ -99,7 +103,8 @@ class PlayerMaterialBottomSheet{
   }
 
   Widget _buildSubtitlesSourceRow(PlayerKidSubtitlesSource subtitlesSource) {
-    final selectedSourceType = fetchHlsMasterPlaylist.betterPlayerSubtitlesSource;
+    final selectedSourceType =
+        fetchHlsMasterPlaylist.betterPlayerSubtitlesSource;
     final bool isSelected = (subtitlesSource.name == selectedSourceType?.name);
     return PlayerMaterialClickableWidget(
       onTap: () {
@@ -124,7 +129,8 @@ class PlayerMaterialBottomSheet{
   }
 
   Widget _buildSpeedRow(PlaybackSpeed playbackSpeedModel) {
-    final bool isSelected = playerMethodManager.currentSpeed() == playbackSpeedModel.speedValue;
+    final bool isSelected =
+        playerMethodManager.currentSpeed() == playbackSpeedModel.speedValue;
     return PlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
@@ -148,14 +154,15 @@ class PlayerMaterialBottomSheet{
     );
   }
 
-  Widget _buildQualityDownloadRow(QualityModel itemQualitySelected,PlayerResource playerResource, String preferredName) {
-
+  Widget _buildQualityDownloadRow(QualityModel itemQualitySelected,
+      PlayerResource playerResource, String preferredName) {
     bool isSelected = false;
 
     return PlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
-        playerMethodManager.startDownload(playerResource,itemQualitySelected.trackIndex);
+        playerMethodManager.startDownload(
+            playerResource, itemQualitySelected.trackIndex);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
@@ -175,17 +182,19 @@ class PlayerMaterialBottomSheet{
   }
 
   void showSubtitlesSelectionWidget(List<PlayerSubtitleResource> listSubtitle) {
-    final subtitles = List.of(fetchHlsMasterPlaylist.getSubtitleDataSource(listSubtitle)).toList();
-    subtitles.insert(0,PlayerKidSubtitlesSource(name: "Off"));
+    final subtitles =
+        List.of(fetchHlsMasterPlaylist.getSubtitleDataSource(listSubtitle))
+            .toList();
+    subtitles.insert(0, PlayerKidSubtitlesSource(name: "Off"));
     _showModalBottomSheet(
         subtitles.map((source) => _buildSubtitlesSourceRow(source)).toList());
   }
 
-
-  void showMoreTypeSelectionWidget(List<QualityModel> listQuality,String currentUrlQuality){
+  void showMoreTypeSelectionWidget(
+      List<QualityModel> listQuality, String currentUrlQuality) {
     final List<Widget> childQuality = [];
     // HLS / DASH
-    if(listQuality.length > 1){
+    if (listQuality.length > 1) {
       for (var index = 0; index < listQuality.length; index++) {
         final track = listQuality[index];
 
@@ -195,36 +204,33 @@ class PlayerMaterialBottomSheet{
         } else {
           preferredName = "${track.height}p";
         }
-        if(currentUrlQuality == track.urlQuality){
+        if (currentUrlQuality == track.urlQuality) {
           track.isSelected = true;
-        }else{
+        } else {
           track.isSelected = false;
         }
         childQuality.add(_buildTrackRow(track, preferredName));
       }
     }
 
-
-
-
     List<PlaybackSpeed> listSpeed = [];
     listSpeed.add(PlaybackSpeed(titleSpeed: "0.25x", speedValue: 0.25));
     listSpeed.add(PlaybackSpeed(titleSpeed: "0.5x", speedValue: 0.5));
     listSpeed.add(PlaybackSpeed(titleSpeed: "0.75x", speedValue: 0.75));
-    listSpeed.add(PlaybackSpeed(titleSpeed: "Normal",speedValue: 1));
-    listSpeed.add(PlaybackSpeed(titleSpeed: "1.25x",speedValue: 1.25));
-    listSpeed.add(PlaybackSpeed(titleSpeed: "1.5x",speedValue: 1.5));
-    listSpeed.add(PlaybackSpeed(titleSpeed: "1.75x",speedValue: 1.75));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "Normal", speedValue: 1));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "1.25x", speedValue: 1.25));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "1.5x", speedValue: 1.5));
+    listSpeed.add(PlaybackSpeed(titleSpeed: "1.75x", speedValue: 1.75));
     listSpeed.add(PlaybackSpeed(titleSpeed: "2x", speedValue: 2));
 
     final childPlaybackSpeed = listSpeed.map((e) => _buildSpeedRow(e)).toList();
 
     _showTwoSingleScrollViewBottomSheet(childQuality, childPlaybackSpeed);
-
   }
 
-  void showQualityDownloadSelectionWidget(List<QualityModel>? listQuality,PlayerResource playerResource){
-    if(listQuality == null){
+  void showQualityDownloadSelectionWidget(
+      List<QualityModel>? listQuality, PlayerResource playerResource) {
+    if (listQuality == null) {
       return;
     }
 
@@ -235,9 +241,9 @@ class PlayerMaterialBottomSheet{
       String preferredName;
       if (track.height != 0 && track.width != 0 && track.bitrate != 0) {
         preferredName = "${track.height}p";
-        childQuality.add(_buildQualityDownloadRow(track,playerResource, preferredName));
+        childQuality.add(
+            _buildQualityDownloadRow(track, playerResource, preferredName));
       }
-
     }
 
     _showModalBottomSheet(childQuality);

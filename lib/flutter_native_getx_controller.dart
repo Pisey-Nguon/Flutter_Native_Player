@@ -12,7 +12,7 @@ import 'method_manager/download_state.dart';
 import 'method_manager/playback_state.dart';
 import 'method_manager/player_method_manager.dart';
 
-class FlutterNativeGetxController extends  SuperController {
+class FlutterNativeGetxController extends SuperController {
   final BuildContext context;
   final PlayerResource playerResource;
   final bool playWhenReady;
@@ -20,7 +20,10 @@ class FlutterNativeGetxController extends  SuperController {
   late PlayerMethodManager playerMethodManager;
   late PlayerMaterialBottomSheet playerMaterialBottomSheet;
 
-  FlutterNativeGetxController({required this.context,required this.playerResource,required this.playWhenReady});
+  FlutterNativeGetxController(
+      {required this.context,
+      required this.playerResource,
+      required this.playWhenReady});
 
   ///Current Position for subtitle
   Duration? currentPosition;
@@ -44,10 +47,16 @@ class FlutterNativeGetxController extends  SuperController {
   final playerWidget = PlayerWidget();
 
   ///Icon for button play that will modify base on playback state.
-  Icon iconControlPlayer = const Icon(Icons.play_arrow, color: Colors.white,);
+  Icon iconControlPlayer = const Icon(
+    Icons.play_arrow,
+    color: Colors.white,
+  );
 
   ///Icon for button download that will modify base on download state.
-  Icon iconDownloader = const Icon(Icons.arrow_downward, color: Colors.white,);
+  Icon iconDownloader = const Icon(
+    Icons.arrow_downward,
+    color: Colors.white,
+  );
 
   ///State for visible or hide button play that will modify base on playback state.
   bool isVisibleButtonPlay = true;
@@ -61,15 +70,16 @@ class FlutterNativeGetxController extends  SuperController {
   ///Indicatermate to show or hide loading over download button before show circular progress bar that will modify base on download state.
   bool isIndicatermateCircularProgress = false;
 
-
   @override
   void onInit() {
-
     ///It's use to fetch hls segment and subtitle.
-    fetchHlsMasterPlaylist = FetchHlsMasterPlaylist(playerResource: playerResource);
+    fetchHlsMasterPlaylist =
+        FetchHlsMasterPlaylist(playerResource: playerResource);
 
     ///Method that use to interact with player on native code.
-    playerMethodManager = PlayerMethodManager(fetchHlsMasterPlaylist: fetchHlsMasterPlaylist,playWhenReady: playWhenReady);
+    playerMethodManager = PlayerMethodManager(
+        fetchHlsMasterPlaylist: fetchHlsMasterPlaylist,
+        playWhenReady: playWhenReady);
 
     ///Method that use to open bottom sheet, i.e open bottom sheet to show quality, playback speed, download by quality.
     playerMaterialBottomSheet = PlayerMaterialBottomSheet(
@@ -116,14 +126,14 @@ class FlutterNativeGetxController extends  SuperController {
     );
   }
 
-  void _handleSubtitleEvent(){
+  void _handleSubtitleEvent() {
     playerMethodManager.setSubtitleSelectedListener((source) {
       fetchHlsMasterPlaylist.setupSubtitleSource(source);
       update();
     });
   }
 
-  void _handleDurationStateEvent(){
+  void _handleDurationStateEvent() {
     playerMethodManager.streamDurationState.listen((event) {
       currentPosition = Duration(milliseconds: event.progress.inMilliseconds);
       durationState = event;
@@ -134,27 +144,32 @@ class FlutterNativeGetxController extends  SuperController {
   void _handlePlaybackStateEvent() {
     playerMethodManager.streamPlaybackState.listen((event) {
       switch (event) {
-        case PlaybackState.readyToPlay:{
+        case PlaybackState.readyToPlay:
+          {
             isShowLoading = false;
             isVisibleButtonPlay = true;
           }
           break;
-        case PlaybackState.play:{
+        case PlaybackState.play:
+          {
             handleControllerTimeout();
             _updateEventTypePlay();
           }
           break;
-        case PlaybackState.pause:{
+        case PlaybackState.pause:
+          {
             controllerTimeout?.cancel();
             _updateEventTypePause();
           }
           break;
-        case PlaybackState.loading:{
+        case PlaybackState.loading:
+          {
             isShowLoading = true;
             isVisibleButtonPlay = false;
           }
           break;
-        case PlaybackState.finish:{
+        case PlaybackState.finish:
+          {
             _updateEventTypeFinished();
           }
           break;
@@ -170,14 +185,14 @@ class FlutterNativeGetxController extends  SuperController {
     });
     playerMethodManager.streamDownloadState.listen((event) {
       downloadState = event;
-      if(event == DownloadState.downloadCompleted){
+      if (event == DownloadState.downloadCompleted) {
         playerMethodManager.fetchHlsMasterPlaylist.listQuality?.clear();
       }
       update();
     });
   }
 
-  void handleControllerTimeout(){
+  void handleControllerTimeout() {
     controllerTimeout?.cancel();
     controllerTimeout = Timer.periodic(const Duration(seconds: 8), (timer) {
       isShowController = false;
@@ -192,7 +207,9 @@ class FlutterNativeGetxController extends  SuperController {
   void onInactive() {}
 
   @override
-  void onPaused() {playerMethodManager.pause();}
+  void onPaused() {
+    playerMethodManager.pause();
+  }
 
   @override
   void onResumed() {}

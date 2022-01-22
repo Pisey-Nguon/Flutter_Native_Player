@@ -1,4 +1,4 @@
-class PlaybackSpeed{
+class PlaybackSpeed {
   final String titleSpeed;
   final double speedValue;
 

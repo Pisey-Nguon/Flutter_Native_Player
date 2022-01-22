@@ -1,4 +1,3 @@
-
 import 'package:collection/collection.dart';
 
 import 'hls_track_metadata_entry.dart';

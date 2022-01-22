@@ -7,5 +7,4 @@ class DurationState {
   final Duration progress;
   final Duration buffered;
   final Duration? total;
-
 }

@@ -4,7 +4,6 @@ import 'dart:io';
 import 'player_kid_data_holder.dart';
 import 'player_kid_hls_utils.dart';
 
-
 ///Base helper class for ASMS parsing.
 class PlayerAsmsUtils {
   static const String _hlsExtension = "m3u8";

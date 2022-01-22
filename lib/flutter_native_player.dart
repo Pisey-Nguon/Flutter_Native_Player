@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 
 import 'constant.dart';
 
-
 class FlutterNativePlayer extends StatelessWidget {
   final PlayerResource playerResource;
   final PlayerProgressColors? progressColors;
@@ -21,13 +20,20 @@ class FlutterNativePlayer extends StatelessWidget {
   final double width;
   final double height;
 
-  const FlutterNativePlayer({Key? key,required this.playerResource,this.progressColors,this.playWhenReady = true, required this.width, required this.height}) : super(key: key);
+  const FlutterNativePlayer(
+      {Key? key,
+      required this.playerResource,
+      this.progressColors,
+      this.playWhenReady = true,
+      required this.width,
+      required this.height})
+      : super(key: key);
 
-
-  Widget androidPlatform(Map<String,dynamic> creationParams) {
+  Widget androidPlatform(Map<String, dynamic> creationParams) {
     return PlatformViewLink(
       viewType: Constant.MP_VIEW_TYPE,
-      surfaceFactory: (BuildContext context, PlatformViewController controller) {
+      surfaceFactory:
+          (BuildContext context, PlatformViewController controller) {
         return AndroidViewSurface(
           controller: controller as AndroidViewController,
           gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
@@ -48,7 +54,7 @@ class FlutterNativePlayer extends StatelessWidget {
     );
   }
 
-  Widget iOSPlatform(Map<String,dynamic> creationParams) {
+  Widget iOSPlatform(Map<String, dynamic> creationParams) {
     return UiKitView(
         viewType: Constant.MP_VIEW_TYPE,
         creationParams: creationParams,
@@ -57,8 +63,8 @@ class FlutterNativePlayer extends StatelessWidget {
 
   Widget crossPlatform() {
     final creationParams = {
-      Constant.KEY_PLAYER_RESOURCE:playerResourceToJson(playerResource),
-      Constant.KEY_PLAY_WHEN_READY:playWhenReady
+      Constant.KEY_PLAYER_RESOURCE: playerResourceToJson(playerResource),
+      Constant.KEY_PLAY_WHEN_READY: playWhenReady
     };
     Widget platform;
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -68,13 +74,21 @@ class FlutterNativePlayer extends StatelessWidget {
     } else {
       platform = const Text("Error no view type");
     }
-    return Container(alignment: Alignment.topCenter,width: double.infinity,height: double.infinity,child: platform,color:Colors.black);
+    return Container(
+        alignment: Alignment.topCenter,
+        width: double.infinity,
+        height: double.infinity,
+        child: platform,
+        color: Colors.black);
   }
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
-      init: FlutterNativeGetxController(context: context,playerResource: playerResource,playWhenReady: playWhenReady),
+      init: FlutterNativeGetxController(
+          context: context,
+          playerResource: playerResource,
+          playWhenReady: playWhenReady),
       builder: (FlutterNativeGetxController controller) {
         return SizedBox(
           width: width,
@@ -88,8 +102,15 @@ class FlutterNativePlayer extends StatelessWidget {
                 width: double.infinity,
                 height: double.infinity,
               ),
-              PlayerOverlayController(controller: controller,playerMethodManager: controller.playerMethodManager,progressColors: progressColors, width: double.infinity, height: double.infinity),
-              PlayerLoading(controller: controller,)
+              PlayerOverlayController(
+                  controller: controller,
+                  playerMethodManager: controller.playerMethodManager,
+                  progressColors: progressColors,
+                  width: double.infinity,
+                  height: double.infinity),
+              PlayerLoading(
+                controller: controller,
+              )
             ],
           ),
         );

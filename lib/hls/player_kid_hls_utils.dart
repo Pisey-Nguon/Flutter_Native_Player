@@ -22,8 +22,7 @@ class PlayerKidHlsUtils {
     } catch (exception) {
       print("Exception on hls parse: $exception");
     }
-    return PlayerKidDataHolder(
-        tracks: tracks);
+    return PlayerKidDataHolder(tracks: tracks);
   }
 
   static Future<List<PlayerKidTrack>> parseTracks(
@@ -35,16 +34,23 @@ class PlayerKidHlsUtils {
       if (parsedPlaylist is HlsMasterPlaylist) {
         parsedPlaylist.variants.forEach(
           (variant) {
-            tracks.add(PlayerKidTrack(variant.format.id, variant.format.width,
-                variant.format.height, variant.format.bitrate,variant.url.toString(), 0, '', ''));
+            tracks.add(PlayerKidTrack(
+                variant.format.id,
+                variant.format.width,
+                variant.format.height,
+                variant.format.bitrate,
+                variant.url.toString(),
+                0,
+                '',
+                ''));
           },
         );
       }
 
       //For auto quality
       if (tracks.isNotEmpty) {
-        tracks.insert(0,PlayerKidTrack("0", 0,
-            0, 0,parsedPlaylist.baseUri, 0, '', ''));
+        tracks.insert(
+            0, PlayerKidTrack("0", 0, 0, 0, parsedPlaylist.baseUri, 0, '', ''));
       }
     } catch (exception) {
       print("Exception on parseSubtitles: $exception");

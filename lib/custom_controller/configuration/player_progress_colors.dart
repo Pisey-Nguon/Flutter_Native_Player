@@ -8,7 +8,7 @@ class PlayerProgressColors {
     Color buffered = const Color.fromARGB(255, 199, 199, 199),
     Color baseBar = const Color.fromARGB(255, 238, 238, 238),
     Color thumb = const Color.fromARGB(255, 255, 56, 56),
-  })  : playedColor  = played,
+  })  : playedColor = played,
         bufferedColor = buffered,
         baseBarColor = baseBar,
         thumbColor = thumb;

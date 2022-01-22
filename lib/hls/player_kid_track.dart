@@ -24,11 +24,11 @@ class PlayerKidTrack {
   ///mimeType of the video track
   final String? mimeType;
 
-  PlayerKidTrack(this.id, this.width, this.height, this.bitrate,this.urlQuality,
-      this.frameRate, this.codecs, this.mimeType);
+  PlayerKidTrack(this.id, this.width, this.height, this.bitrate,
+      this.urlQuality, this.frameRate, this.codecs, this.mimeType);
 
   factory PlayerKidTrack.defaultTrack() {
-    return PlayerKidTrack('', 0, 0, 0, '',0, '', '');
+    return PlayerKidTrack('', 0, 0, 0, '', 0, '', '');
   }
 
   @override

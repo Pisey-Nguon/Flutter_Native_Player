@@ -1,5 +1,3 @@
-
-
 import 'package:flutter_native_player/model/player_resource.dart';
 import 'package:flutter_native_player/model/player_subtitle_resource.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
@@ -12,36 +10,49 @@ import 'player_kid_data_holder.dart';
 import 'player_kid_track.dart';
 import 'player_kid_utils.dart';
 
-class FetchHlsMasterPlaylist{
-
+class FetchHlsMasterPlaylist {
   PlayerResource playerResource;
   List<QualityModel>? listQuality;
 
-
   FetchHlsMasterPlaylist({required this.playerResource});
 
-  Future<List<QualityModel>> getListQuality() async{
+  Future<List<QualityModel>> getListQuality() async {
     final List<QualityModel> listQuality = [];
-    final result = await PlayerAsmsUtils.getDataFromUrl(playerResource.videoUrl,null);
-    if (result != null){
-
-      final PlayerKidDataHolder _response = await PlayerAsmsUtils.parse(result, playerResource.videoUrl);
+    final result =
+        await PlayerAsmsUtils.getDataFromUrl(playerResource.videoUrl, null);
+    if (result != null) {
+      final PlayerKidDataHolder _response =
+          await PlayerAsmsUtils.parse(result, playerResource.videoUrl);
       _response.tracks?.forEach((element) {
-        listQuality.add(QualityModel(width: element.width ?? 0, height: element.height ?? 0, bitrate: element.bitrate ?? 0,urlQuality: element.urlQuality ?? playerResource.videoUrl,urlMovie: playerResource.videoUrl,titleMovie: "No title", trackIndex:element.id != "" ? int.parse(element.id!):0,isSelected: false));
+        listQuality.add(QualityModel(
+            width: element.width ?? 0,
+            height: element.height ?? 0,
+            bitrate: element.bitrate ?? 0,
+            urlQuality: element.urlQuality ?? playerResource.videoUrl,
+            urlMovie: playerResource.videoUrl,
+            titleMovie: "No title",
+            trackIndex: element.id != "" ? int.parse(element.id!) : 0,
+            isSelected: false));
       });
     }
-    if(listQuality.isEmpty){
-      listQuality.add(QualityModel(width: 0, height: 0, bitrate: 0,urlQuality: playerResource.videoUrl,urlMovie: playerResource.videoUrl,titleMovie: "No title", trackIndex:0,isSelected: true));
+    if (listQuality.isEmpty) {
+      listQuality.add(QualityModel(
+          width: 0,
+          height: 0,
+          bitrate: 0,
+          urlQuality: playerResource.videoUrl,
+          urlMovie: playerResource.videoUrl,
+          titleMovie: "No title",
+          trackIndex: 0,
+          isSelected: true));
     }
     this.listQuality = listQuality;
     return listQuality;
   }
 
-  List<PlayerSubtitleResource> getListSubtitle(){
+  List<PlayerSubtitleResource> getListSubtitle() {
     return playerResource.playerSubtitleResource ?? [];
   }
-
-
 
   PlayerKidSubtitlesSource? betterPlayerSubtitlesSource;
 
@@ -72,7 +83,7 @@ class FetchHlsMasterPlaylist{
         return;
       }
       final subtitlesParsed =
-      await PlayerKidSubtitlesFactory.parseSubtitles(subtitlesSource);
+          await PlayerKidSubtitlesFactory.parseSubtitles(subtitlesSource);
       subtitlesLines.addAll(subtitlesParsed);
     }
 
@@ -82,15 +93,15 @@ class FetchHlsMasterPlaylist{
     // }
   }
 
-  List<PlayerKidSubtitlesSource> getSubtitleDataSource(List<PlayerSubtitleResource>? listSubtitleVideo){
+  List<PlayerKidSubtitlesSource> getSubtitleDataSource(
+      List<PlayerSubtitleResource>? listSubtitleVideo) {
     List<PlayerKidSubtitlesSource> listSubtitle = [];
     listSubtitleVideo?.forEach((element) {
       listSubtitle.add(PlayerKidSubtitlesSource(
           type: PlayerKidSubtitlesSourceType.network,
           name: element.language,
           urls: [element.subtitleUrl],
-          selectedByDefault: false
-      ));
+          selectedByDefault: false));
     });
     return listSubtitle;
   }

@@ -1,4 +1,4 @@
-enum PlaybackState{
+enum PlaybackState {
   readyToPlay,
   play,
   pause,

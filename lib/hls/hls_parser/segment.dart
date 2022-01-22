@@ -1,4 +1,3 @@
-
 import 'drm_init_data.dart';
 
 class Segment {

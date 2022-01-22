@@ -501,8 +501,7 @@ class HlsPlaylistParser {
             if (instreamId.startsWith('CC')) {
               mimeType = MimeTypes.applicationCea608;
               accessibilityChannel = int.parse(instreamId.substring(2));
-            } else
-            /* starts with SERVICE */ {
+            } else /* starts with SERVICE */ {
               mimeType = MimeTypes.applicationCea708;
               accessibilityChannel = int.parse(instreamId.substring(7));
             }
@@ -831,8 +830,7 @@ class HlsPlaylistParser {
         if (methodNone == method) {
           currentSchemeDatas.clear();
           cachedDrmInitData = null;
-        } else
-        /* !METHOD_NONE.equals(method) */ {
+        } else /* !METHOD_NONE.equals(method) */ {
           fullSegmentEncryptionIV = _parseStringAttr(
               source: line,
               pattern: regexpIv,

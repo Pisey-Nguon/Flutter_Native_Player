@@ -13,11 +13,17 @@ class PlayerKidSubtitlesDrawer extends StatelessWidget {
   final RegExp htmlRegExp =
       // ignore: unnecessary_raw_strings
       RegExp(r"<[^>]*>", multiLine: true);
-  final PlayerKidSubtitlesConfiguration configuration = const PlayerKidSubtitlesConfiguration();
+  final PlayerKidSubtitlesConfiguration configuration =
+      const PlayerKidSubtitlesConfiguration();
   final bool _playerVisible = true;
 
-  PlayerKidSubtitlesDrawer({Key? key,required this.controller,required this.subtitles,required this.width,required this.height}) : super(key: key);
-
+  PlayerKidSubtitlesDrawer(
+      {Key? key,
+      required this.controller,
+      required this.subtitles,
+      required this.width,
+      required this.height})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

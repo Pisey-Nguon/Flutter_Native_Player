@@ -1,9 +1,10 @@
-class Constant{
+class Constant {
   static const MP_VIEW_TYPE = "player_cross_platform";
 
   static const METHOD_CHANNEL_PLAYER = "METHOD_CHANNEL_PLAYER";
   static const EVENT_CHANNEL_PLAYER = "EVENT_CHANNEL_PLAYER";
-  static const EVENT_CHANNEL_PERCENTAGE_DOWNLOADED = "EVENT_CHANNEL_PERCENTAGE_DOWNLOADED";
+  static const EVENT_CHANNEL_PERCENTAGE_DOWNLOADED =
+      "EVENT_CHANNEL_PERCENTAGE_DOWNLOADED";
   static const EVENT_CHANNEL_DOWNLOAD_STATUS = "EVENT_CHANNEL_DOWNLOAD_STATUS";
 
   static const METHOD_PLAY = "METHOD_PLAY";
@@ -61,6 +62,4 @@ class Constant{
   static const EVENT_PAUSE = "EVENT_PAUSE";
   static const EVENT_LOADING = "EVENT_LOADING";
   static const EVENT_FINISH = "EVENT_FINISH";
-
-
 }

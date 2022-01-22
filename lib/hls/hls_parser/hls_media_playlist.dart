@@ -1,4 +1,3 @@
-
 import 'package:flutter_native_player/hls/hls_parser/playlist.dart';
 import 'package:flutter_native_player/hls/hls_parser/segment.dart';
 

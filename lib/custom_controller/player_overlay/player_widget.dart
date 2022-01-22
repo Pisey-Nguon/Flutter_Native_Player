@@ -35,8 +35,9 @@ class PlayerWidget {
     );
   }
 
-  Widget currentTimeWidget(DurationState? durationState){
-    final time = TimeUtils.formatDurationCount(durationState?.progress.inMilliseconds ?? 0);
+  Widget currentTimeWidget(DurationState? durationState) {
+    final time = TimeUtils.formatDurationCount(
+        durationState?.progress.inMilliseconds ?? 0);
     return Container(
       padding: const EdgeInsets.only(right: 10),
       alignment: Alignment.centerLeft,
@@ -48,19 +49,17 @@ class PlayerWidget {
     );
   }
 
-  Widget totalTimeWidget(DurationState? durationState){
-    final time = TimeUtils.formatDurationCount(durationState?.total?.inMilliseconds ?? 0);
+  Widget totalTimeWidget(DurationState? durationState) {
+    final time = TimeUtils.formatDurationCount(
+        durationState?.total?.inMilliseconds ?? 0);
     return Container(
       padding: const EdgeInsets.only(left: 10),
       alignment: Alignment.centerRight,
       height: 50,
-      constraints: const BoxConstraints(
-        minWidth: 45
-      ),
+      constraints: const BoxConstraints(minWidth: 45),
       child: textView(time),
     );
   }
-
 
   Widget buttonClick(Icon icon, double? iconSize, VoidCallback press) {
     return IconButton(
@@ -88,8 +87,8 @@ class PlayerWidget {
       child: isIndicatermate
           ? const CircularProgressIndicator()
           : CircularProgressIndicator(
-        value: progress / 100,
-      ),
+              value: progress / 100,
+            ),
     );
   }
 
@@ -153,10 +152,9 @@ class PlayerWidget {
                 Icons.stop,
                 color: Colors.transparent,
               ),
-              24,
-              () {
-                cancelDownload.call();
-              })
+              24, () {
+            cancelDownload.call();
+          })
         ]);
       case DownloadState.downloadStarted:
         return Stack(alignment: Alignment.center, children: [
@@ -166,10 +164,9 @@ class PlayerWidget {
                 Icons.stop,
                 color: Colors.white,
               ),
-              24,
-              () {
-                cancelDownload.call();
-              })
+              24, () {
+            cancelDownload.call();
+          })
         ]);
       case DownloadState.downloadPaused:
         return Stack(
@@ -182,9 +179,7 @@ class PlayerWidget {
                   color: Colors.white,
                 ),
                 24,
-                () {
-
-                })
+                () {})
           ],
         );
       case DownloadState.downloadResumed:
@@ -197,10 +192,9 @@ class PlayerWidget {
                   Icons.stop,
                   color: Colors.white,
                 ),
-                24,
-                () {
-                  cancelDownload.call();
-                })
+                24, () {
+              cancelDownload.call();
+            })
           ],
         );
       case DownloadState.downloadCanceled:
@@ -212,10 +206,9 @@ class PlayerWidget {
                   Icons.arrow_downward,
                   color: Colors.white,
                 ),
-                24,
-                () {
-                  openOptionQuality.call();
-                })
+                24, () {
+              openOptionQuality.call();
+            })
           ],
         );
       case DownloadState.downloadFailed:
@@ -227,10 +220,9 @@ class PlayerWidget {
                   Icons.refresh,
                   color: Colors.white,
                 ),
-                24,
-                () {
-                  retryDownload.call();
-                })
+                24, () {
+              retryDownload.call();
+            })
           ],
         );
       case DownloadState.downloadCompleted:
@@ -255,15 +247,15 @@ class PlayerWidget {
                   Icons.arrow_downward,
                   color: Colors.white,
                 ),
-                24,
-                    () {
-                  openOptionQuality.call();
-                    })
+                24, () {
+              openOptionQuality.call();
+            })
           ],
         );
-      case null:{
-        return const SizedBox();
-      }
+      case null:
+        {
+          return const SizedBox();
+        }
     }
   }
 

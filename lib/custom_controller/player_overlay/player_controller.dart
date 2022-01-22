@@ -45,18 +45,19 @@ class PlayerController extends StatelessWidget {
               //     cancelDownload: () {
               //       controller.playerMethodManager.setCancelDownload();
               //     }),
-              controller.playerResource.playerSubtitleResource != null ?
-              controller.playerWidget.buttonClick(
-                  const Icon(
-                    Icons.subtitles_outlined,
-                    color: Colors.white,
-                  ),
-                  null, () {
-                controller.playerMaterialBottomSheet
-                    .showSubtitlesSelectionWidget(controller
-                        .playerMethodManager.fetchHlsMasterPlaylist
-                        .getListSubtitle());
-              }):const SizedBox(),
+              controller.playerResource.playerSubtitleResource != null
+                  ? controller.playerWidget.buttonClick(
+                      const Icon(
+                        Icons.subtitles_outlined,
+                        color: Colors.white,
+                      ),
+                      null, () {
+                      controller.playerMaterialBottomSheet
+                          .showSubtitlesSelectionWidget(controller
+                              .playerMethodManager.fetchHlsMasterPlaylist
+                              .getListSubtitle());
+                    })
+                  : const SizedBox(),
               controller.playerWidget.buttonClick(
                   const Icon(
                     Icons.more_horiz_sharp,
@@ -95,9 +96,8 @@ class PlayerController extends StatelessWidget {
           height: 60,
           child: controller.isVisibleButtonPlay
               ? controller.playerWidget
-                  .buttonClick(controller.iconControlPlayer,50, () {
-                    controller.playerMethodManager.playByState();
-
+                  .buttonClick(controller.iconControlPlayer, 50, () {
+                  controller.playerMethodManager.playByState();
                 })
               : const SizedBox(),
         ),

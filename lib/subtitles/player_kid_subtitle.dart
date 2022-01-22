@@ -1,4 +1,3 @@
-
 class PlayerKidSubtitle {
   static const String timerSeparator = ' --> ';
   final int? index;

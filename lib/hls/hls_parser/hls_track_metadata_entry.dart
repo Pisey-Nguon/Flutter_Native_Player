@@ -1,7 +1,7 @@
-
 import 'package:collection/collection.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_native_player/hls/hls_parser/variant_info.dart';
+
 class HlsTrackMetadataEntry {
   HlsTrackMetadataEntry({this.groupId, this.name, this.variantInfos});
 

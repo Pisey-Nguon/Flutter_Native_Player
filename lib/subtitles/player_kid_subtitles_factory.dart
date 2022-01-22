@@ -65,8 +65,7 @@ class PlayerKidSubtitlesFactory {
       print("Parsed total subtitles: ${subtitles.length}");
       return subtitles;
     } catch (exception) {
-      print(
-          "Failed to read subtitles from network: $exception");
+      print("Failed to read subtitles from network: $exception");
     }
     return [];
   }

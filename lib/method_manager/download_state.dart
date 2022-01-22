@@ -1,4 +1,4 @@
-enum DownloadState{
+enum DownloadState {
   downloadQueued,
   downloadStarted,
   downloadPaused,
