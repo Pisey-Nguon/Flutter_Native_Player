@@ -129,7 +129,7 @@ class PlayerWidget {
       baseBarColor: _progressColors.baseBarColor,
       progressBarColor: _progressColors.playedColor,
       bufferedBarColor: _progressColors.bufferedColor,
-      barHeight: 5,
+      barHeight: 4,
       thumbRadius: 6,
       thumbGlowRadius: 12,
       thumbGlowColor: _progressColors.thumbColor,

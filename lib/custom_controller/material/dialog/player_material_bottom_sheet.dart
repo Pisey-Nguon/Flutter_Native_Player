@@ -7,7 +7,7 @@ import 'package:flutter_native_player/model/player_subtitle_resource.dart';
 import 'package:flutter_native_player/model/quality_model.dart';
 import 'package:flutter_native_player/subtitles/player_kid_subtitles_source.dart';
 
-import 'better_player_clickable_widget.dart';
+import 'player_clickable_widget.dart';
 
 class PlayerMaterialBottomSheet{
   final BuildContext context;
@@ -76,7 +76,7 @@ class PlayerMaterialBottomSheet{
   Widget _buildTrackRow(QualityModel itemQuality,String preferredName) {
     final bool isSelected = itemQuality.isSelected;
 
-    return BetterPlayerMaterialClickableWidget(
+    return PlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
         playerMethodManager.changeQuality(itemQuality);
@@ -101,7 +101,7 @@ class PlayerMaterialBottomSheet{
   Widget _buildSubtitlesSourceRow(PlayerKidSubtitlesSource subtitlesSource) {
     final selectedSourceType = fetchHlsMasterPlaylist.betterPlayerSubtitlesSource;
     final bool isSelected = (subtitlesSource.name == selectedSourceType?.name);
-    return BetterPlayerMaterialClickableWidget(
+    return PlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
         fetchHlsMasterPlaylist.setupSubtitleSource(subtitlesSource);
@@ -125,7 +125,7 @@ class PlayerMaterialBottomSheet{
 
   Widget _buildSpeedRow(PlaybackSpeed playbackSpeedModel) {
     final bool isSelected = playerMethodManager.currentSpeed() == playbackSpeedModel.speedValue;
-    return BetterPlayerMaterialClickableWidget(
+    return PlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
         // _betterPlayerController.setSpeed(playbackSpeedModel.speedValue);
@@ -152,7 +152,7 @@ class PlayerMaterialBottomSheet{
 
     bool isSelected = false;
 
-    return BetterPlayerMaterialClickableWidget(
+    return PlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
         playerMethodManager.startDownload(playerResource,itemQualitySelected.trackIndex);

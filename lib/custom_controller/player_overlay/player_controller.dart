@@ -132,12 +132,19 @@ class PlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
       children: [
-        controllerTop(),
-        Flexible(flex: 1, child: controllerCenter()),
-        controllerBottom()
+        Container(
+          color: Colors.black38,
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            controllerTop(),
+            Flexible(flex: 1, child: controllerCenter()),
+            controllerBottom()
+          ],
+        )
       ],
     );
   }

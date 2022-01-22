@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
         ),
         body: FlutterNativePlayer(
             playerResource: playerResource,
-            playWhenReady: false,
+            playWhenReady: true,
             width: double.infinity,
             height: 250),
       ),

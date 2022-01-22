@@ -180,7 +180,7 @@ class FlutterNativeGetxController extends GetxController{
   void handleControllerTimeout(){
     controllerTimeout?.cancel();
     controllerTimeout = Timer.periodic(const Duration(seconds: 8), (timer) {
-      // isShowController = false;
+      isShowController = false;
       update();
     });
   }
