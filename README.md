@@ -33,12 +33,12 @@ Copy this into dependencies:
      final playerSubtitleResource = [
         PlayerSubtitleResource(
           language: "English",
-      subtitleUrl: "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/English_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
-      ),
+	      subtitleUrl: "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/English_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
+	      ),
       PlayerSubtitleResource(
           language: "Khmer",
-      subtitleUrl: "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/Khmer_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
-      )
+	      subtitleUrl: "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/Khmer_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
+	      )
       ];
 
       @override
@@ -47,22 +47,23 @@ Copy this into dependencies:
           home: Scaffold(
             appBar: AppBar(
               title: const Text('Flutter Native Player'),
-      ),
-      body: Center(
+	      ),
+	      body: Center(
               child: FlutterNativePlayer(
-                  playerResource: PlayerResource(videoUrl: videoUrl, playerSubtitleResource: playerSubtitleResource),
-      playWhenReady: true,
-      width: double.infinity,
-      height: 250),
-      ),
-      ),
-      );
+	                  playerResource: PlayerResource(videoUrl: videoUrl, playerSubtitleResource: playerSubtitleResource),
+				      playWhenReady: true,
+				      width: double.infinity,
+				      height: 250
+				      ),
+			      ),
+		      ),
+	      );
       }
     }
 
 **Configuration:**
 
- 1. **playWhenReady** if it's true it's going to play immediately after fetching data success but if it's false that after fetching data success it's not played after fetching data success.
+ 1. **playWhenReady** if it's true it's going to play immediately after fetching data success but if it's false that after fetching data success it's not played.
  2. **playerResource** if null or empty list it's going to hide subtitle button.
 
 ## Supported Formats
