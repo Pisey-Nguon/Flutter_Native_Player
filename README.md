@@ -2,6 +2,8 @@
 
 A Flutter plugin for  Android, iOS for playing back video on a Widget surface.
 
+![20220122_104448](https://user-images.githubusercontent.com/47247206/150627344-55faa680-7527-4054-bba5-ad78ef7f417f.gif)
+
 
 ## Installation
 Copy and paste to dependencies:
@@ -9,6 +11,7 @@ Copy and paste to dependencies:
     flutter_native_player: ^1.0.0
 
 *Note: iOS requires 10.0 or higher and Android requires SDK 16 or higher*
+
 **Example:**
 
     import 'package:flutter/material.dart';
