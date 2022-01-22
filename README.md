@@ -1,16 +1,70 @@
-# flutter_native_player
+# Flutter Native Player for Flutter
 
-A new flutter plugin project.
+A Flutter plugin for  Android, iOS for playing back video on a Widget surface.
 
-## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+## Installation
+Copy this into dependencies:
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    flutter_native_player: ^1.0.0
 
-# Flutter_Native_Player
+*Note: iOS requires 10.0 or higher and Android requires SDK 16 or higher*
+**Example:**
+
+    import 'package:flutter/material.dart';
+    import 'package:flutter_native_player/flutter_native_player.dart';
+    import 'package:flutter_native_player/model/player_resource.dart';
+    import 'package:flutter_native_player/model/player_subtitle_resource.dart';
+
+    void main() {
+      runApp(const MyApp());
+    }
+
+    class MyApp extends StatefulWidget {
+      const MyApp({Key? key}) : super(key: key);
+
+      @override
+      State<MyApp> createState() => _MyAppState();
+    }
+
+    class _MyAppState extends State<MyApp> {
+
+      String videoUrl = "https://d2cqvl54b1gtkt.cloudfront.net/PRODUCTION/5d85da3fa81ada4c66211a07/post/media/video/1616987127933-bfc1a13a-49c6-4272-8ffd-dc04b05eed2c/1616987128057-740d153b431660cf976789c1901192a961f0fd5b2a2af43e2388f671fa03c2aa/1616987128057-740d153b431660cf976789c1901192a961f0fd5b2a2af43e2388f671fa03c2aa.m3u8";
+     final playerSubtitleResource = [
+        PlayerSubtitleResource(
+          language: "English",
+      subtitleUrl: "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/English_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
+      ),
+      PlayerSubtitleResource(
+          language: "Khmer",
+      subtitleUrl: "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/Khmer_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
+      )
+      ];
+
+      @override
+      Widget build(BuildContext context) {
+        return MaterialApp(
+          home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Flutter Native Player'),
+      ),
+      body: Center(
+              child: FlutterNativePlayer(
+                  playerResource: PlayerResource(videoUrl: videoUrl, playerSubtitleResource: playerSubtitleResource),
+      playWhenReady: true,
+      width: double.infinity,
+      height: 250),
+      ),
+      ),
+      );
+      }
+    }
+
+**Configuration:**
+
+ 1. **playWhenReady** if it's true it's going to play immediately after fetching data success but if it's false that after fetching data success it's not played after fetching data success.
+ 2. **playerResource** if null or empty list it's going to hide subtitle button.
+
+## Supported Formats
+-   For Android, the backing player is  [ExoPlayer](https://google.github.io/ExoPlayer/), please refer  [here](https://google.github.io/ExoPlayer/supported-formats.html)  for list of supported formats.
+-   For iOS, the backing player is  [AVPlayer](https://developer.apple.com/documentation/avfoundation/avplayer). The supported formats vary depending on the version of iOS,  [AVURLAsset](https://developer.apple.com/documentation/avfoundation/avurlasset)  class has  [audiovisualTypes](https://developer.apple.com/documentation/avfoundation/avurlasset/1386800-audiovisualtypes?language=objc)  that you can query for supported av formats.
