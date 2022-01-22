@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_player/flutter_native_getx_controller.dart';
-import 'package:flutter_native_player/method_manager/playback_state.dart';
 
 class PlayerController extends StatelessWidget {
   final FlutterNativeGetxController controller;

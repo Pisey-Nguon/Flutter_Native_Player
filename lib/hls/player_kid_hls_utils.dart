@@ -1,7 +1,7 @@
-import 'player_kid_data_holder.dart';
-import 'player_kid_track.dart';
 import 'hls_parser/hls_master_playlist.dart';
 import 'hls_parser/hls_playlist_parser.dart';
+import 'player_kid_data_holder.dart';
+import 'player_kid_track.dart';
 
 ///HLS helper class
 class PlayerKidHlsUtils {
