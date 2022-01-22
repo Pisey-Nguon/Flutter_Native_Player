@@ -21,6 +21,7 @@ import com.pisey.flutter_native_player.utils.PlayerUtil
 import com.pisey.flutter_native_player.utils.StreamBuilder
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 import java.util.*
@@ -124,7 +125,7 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
 
 
     private fun implementEventFromFlutter(){
-        playerMethodManager.methodChannel(binaryMessenger) { call, result ->
+        playerMethodManager.methodChannel(binaryMessenger, MethodChannel.MethodCallHandler { call, result ->
             when (call.method) {
                 Constant.METHOD_PLAY -> player.play()
                 Constant.METHOD_PAUSE -> player.pause()
@@ -139,7 +140,7 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
                 Constant.METHOD_IS_PLAYING -> result.success(player.isPlaying)
                 Constant.METHOD_RESTART -> restart()
             }
-        }
+        })
         playerMethodManager.eventChannel(binaryMessenger,object :EventChannel.StreamHandler{
             override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                 eventChannelPlayer = events

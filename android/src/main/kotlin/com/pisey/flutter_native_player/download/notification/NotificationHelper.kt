@@ -118,7 +118,7 @@ class NotificationHelper(context: Context, channelId: String?) {
         context: Context,
         @DrawableRes smallIcon: Int,
         contentIntent: PendingIntent?,
-        message: String?,
+        message: String?
 
     ): Notification {
 
