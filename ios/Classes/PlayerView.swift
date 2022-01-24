@@ -30,7 +30,9 @@ class PlayerView: UIView,FlutterStreamHandler {
 
     private(set) var playerMethodManager:PlayerMethodManager
     private(set) var binaryMessenger:FlutterBinaryMessenger
-    private var downloadManager:DownloadManager?
+    
+    ///Pending this feature
+//    private var downloadManager:DownloadManager?
     private var rate:Float = 1
     private var currentPosition = CMTime.init()
     private var wasPlaying:Bool = false
@@ -124,7 +126,9 @@ class PlayerView: UIView,FlutterStreamHandler {
         if self.avplayer?.isPlaying == true{
             self.sendEvent(eventType: Constant.EVENT_PLAY, valueOfEvent: nil)
         }else{
-            self.sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
+            if avplayer?.currentItem?.isPlaybackBufferFull == false{
+                self.sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
+            }
         }
     }
     func methodHandler(call: FlutterMethodCall, result: @escaping FlutterResult) -> Void{
@@ -188,7 +192,9 @@ class PlayerView: UIView,FlutterStreamHandler {
     func setupAVPlayer(){
         playerMethodManager.methodChannel(binaryMessenger: binaryMessenger, handler:methodHandler(call:result:))
         playerMethodManager.eventChannelPlayer(binaryMessenger: binaryMessenger,handler: self)
-        downloadManager = DownloadManager(playerMethodManager: playerMethodManager)
+        
+        ///Pending this feature
+//        downloadManager = DownloadManager(playerMethodManager: playerMethodManager)
         avplayer = AVPlayer(playerItem: playerItem)
         ///This observe can use if nessessary
         avplayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), options: NSKeyValueObservingOptions.new, context: nil)
@@ -207,13 +213,11 @@ class PlayerView: UIView,FlutterStreamHandler {
         playerItemBufferKeepUpObserver = avplayer?.currentItem?.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] (_, _) in
             guard let self = self else { return }
             self.sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
-            self.validateEventIsPlay()
         }
             
         playerItemBufferFullObserver = avplayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferFull, options: [.new]) { [weak self] (_, _) in
             guard let self = self else { return }
             self.sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
-            self.validateEventIsPlay()
         
         }
      
@@ -255,29 +259,7 @@ class PlayerView: UIView,FlutterStreamHandler {
             
         case "rate":
             rate = avplayer?.rate ?? 1
-            if avplayer?.isPlaying == true {
-                sendEvent(eventType: Constant.EVENT_PLAY,valueOfEvent: nil)
-            }else{
-          
-                ///Check with this because we need to prevent send event pause when player is end
-                if playerItem.isPlaybackBufferFull == false{
-                    sendEvent(eventType: Constant.EVENT_PAUSE,valueOfEvent: nil)
-                }
-                
-                switch avplayer!.timeControlStatus{
-                    
-                case .paused:
-                    sendEvent(eventType: Constant.EVENT_PAUSE,valueOfEvent: nil)
-                    break
-                case .waitingToPlayAtSpecifiedRate:
-                    break
-                case .playing:
-                    break
-                @unknown default:
-                    break
-                }
-            
-            }
+            validateEventIsPlay()
         
             break
         case .none:

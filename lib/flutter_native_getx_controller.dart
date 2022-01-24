@@ -120,6 +120,10 @@ class FlutterNativeGetxController extends SuperController {
   }
 
   void _updateEventTypeFinished() {
+    controllerTimeout?.cancel();
+    isShowLoading = false;
+    isVisibleButtonPlay = true;
+    isShowController = true;
     iconControlPlayer = const Icon(
       Icons.replay,
       color: Colors.white,
