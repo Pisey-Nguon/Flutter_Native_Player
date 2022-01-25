@@ -3,10 +3,10 @@ import 'package:flutter_native_player/flutter_native_getx_controller.dart';
 
 class PlayerController extends StatelessWidget {
   final FlutterNativeGetxController controller;
-  const PlayerController({
-    Key? key,
-    required this.controller,
-  }) : super(key: key);
+  final GestureTapCallback onTap;
+  const PlayerController(
+      {Key? key, required this.controller, required this.onTap})
+      : super(key: key);
 
   Widget controllerTop() {
     return Container(
@@ -115,7 +115,11 @@ class PlayerController extends StatelessWidget {
       height: 50,
       child: Row(
         children: [
-          controller.playerWidget.currentTimeWidget(controller.durationState),
+          GestureDetector(
+            child: controller.playerWidget
+                .currentTimeWidget(controller.durationState),
+            onTap: onTap,
+          ),
           Expanded(
               child: controller.playerWidget.progressBar(
                   controller: controller,
@@ -123,7 +127,11 @@ class PlayerController extends StatelessWidget {
                     controller.playerMethodManager
                         .seekTo(duration.inMilliseconds);
                   })),
-          controller.playerWidget.totalTimeWidget(controller.durationState)
+          GestureDetector(
+            child: controller.playerWidget
+                .totalTimeWidget(controller.durationState),
+            onTap: onTap,
+          )
         ],
       ),
     );
@@ -137,10 +145,19 @@ class PlayerController extends StatelessWidget {
           color: Colors.black38,
         ),
         Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            controllerTop(),
-            Flexible(flex: 1, child: controllerCenter()),
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              child: controllerTop(),
+              onTap: onTap,
+            ),
+            Expanded(
+                flex: 1,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: onTap,
+                  child: controllerCenter(),
+                )),
             controllerBottom()
           ],
         )

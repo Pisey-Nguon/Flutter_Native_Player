@@ -28,17 +28,12 @@ class PlayerOverlayController extends StatelessWidget {
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
         child: controller.isShowController
-            ? Container(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: PlayerController(
-                    controller: controller,
-                  ),
-                  onTap: () {
-                    controller.isShowController = false;
-                    controller.update();
-                  },
-                ),
+            ? PlayerController(
+                controller: controller,
+                onTap: () {
+                  controller.isShowController = false;
+                  controller.update();
+                },
               )
             : GestureDetector(
                 behavior: HitTestBehavior.opaque,

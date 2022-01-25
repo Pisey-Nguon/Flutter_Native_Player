@@ -1,6 +1,6 @@
 name: flutter_native_player
 description: A Flutter plugin for Android, iOS for playing back video on a Widget surface.
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/Pisey-Nguon/Flutter_Native_Player
 
 environment:

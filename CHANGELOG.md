@@ -10,3 +10,7 @@
 
 * Change Minimum plugin require on iOS from iOS 10 to iOS 9.
 * Fix the issue playback state on iOS does not work properly.
+
+## 1.0.3
+
+* Improve gesture on the time bar.
