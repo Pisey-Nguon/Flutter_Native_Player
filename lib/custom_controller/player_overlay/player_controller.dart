@@ -44,7 +44,7 @@ class PlayerController extends StatelessWidget {
               //     cancelDownload: () {
               //       controller.playerMethodManager.setCancelDownload();
               //     }),
-              controller.playerResource.playerSubtitleResource != null
+              controller.playerResource.playerSubtitleResources != null
                   ? controller.playerWidget.buttonClick(
                       const Icon(
                         Icons.subtitles_outlined,

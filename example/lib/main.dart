@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
           child: FlutterNativePlayer(
               playerResource: PlayerResource(
                   videoUrl: videoUrl,
-                  playerSubtitleResource: playerSubtitleResource),
+                  playerSubtitleResources: playerSubtitleResource),
               playWhenReady: true,
               width: double.infinity,
               height: 250),

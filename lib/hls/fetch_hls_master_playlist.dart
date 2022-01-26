@@ -51,7 +51,7 @@ class FetchHlsMasterPlaylist {
   }
 
   List<PlayerSubtitleResource> getListSubtitle() {
-    return playerResource.playerSubtitleResource ?? [];
+    return playerResource.playerSubtitleResources ?? [];
   }
 
   PlayerKidSubtitlesSource? betterPlayerSubtitlesSource;

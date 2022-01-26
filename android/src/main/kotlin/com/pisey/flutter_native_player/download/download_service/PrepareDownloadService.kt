@@ -11,14 +11,10 @@ import com.google.android.exoplayer2.offline.DownloadService
 import com.google.android.exoplayer2.offline.StreamKey
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.NotificationUtil
-import com.google.gson.Gson
 import com.pisey.flutter_native_player.constants.Constant
 import com.pisey.flutter_native_player.R
 import com.pisey.flutter_native_player.download.model.PlayerResource
-import com.pisey.flutter_native_player.utils.BroadcastSender
-import com.pisey.flutter_native_player.utils.DownloadFile
-import com.pisey.flutter_native_player.utils.PlayerUtil
-import com.pisey.flutter_native_player.utils.TaskRunner
+import com.pisey.flutter_native_player.utils.*
 
 class PrepareDownloadService:Service() {
 
@@ -57,13 +53,11 @@ class PrepareDownloadService:Service() {
     }
 
     private fun getDownloadRequest(playerResource: PlayerResource, trackIndex: Int): DownloadRequest {
-        val playerResourceGson = Gson().toJson(playerResource)
         val streamKeys = ArrayList<StreamKey>()
         streamKeys.add(StreamKey(0, 0, trackIndex))
         streamKeys.add(StreamKey(0, 1, 0))
         return DownloadRequest.Builder("No title", Uri.parse(playerResource.videoUrl))
             .setMimeType(MimeTypes.APPLICATION_M3U8)
-            .setData(playerResourceGson.toByteArray())
             .setStreamKeys(streamKeys)
             .build()
     }

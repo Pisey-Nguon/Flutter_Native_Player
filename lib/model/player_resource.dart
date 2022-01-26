@@ -14,23 +14,23 @@ String playerResourceToJson(PlayerResource data) => json.encode(data.toJson());
 class PlayerResource {
   PlayerResource({
     required this.videoUrl,
-    required this.playerSubtitleResource,
+    required this.playerSubtitleResources,
   });
 
   String videoUrl;
-  List<PlayerSubtitleResource>? playerSubtitleResource;
+  List<PlayerSubtitleResource>? playerSubtitleResources;
 
   factory PlayerResource.fromJson(Map<String, dynamic> json) => PlayerResource(
         videoUrl: json["videoUrl"],
-        playerSubtitleResource: List<PlayerSubtitleResource>.from(
-            json["playerSubtitleResource"]
+        playerSubtitleResources: List<PlayerSubtitleResource>.from(
+            json["playerSubtitleResources"]
                 .map((x) => PlayerSubtitleResource.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "videoUrl": videoUrl,
-        "playerSubtitleResource": playerSubtitleResource != null
-            ? List<dynamic>.from(playerSubtitleResource!.map((x) => x.toJson()))
+        "playerSubtitleResources": playerSubtitleResources != null
+            ? List<dynamic>.from(playerSubtitleResources!.map((x) => x.toJson()))
             : null,
       };
 }

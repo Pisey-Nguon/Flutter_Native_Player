@@ -13,15 +13,14 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.Paramet
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.util.Util
-import com.google.gson.Gson
 import com.pisey.flutter_native_player.constants.Constant
 import com.pisey.flutter_native_player.download.download_service.DownloadMethod
 import com.pisey.flutter_native_player.download.model.PlayerResource
+import com.pisey.flutter_native_player.utils.JsonUtil
 import com.pisey.flutter_native_player.utils.PlayerUtil
 import com.pisey.flutter_native_player.utils.StreamBuilder
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 import java.util.*
@@ -35,7 +34,6 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
     private var eventChannelPlayer: EventChannel.EventSink? = null
     private var downloadRequest:DownloadRequest? = null
     private var playWhenReady = true
-    private lateinit var foregroundPlayer:View
     private lateinit var playerView:PlayerView
     private lateinit var player:ExoPlayer
     private lateinit var dataSourceFactory: DataSource.Factory
@@ -94,7 +92,6 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
         dataSourceFactory = PlayerUtil.getDataSourceFactory(context)
         player = ExoPlayer.Builder(context).setTrackSelector(trackSelector).build()
         player.addListener(playerListener)
-        foregroundPlayer = view.findViewById(R.id.foregroundPlayer)
         playerView = view.findViewById(R.id.playerView)
         playerView.player = player
         playerView.player?.playWhenReady = playWhenReady
@@ -102,7 +99,8 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
     private fun validateDownloadRequest(){
         val playerResourceString = creationParams[Constant.KEY_PLAYER_RESOURCE] as String
         playWhenReady = creationParams[Constant.KEY_PLAY_WHEN_READY] as Boolean
-        val playerResource = Gson().fromJson(playerResourceString,PlayerResource::class.java)
+        val map = JsonUtil.jsonToMap(playerResourceString)
+        val playerResource = PlayerResource(videoUrl = map["videoUrl"] as String)
         downloadRequest = PlayerUtil.getDownloadTracker(context).getDownloadRequest(Uri.parse(playerResource.videoUrl))
 
         if (downloadRequest != null){
@@ -120,7 +118,6 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
     }
     private fun releasePlayer(){
         player.release()
-        foregroundPlayer.visibility = View.VISIBLE
     }
 
 
@@ -200,7 +197,8 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
         val data = arguments as HashMap<String, Any>
         val trackIndexMovie = data[Constant.KEY_TRACK_INDEX] as Int
         val playerResourceString = data[Constant.KEY_PLAYER_RESOURCE] as String
-        val playerResource = Gson().fromJson(playerResourceString,PlayerResource::class.java)
+        val map = JsonUtil.jsonToMap(playerResourceString)
+        val playerResource = PlayerResource(videoUrl = map["videoUrl"] as String)
         downloadMethod.startDownload(playerResource,trackIndexMovie)
     }
     private fun cancelDownloadVideo(){
