@@ -2,7 +2,7 @@
 
 A Flutter plugin for  Android, iOS for playing back video on a Widget surface.
 
-![20220122_104448](https://user-images.githubusercontent.com/47247206/150627344-55faa680-7527-4054-bba5-ad78ef7f417f.gif)
+![20220406_154347](https://user-images.githubusercontent.com/47247206/161935867-5867661b-ff75-450c-b059-fd57c753221a.gif)
 
 
 ## Installation
