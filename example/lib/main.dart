@@ -16,17 +16,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String videoUrl =
-      "https://d2cqvl54b1gtkt.cloudfront.net/PRODUCTION/5d85da3fa81ada4c66211a07/post/media/video/1616987127933-bfc1a13a-49c6-4272-8ffd-dc04b05eed2c/1616987128057-740d153b431660cf976789c1901192a961f0fd5b2a2af43e2388f671fa03c2aa/1616987128057-740d153b431660cf976789c1901192a961f0fd5b2a2af43e2388f671fa03c2aa.m3u8";
+      "https://p-events-delivery.akamaized.net/2109isftrwvmiekgrjkbbhxhfbkxjkoj/m3u8/vod_index.m3u8";
   final playerSubtitleResource = [
     PlayerSubtitleResource(
       language: "English",
       subtitleUrl:
-          "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/English_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
+          "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/%5BEnglish%5D%20Apple%20Event%20%E2%80%94%20October%2013%20%5BDownSub.com%5D.srt",
     ),
     PlayerSubtitleResource(
-      language: "Khmer",
+      language: "Japanes",
       subtitleUrl:
-          "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/Khmer_Transformers_The_Last_Knight_Official_Trailer_1_2017_Michael.srt",
+          "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/%5BJapanese%5D%20Apple%20Event%20%E2%80%94%20October%2013%20%5BDownSub.com%5D.srt",
     )
   ];
 

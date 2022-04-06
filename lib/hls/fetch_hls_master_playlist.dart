@@ -7,7 +7,6 @@ import 'package:flutter_native_player/subtitles/player_kid_subtitles_source.dart
 import 'package:flutter_native_player/subtitles/player_kid_subtitles_source_type.dart';
 
 import 'player_kid_data_holder.dart';
-import 'player_kid_track.dart';
 import 'player_kid_utils.dart';
 
 class FetchHlsMasterPlaylist {
@@ -59,14 +58,14 @@ class FetchHlsMasterPlaylist {
   ///Subtitles lines for current data source.
   List<PlayerKidSubtitle> subtitlesLines = [];
 
-  ///List of tracks available for current data source. Used only for HLS / DASH.
-  List<PlayerKidTrack> _betterPlayerAsmsTracks = [];
+  // ///List of tracks available for current data source. Used only for HLS / DASH.
+  // List<PlayerKidTrack> _betterPlayerAsmsTracks = [];
 
   ///List of loaded ASMS segments
   final List<String> _asmsSegmentsLoaded = [];
 
-  ///Flag which determines whether are ASMS segments loading
-  bool _asmsSegmentsLoading = false;
+  // ///Flag which determines whether are ASMS segments loading
+  // bool _asmsSegmentsLoading = false;
 
   ///Setup subtitles to be displayed from given subtitle source.
   ///If subtitles source is segmented then don't load videos at start. Videos
@@ -76,7 +75,7 @@ class FetchHlsMasterPlaylist {
     betterPlayerSubtitlesSource = subtitlesSource;
     subtitlesLines.clear();
     _asmsSegmentsLoaded.clear();
-    _asmsSegmentsLoading = false;
+    // _asmsSegmentsLoading = false;
 
     if (subtitlesSource.type != PlayerKidSubtitlesSourceType.none) {
       if (subtitlesSource.asmsIsSegmented == true) {

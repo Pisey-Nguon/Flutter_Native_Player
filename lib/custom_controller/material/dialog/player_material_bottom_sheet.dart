@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_player/custom_controller/material/dialog/player_pin_header_widget.dart';
 import 'package:flutter_native_player/hls/fetch_hls_master_playlist.dart';
 import 'package:flutter_native_player/method_manager/player_method_manager.dart';
 import 'package:flutter_native_player/model/playback_speed.dart';
@@ -50,51 +51,29 @@ class PlayerMaterialBottomSheet {
         children: children2,
       ),
     );
-    Widget combineScrollView = Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+
+    Widget containerView = Row(
       children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(14),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.settings_applications_outlined,color: Colors.black87,),
-                    Text("Quality",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.w600,fontSize: 18))
-                  ],
-                ),
-              ),
-              children1.isNotEmpty ? scrollView1 : const SizedBox(),
+        children1.isNotEmpty ? Expanded(
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(delegate: PlayerPinHeaderWidget(iconData: Icons.settings_applications_outlined, title: "Quality"),pinned: true,floating: true,),
+              SliverToBoxAdapter(child: scrollView1,)
             ],
           ),
-        ),
+        ):const SizedBox(),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
-                Padding(
-                  padding: const EdgeInsets.all(14),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.closed_caption_outlined,color: Colors.black87,),
-                      Text("Playback Speed",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.w600,fontSize: 18))
-                    ],
-                  ),
-                ),
-                scrollView2
-              ]
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(delegate: PlayerPinHeaderWidget(iconData: Icons.slow_motion_video_outlined, title: "Playback Speed"),pinned: true,floating: true,),
+              SliverToBoxAdapter(child: scrollView2,)
+            ],
           ),
         )
       ],
     );
     Widget safeArea = SafeArea(
-      child: combineScrollView,
+      child: containerView,
       top: false,
     );
     showModalBottomSheet<void>(
@@ -107,7 +86,7 @@ class PlayerMaterialBottomSheet {
 
   TextStyle _getOverflowMenuElementTextStyle(bool isSelected) {
     return TextStyle(
-      fontSize: 16,
+      fontSize: 15,
       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       color: Colors.black,
     );
@@ -170,7 +149,6 @@ class PlayerMaterialBottomSheet {
     return PlayerMaterialClickableWidget(
       onTap: () {
         Navigator.of(context).pop();
-        // _betterPlayerController.setSpeed(playbackSpeedModel.speedValue);
         playerMethodManager.setPlaybackSpeed(playbackSpeedModel.speedValue);
       },
       child: Padding(
