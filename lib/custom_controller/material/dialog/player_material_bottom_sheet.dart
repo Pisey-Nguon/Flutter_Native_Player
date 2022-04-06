@@ -63,8 +63,8 @@ class PlayerMaterialBottomSheet {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: const [
-                    Icon(Icons.settings_applications_outlined,),
-                    Text("Quality",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18))
+                    Icon(Icons.settings_applications_outlined,color: Colors.black87,),
+                    Text("Quality",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.w600,fontSize: 18))
                   ],
                 ),
               ),
@@ -82,8 +82,8 @@ class PlayerMaterialBottomSheet {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: const [
-                      Icon(Icons.closed_caption_outlined,),
-                      Text("Playback Speed",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18))
+                      Icon(Icons.closed_caption_outlined,color: Colors.black87,),
+                      Text("Playback Speed",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.w600,fontSize: 18))
                     ],
                   ),
                 ),
