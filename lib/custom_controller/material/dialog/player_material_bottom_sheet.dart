@@ -53,8 +53,44 @@ class PlayerMaterialBottomSheet {
     Widget combineScrollView = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        children1.isNotEmpty ? Expanded(child: scrollView1) : const SizedBox(),
-        Expanded(child: scrollView2)
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.settings_applications_outlined,),
+                    Text("Quality",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18))
+                  ],
+                ),
+              ),
+              children1.isNotEmpty ? scrollView1 : const SizedBox(),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+              children:[
+                Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.closed_caption_outlined,),
+                      Text("Playback Speed",style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 18))
+                    ],
+                  ),
+                ),
+                scrollView2
+              ]
+          ),
+        )
       ],
     );
     Widget safeArea = SafeArea(

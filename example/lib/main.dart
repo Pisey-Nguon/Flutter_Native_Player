@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
               playerResource: PlayerResource(
                   videoUrl: videoUrl,
                   playerSubtitleResources: playerSubtitleResource),
-              playWhenReady: true,
+              playWhenReady: false,
               width: double.infinity,
               height: 250),
         ),

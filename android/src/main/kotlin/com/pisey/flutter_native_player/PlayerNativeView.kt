@@ -87,6 +87,7 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
     }
 
     private fun setupNativeView(){
+        playWhenReady = creationParams[Constant.KEY_PLAY_WHEN_READY] as Boolean
         trackSelector = DefaultTrackSelector(context)
         trackSelector.parameters = ParametersBuilder(context).setRendererDisabled(C.TRACK_TYPE_VIDEO, true).build()
         dataSourceFactory = PlayerUtil.getDataSourceFactory(context)
@@ -98,7 +99,6 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
     }
     private fun validateDownloadRequest(){
         val playerResourceString = creationParams[Constant.KEY_PLAYER_RESOURCE] as String
-        playWhenReady = creationParams[Constant.KEY_PLAY_WHEN_READY] as Boolean
         val map = JsonUtil.jsonToMap(playerResourceString)
         val playerResource = PlayerResource(videoUrl = map["videoUrl"] as String)
         downloadRequest = PlayerUtil.getDownloadTracker(context).getDownloadRequest(Uri.parse(playerResource.videoUrl))
