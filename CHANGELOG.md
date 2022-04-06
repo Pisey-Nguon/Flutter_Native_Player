@@ -22,3 +22,7 @@
 ## 1.0.5
 
 * Fix the issue playWhenReady not working on android.
+
+## 1.0.6
+
+* Add title header to bottom sheet
