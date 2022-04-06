@@ -18,3 +18,7 @@
 ## 1.0.4
 
 * Fix the issue can not build release with this plugin.
+
+## 1.0.5
+
+* Fix the issue playWhenReady not working on android.
