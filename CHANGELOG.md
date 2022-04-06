@@ -25,4 +25,5 @@
 
 ## 1.0.6
 
-* Add title header to bottom sheet
+* Add title header to bottom sheet.
+* Fix the issue can not build with release mode.
