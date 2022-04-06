@@ -24,7 +24,7 @@ class _MyAppState extends State<MyApp> {
           "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/%5BEnglish%5D%20Apple%20Event%20%E2%80%94%20October%2013%20%5BDownSub.com%5D.srt",
     ),
     PlayerSubtitleResource(
-      language: "Japanes",
+      language: "Japanese",
       subtitleUrl:
           "https://raw.githubusercontent.com/Pisey-Nguon/Player-Resource/master/%5BJapanese%5D%20Apple%20Event%20%E2%80%94%20October%2013%20%5BDownSub.com%5D.srt",
     )
