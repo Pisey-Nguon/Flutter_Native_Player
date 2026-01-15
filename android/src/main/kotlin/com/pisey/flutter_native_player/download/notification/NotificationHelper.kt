@@ -7,10 +7,10 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.offline.Download
-import com.google.android.exoplayer2.scheduler.Requirements
-import com.google.android.exoplayer2.scheduler.Requirements.RequirementFlags
+import androidx.media3.common.C
+import androidx.media3.exoplayer.offline.Download
+import androidx.media3.exoplayer.scheduler.Requirements
+import androidx.media3.exoplayer.scheduler.Requirements.RequirementFlags
 import com.pisey.flutter_native_player.R
 
 class NotificationHelper(context: Context, channelId: String?) {

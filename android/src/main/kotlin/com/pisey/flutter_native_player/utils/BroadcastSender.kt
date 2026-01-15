@@ -2,7 +2,7 @@ package com.pisey.flutter_native_player.utils
 
 import android.content.Context
 import android.content.Intent
-import com.google.android.exoplayer2.offline.Download
+import androidx.media3.exoplayer.offline.Download
 import com.pisey.flutter_native_player.download.model.DownloadEventModel
 import com.pisey.flutter_native_player.constants.ConstantDownload
 

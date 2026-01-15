@@ -3,14 +3,14 @@ package com.pisey.flutter_native_player.download.download_service
 
 import android.content.Context
 import android.net.Uri
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.offline.Download
-import com.google.android.exoplayer2.offline.DownloadIndex
-import com.google.android.exoplayer2.offline.DownloadManager
-import com.google.android.exoplayer2.offline.DownloadRequest
-import com.google.android.exoplayer2.upstream.HttpDataSource
-import com.google.android.exoplayer2.util.Assertions
-import com.google.android.exoplayer2.util.Log
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.offline.Download
+import androidx.media3.exoplayer.offline.DownloadIndex
+import androidx.media3.exoplayer.offline.DownloadManager
+import androidx.media3.exoplayer.offline.DownloadRequest
+import androidx.media3.datasource.HttpDataSource
+import androidx.media3.common.util.Assertions
+import androidx.media3.common.util.Log
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArraySet

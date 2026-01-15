@@ -17,26 +17,26 @@ package com.pisey.flutter_native_player.utils
 
 import android.content.Context
 import android.os.Build
-import com.google.android.exoplayer2.ExoPlayerLibraryInfo
-import com.google.android.exoplayer2.upstream.HttpDataSource
-import com.google.android.exoplayer2.database.DatabaseProvider
-import com.google.android.exoplayer2.RenderersFactory
-import com.google.android.exoplayer2.DefaultRenderersFactory.ExtensionRendererMode
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ext.cronet.CronetEngineWrapper
-import com.google.android.exoplayer2.ext.cronet.CronetDataSource
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
-import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor
-import com.google.android.exoplayer2.offline.DefaultDownloadIndex
-import com.google.android.exoplayer2.offline.ActionFileUpgradeUtil
-import com.google.android.exoplayer2.database.ExoDatabaseProvider
-import com.google.android.exoplayer2.offline.DownloadManager
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.cache.Cache
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource
-import com.google.android.exoplayer2.util.Log
+import androidx.media3.common.util.MediaLibraryInfo
+import androidx.media3.datasource.HttpDataSource
+import androidx.media3.database.DatabaseProvider
+import androidx.media3.exoplayer.RenderersFactory
+import androidx.media3.exoplayer.DefaultRenderersFactory.ExtensionRendererMode
+import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.datasource.cronet.CronetEngineWrapper
+import androidx.media3.datasource.cronet.CronetDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.cache.SimpleCache
+import androidx.media3.datasource.cache.NoOpCacheEvictor
+import androidx.media3.exoplayer.offline.DefaultDownloadIndex
+import androidx.media3.exoplayer.offline.ActionFileUpgradeUtil
+import androidx.media3.database.StandaloneDatabaseProvider
+import androidx.media3.exoplayer.offline.DownloadManager
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.cache.Cache
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.common.util.Log
 import com.pisey.flutter_native_player.download.notification.NotificationHelper
 import com.pisey.flutter_native_player.download.download_service.DownloadTracker
 import java.io.File
@@ -60,11 +60,11 @@ object PlayerUtil {
      */
     private const val USE_CRONET_FOR_NETWORKING = true
     private val USER_AGENT = ("ExoPlayerDemo/"
-            + ExoPlayerLibraryInfo.VERSION
+            + MediaLibraryInfo.VERSION
             + " (Linux; Android "
             + Build.VERSION.RELEASE
             + ") "
-            + ExoPlayerLibraryInfo.VERSION_SLASHY)
+            + MediaLibraryInfo.VERSION_SLASHY)
     private const val TAG = "DemoUtil"
     private const val DOWNLOAD_ACTION_FILE = "actions"
     private const val DOWNLOAD_TRACKER_ACTION_FILE = "tracked_actions"
@@ -121,7 +121,7 @@ object PlayerUtil {
         if (dataSourceFactory == null) {
             context = context.applicationContext
             val upstreamFactory =
-                DefaultDataSourceFactory(context, getHttpDataSourceFactory(context)!!)
+                DefaultDataSource.Factory(context, getHttpDataSourceFactory(context)!!)
             dataSourceFactory =
                 buildReadOnlyCacheDataSource(upstreamFactory, getDownloadCache(context))
         }
@@ -215,7 +215,7 @@ object PlayerUtil {
     @Synchronized
     private fun getDatabaseProvider(context: Context): DatabaseProvider? {
         if (databaseProvider == null) {
-            databaseProvider = ExoDatabaseProvider(context)
+            databaseProvider = StandaloneDatabaseProvider(context)
         }
         return databaseProvider
     }

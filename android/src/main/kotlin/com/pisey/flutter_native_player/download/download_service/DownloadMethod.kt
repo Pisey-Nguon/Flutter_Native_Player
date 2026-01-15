@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.offline.Download
-import com.google.android.exoplayer2.offline.DownloadService
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.offline.Download
+import androidx.media3.exoplayer.offline.DownloadService
 import com.pisey.flutter_native_player.constants.Constant
 import com.pisey.flutter_native_player.download.model.DownloadEventModel
 import com.pisey.flutter_native_player.download.model.PlayerResource
