@@ -79,6 +79,31 @@ Copy and paste to dependencies:
  1. **playWhenReady** if it's true it's going to play immediately after fetching data success but if it's false that after fetching data success it's not played.
  2. **playerSubtitleResource** if null or empty list it's going to hide subtitle button.
 
+## Migration Guide
+
+### Migrating from 1.x.x to 2.0.0
+
+Version 2.0.0 includes several breaking changes to support the latest Flutter, Android, and iOS versions:
+
+#### Minimum Requirements Updated
+- **Flutter**: 3.0.0 or higher (was 2.5.0)
+- **Dart**: 3.0.0 or higher (was 2.15.1)
+- **Android**: SDK 21 (Android 5.0) or higher (was SDK 16)
+- **iOS**: 12.0 or higher (was 9.0)
+
+#### Android Changes
+- Migrated from ExoPlayer2 to AndroidX Media3
+- Updated to latest Kotlin (1.9.22) and Android Gradle Plugin (8.3.0)
+- Added Android 13+ permissions support
+- Removed deprecated kotlin-android-extensions
+
+#### What You Need to Do
+1. Update your Flutter SDK to 3.0.0 or higher
+2. Update your app's minimum Android SDK version to 21 in `android/app/build.gradle`
+3. Update your app's minimum iOS version to 12.0 in your Podfile
+4. Run `flutter pub upgrade` to update dependencies
+5. Test video playback in your app
+
 ## Supported Formats
--   For Android, the backing player is  [ExoPlayer](https://google.github.io/ExoPlayer/), please refer  [here](https://google.github.io/ExoPlayer/supported-formats.html)  for list of supported formats.
+-   For Android, the backing player is [AndroidX Media3](https://developer.android.com/media/media3), which uses ExoPlayer under the hood. Please refer [here](https://developer.android.com/media/media3/exoplayer/supported-formats) for list of supported formats.
 -   For iOS, the backing player is  [AVPlayer](https://developer.apple.com/documentation/avfoundation/avplayer). The supported formats vary depending on the version of iOS,  [AVURLAsset](https://developer.apple.com/documentation/avfoundation/avurlasset)  class has  [audiovisualTypes](https://developer.apple.com/documentation/avfoundation/avurlasset/1386800-audiovisualtypes?language=objc)  that you can query for supported av formats.
