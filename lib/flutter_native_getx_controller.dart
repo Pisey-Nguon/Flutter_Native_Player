@@ -217,4 +217,7 @@ class FlutterNativeGetxController extends SuperController {
 
   @override
   void onResumed() {}
+
+  @override
+  void onHidden() {}
 }

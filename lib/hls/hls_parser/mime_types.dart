@@ -139,7 +139,9 @@ class MimeTypes {
     if (codec.startsWith('dvav') ||
         codec.startsWith('dva1') ||
         codec.startsWith('dvhe') ||
-        codec.startsWith('dvh1')) return MimeTypes.videoDolbyVision;
+        codec.startsWith('dvh1')) {
+      return MimeTypes.videoDolbyVision;
+    }
 
     if (codec.startsWith('av01')) return MimeTypes.videoAv1;
 

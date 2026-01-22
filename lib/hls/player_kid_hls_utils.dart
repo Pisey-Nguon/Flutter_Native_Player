@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'hls_parser/hls_master_playlist.dart';
 import 'hls_parser/hls_playlist_parser.dart';
 import 'player_kid_data_holder.dart';
@@ -20,7 +22,9 @@ class PlayerKidHlsUtils {
       // subtitles = list[1] as List<BetterPlayerAsmsSubtitle>;
       // audios = list[2] as List<BetterPlayerAsmsAudioTrack>;
     } catch (exception) {
-      print("Exception on hls parse: $exception");
+      if (kDebugMode) {
+        print("Exception on hls parse: $exception");
+      }
     }
     return PlayerKidDataHolder(tracks: tracks);
   }
@@ -32,8 +36,7 @@ class PlayerKidHlsUtils {
       final parsedPlaylist = await HlsPlaylistParser.create()
           .parseString(Uri.parse(masterPlaylistUrl), data);
       if (parsedPlaylist is HlsMasterPlaylist) {
-        parsedPlaylist.variants.forEach(
-          (variant) {
+        for (var variant in parsedPlaylist.variants) {
             tracks.add(PlayerKidTrack(
                 variant.format.id,
                 variant.format.width,
@@ -43,8 +46,7 @@ class PlayerKidHlsUtils {
                 0,
                 '',
                 ''));
-          },
-        );
+          }
       }
 
       //For auto quality
@@ -53,7 +55,9 @@ class PlayerKidHlsUtils {
             0, PlayerKidTrack("0", 0, 0, 0, parsedPlaylist.baseUri, 0, '', ''));
       }
     } catch (exception) {
-      print("Exception on parseSubtitles: $exception");
+      if (kDebugMode) {
+        print("Exception on parseSubtitles: $exception");
+      }
     }
     return tracks;
   }

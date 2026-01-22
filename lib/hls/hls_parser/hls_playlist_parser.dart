@@ -343,7 +343,6 @@ class HlsPlaylistParser {
       }
     }
 
-    // TODO: Don't deduplicate variants by URL.
     final List<Variant> deduplicatedVariants =
         []; // ignore: always_specify_types
     final Set<Uri> urlsInDeduplicatedVariants =
@@ -361,7 +360,7 @@ class HlsPlaylistParser {
     }
 
     // ignore: always_specify_types
-    mediaTags.forEach((line) {
+    for (var line in mediaTags) {
       final String? groupId = _parseStringAttr(
           source: line,
           pattern: regexpGroupId,
@@ -458,17 +457,12 @@ class HlsPlaylistParser {
               language: language,
             );
 
-            // ignore: unnecessary_null_comparison
-            if (uri == null) {
-              muxedAudioFormat = format;
-            } else {
-              audios.add(Rendition(
-                url: uri,
-                format: format.copyWithMetadata(metadata),
-                groupId: groupId,
-                name: name,
-              ));
-            }
+            audios.add(Rendition(
+              url: uri,
+              format: format.copyWithMetadata(metadata),
+              groupId: groupId,
+              name: name,
+            ));
             break;
           }
         case typeSubtitles:
@@ -506,7 +500,7 @@ class HlsPlaylistParser {
               accessibilityChannel = int.parse(instreamId.substring(7));
             }
             muxedCaptionFormats ??= []; // ignore: always_specify_types
-            muxedCaptionFormats!.add(Format(
+            muxedCaptionFormats.add(Format(
               id: formatId,
               label: name,
               sampleMimeType: mimeType,
@@ -520,7 +514,7 @@ class HlsPlaylistParser {
         default:
           break;
       }
-    });
+    }
 
     if (noClosedCaptions) {
       muxedCaptionFormats = [];
@@ -605,15 +599,21 @@ class HlsPlaylistParser {
     if (parseOptionalBooleanAttribute(
         line: line,
         pattern: regexpDefault,
-        defaultValue: false)) flags |= Util.selectionFlagDefault;
+        defaultValue: false)) {
+      flags |= Util.selectionFlagDefault;
+    }
     if (parseOptionalBooleanAttribute(
         line: line,
         pattern: regexpForced,
-        defaultValue: false)) flags |= Util.selectionFlagForced;
+        defaultValue: false)) {
+      flags |= Util.selectionFlagForced;
+    }
     if (parseOptionalBooleanAttribute(
         line: line,
         pattern: regexpAutoSelect,
-        defaultValue: false)) flags |= Util.selectionFlagAutoSelect;
+        defaultValue: false)) {
+      flags |= Util.selectionFlagAutoSelect;
+    }
     return flags;
   }
 

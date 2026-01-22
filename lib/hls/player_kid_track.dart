@@ -36,7 +36,7 @@ class PlayerKidTrack {
   int get hashCode => super.hashCode;
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return other is PlayerKidTrack &&
         width == other.width &&
         height == other.height &&

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import 'player_kid_data_holder.dart';
 import 'player_kid_hls_utils.dart';
 
@@ -48,7 +50,9 @@ class PlayerAsmsUtils {
 
       return data;
     } catch (exception) {
-      print("GetDataFromUrl failed: $exception");
+      if (kDebugMode) {
+        print("GetDataFromUrl failed: $exception");
+      }
       return null;
     }
   }

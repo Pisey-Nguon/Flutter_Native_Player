@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.core.content.ContextCompat
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.offline.Download
 import com.google.android.exoplayer2.offline.DownloadService
@@ -76,7 +77,13 @@ class DownloadMethod(private val context: Context) {
         val intentFilter = IntentFilter()
         intentFilter.addAction(ConstantDownload.ACTION_DOWNLOAD_PERCENTAGE)
         intentFilter.addAction(ConstantDownload.ACTION_DOWNLOAD_STATUS)
-        context.registerReceiver(mBroadcastReceiver, intentFilter)
+
+        ContextCompat.registerReceiver(
+            context,
+            mBroadcastReceiver,
+            intentFilter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
     }
 
 }
