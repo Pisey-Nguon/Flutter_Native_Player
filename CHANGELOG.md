@@ -27,3 +27,20 @@
 
 * Add title header to bottom sheet.
 * Fix the issue can not build with release mode.
+
+## 1.0.7
+
+* Upgrade Android Gradle Plugin to 8.11.1 and Gradle to 8.14.
+* Upgrade Kotlin to 2.2.20.
+* Migrate Android build configuration to Kotlin DSL (build.gradle.kts).
+* Update minimum Android SDK to 24 and compile SDK to 36.
+* Update Java compatibility to version 17.
+* Update Flutter SDK requirement to ^3.10.7.
+* Update dependencies: collection (^1.19.1), flutter_widget_from_html_core (^0.17.0), get (^4.7.3).
+* Fix deprecated API usage: replace withOpacity with withValues, bodyText1 with bodyMedium.
+* Fix dynamic type parameters with proper Object type.
+* Replace hashValues with Object.hash.
+* Fix BroadcastReceiver registration with ContextCompat.registerReceiver for Android 14+ compatibility.
+* Remove kotlin-android-extensions plugin and migrate to kotlin-parcelize.
+* Add proper ignore_for_file directives for linting.
+* Code quality improvements and modernization via dart fix.
