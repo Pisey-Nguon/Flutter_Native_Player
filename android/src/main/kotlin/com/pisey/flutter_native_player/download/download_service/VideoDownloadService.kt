@@ -25,7 +25,7 @@ class VideoDownloadService : DownloadService(
     FOREGROUND_NOTIFICATION_ID,
     DEFAULT_FOREGROUND_NOTIFICATION_UPDATE_INTERVAL,
     PlayerUtil.DOWNLOAD_NOTIFICATION_CHANNEL_ID,
-    R.string.exo_download_notification_channel_name,  /* channelDescriptionResourceId= */
+    com.google.android.exoplayer2.ui.R.string.exo_download_notification_channel_name,  /* channelDescriptionResourceId= */
     0
 ) {
     override fun getDownloadManager(): DownloadManager {

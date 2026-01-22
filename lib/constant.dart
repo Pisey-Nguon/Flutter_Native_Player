@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class Constant {
   static const MP_VIEW_TYPE = "player_cross_platform";
 

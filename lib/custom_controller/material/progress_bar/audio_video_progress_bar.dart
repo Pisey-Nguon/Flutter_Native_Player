@@ -256,7 +256,7 @@ class ProgressBar extends LeafRenderObjectWidget {
   _RenderProgressBar createRenderObject(BuildContext context) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
-    final textStyle = timeLabelTextStyle ?? theme.textTheme.bodyText1;
+    final textStyle = timeLabelTextStyle ?? theme.textTheme.bodyMedium;
     return _RenderProgressBar(
       progress: progress,
       total: total,
@@ -266,9 +266,9 @@ class ProgressBar extends LeafRenderObjectWidget {
       onDragUpdate: onDragUpdate,
       onDragEnd: onDragEnd,
       barHeight: barHeight,
-      baseBarColor: baseBarColor ?? primaryColor.withOpacity(0.24),
+      baseBarColor: baseBarColor ?? primaryColor.withValues(alpha: 0.24),
       progressBarColor: progressBarColor ?? primaryColor,
-      bufferedBarColor: bufferedBarColor ?? primaryColor.withOpacity(0.24),
+      bufferedBarColor: bufferedBarColor ?? primaryColor.withValues(alpha: 0.24),
       barCapShape: barCapShape,
       thumbRadius: thumbRadius,
       thumbColor: thumbColor ?? primaryColor,
@@ -288,7 +288,7 @@ class ProgressBar extends LeafRenderObjectWidget {
       BuildContext context, _RenderProgressBar renderObject) {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
-    final textStyle = timeLabelTextStyle ?? theme.textTheme.bodyText1;
+    final textStyle = timeLabelTextStyle ?? theme.textTheme.bodyMedium;
     renderObject
       ..progress = progress
       ..total = total
@@ -298,9 +298,9 @@ class ProgressBar extends LeafRenderObjectWidget {
       ..onDragUpdate = onDragUpdate
       ..onDragEnd = onDragEnd
       ..barHeight = barHeight
-      ..baseBarColor = baseBarColor ?? primaryColor.withOpacity(0.24)
+      ..baseBarColor = baseBarColor ?? primaryColor.withValues(alpha: 0.24)
       ..progressBarColor = progressBarColor ?? primaryColor
-      ..bufferedBarColor = bufferedBarColor ?? primaryColor.withOpacity(0.24)
+      ..bufferedBarColor = bufferedBarColor ?? primaryColor.withValues(alpha: 0.24)
       ..barCapShape = barCapShape
       ..thumbRadius = thumbRadius
       ..thumbColor = thumbColor ?? primaryColor

@@ -69,7 +69,7 @@ class NotificationHelper(context: Context, channelId: String?) {
         val titleStringId: Int
         var showProgress = true
         if (haveDownloadingTasks) {
-            titleStringId = R.string.exo_download_downloading
+            titleStringId = com.google.android.exoplayer2.ui.R.string.exo_download_downloading
         } else if (haveQueuedTasks && notMetRequirements != 0) {
             showProgress = false
             titleStringId = if (notMetRequirements and Requirements.NETWORK_UNMETERED != 0) {
@@ -82,7 +82,7 @@ class NotificationHelper(context: Context, channelId: String?) {
                 R.string.exo_download_paused
             }
         } else if (haveRemovingTasks) {
-            titleStringId = R.string.exo_download_removing
+            titleStringId = com.google.android.exoplayer2.ui.R.string.exo_download_removing
         } else {
             // There are either no downloads, or all downloads are in terminal states.
             titleStringId = NULL_STRING_ID
@@ -127,7 +127,7 @@ class NotificationHelper(context: Context, channelId: String?) {
             smallIcon,
             contentIntent,
             message,
-            R.string.exo_download_downloading,
+            com.google.android.exoplayer2.ui.R.string.exo_download_downloading,
             100,
             0,
             true,  /* ongoing= */
@@ -152,7 +152,7 @@ class NotificationHelper(context: Context, channelId: String?) {
         contentIntent: PendingIntent?,
         message: String?
     ): Notification {
-        val titleStringId = R.string.exo_download_completed
+        val titleStringId = com.google.android.exoplayer2.ui.R.string.exo_download_completed
         return buildEndStateNotification(context, smallIcon, contentIntent, message, titleStringId)
     }
 
@@ -171,7 +171,7 @@ class NotificationHelper(context: Context, channelId: String?) {
         contentIntent: PendingIntent?,
         message: String?
     ): Notification {
-        @StringRes val titleStringId = R.string.exo_download_failed
+        @StringRes val titleStringId = com.google.android.exoplayer2.ui.R.string.exo_download_failed
         return buildEndStateNotification(context, smallIcon, contentIntent, message, titleStringId)
     }
 

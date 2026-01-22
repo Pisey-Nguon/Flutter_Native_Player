@@ -2,6 +2,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import 'player_kid_subtitle.dart';
 import 'player_kid_subtitles_source.dart';
 import 'player_kid_subtitles_source_type.dart';
@@ -32,12 +34,16 @@ class PlayerKidSubtitlesFactory {
           final subtitlesCache = _parseString(fileContent);
           subtitles.addAll(subtitlesCache);
         } else {
-          print("$url doesn't exist!");
+          if (kDebugMode) {
+            print("$url doesn't exist!");
+          }
         }
       }
       return subtitles;
     } catch (exception) {
-      print("Failed to read subtitles from file: $exception");
+      if (kDebugMode) {
+        print("Failed to read subtitles from file: $exception");
+      }
     }
     return [];
   }
@@ -62,10 +68,14 @@ class PlayerKidSubtitlesFactory {
       }
       client.close();
 
-      print("Parsed total subtitles: ${subtitles.length}");
+      if (kDebugMode) {
+        print("Parsed total subtitles: ${subtitles.length}");
+      }
       return subtitles;
     } catch (exception) {
-      print("Failed to read subtitles from network: $exception");
+      if (kDebugMode) {
+        print("Failed to read subtitles from network: $exception");
+      }
     }
     return [];
   }
@@ -75,7 +85,9 @@ class PlayerKidSubtitlesFactory {
     try {
       return _parseString(source.content!);
     } catch (exception) {
-      print("Failed to read subtitles from memory: $exception");
+      if (kDebugMode) {
+        print("Failed to read subtitles from memory: $exception");
+      }
     }
     return [];
   }

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class PlayerKidSubtitle {
   static const String timerSeparator = ' --> ';
   final int? index;
@@ -5,15 +7,11 @@ class PlayerKidSubtitle {
   final Duration? end;
   final List<String>? texts;
 
-  ///VTT OR SRT
-  final String? type;
-
   PlayerKidSubtitle._({
     this.index,
     this.start,
     this.end,
     this.texts,
-    this.type,
   });
 
   factory PlayerKidSubtitle(String value, bool isWebVTT) {
@@ -27,7 +25,9 @@ class PlayerKidSubtitle {
       }
       return PlayerKidSubtitle._();
     } catch (exception) {
-      print("Failed to parse subtitle line: $value");
+      if (kDebugMode) {
+        print("Failed to parse subtitle line: $value");
+      }
       return PlayerKidSubtitle._();
     }
   }
@@ -42,7 +42,9 @@ class PlayerKidSubtitle {
       return PlayerKidSubtitle._(
           index: -1, start: start, end: end, texts: texts);
     } catch (exception) {
-      print("Failed to parse subtitle line: $scanner");
+      if (kDebugMode) {
+        print("Failed to parse subtitle line: $scanner");
+      }
       return PlayerKidSubtitle._();
     }
   }
@@ -68,7 +70,9 @@ class PlayerKidSubtitle {
       return PlayerKidSubtitle._(
           index: index, start: start, end: end, texts: texts);
     } catch (exception) {
-      print("Failed to parse subtitle line: $scanner");
+      if (kDebugMode) {
+        print("Failed to parse subtitle line: $scanner");
+      }
       return PlayerKidSubtitle._();
     }
   }
@@ -105,7 +109,9 @@ class PlayerKidSubtitle {
           milliseconds: int.tryParse(secsAndMillsSplit[1])!);
       return result;
     } catch (exception) {
-      print("Failed to process value: $value");
+      if (kDebugMode) {
+        print("Failed to process value: $value");
+      }
       return const Duration();
     }
   }

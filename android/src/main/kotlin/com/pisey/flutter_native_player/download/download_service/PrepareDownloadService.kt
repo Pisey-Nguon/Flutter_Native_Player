@@ -28,7 +28,7 @@ class PrepareDownloadService:Service() {
             this,
             PlayerUtil.DOWNLOAD_NOTIFICATION_CHANNEL_ID,
             R.string.application_name,
-            R.string.exo_download_description,
+            com.google.android.exoplayer2.ui.R.string.exo_download_description,
             NotificationUtil.IMPORTANCE_LOW
         )
     }
