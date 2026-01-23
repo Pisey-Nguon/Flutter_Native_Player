@@ -17,13 +17,18 @@ class FetchHlsMasterPlaylist {
 
   Future<List<QualityModel>> getListQuality() async {
     final List<QualityModel> listQuality = [];
-    final result =
-        await PlayerAsmsUtils.getDataFromUrl(playerResource.videoUrl, null);
+    final result = await PlayerAsmsUtils.getDataFromUrl(
+      playerResource.videoUrl,
+      null,
+    );
     if (result != null) {
-      final PlayerKidDataHolder _response =
-          await PlayerAsmsUtils.parse(result, playerResource.videoUrl);
+      final PlayerKidDataHolder _response = await PlayerAsmsUtils.parse(
+        result,
+        playerResource.videoUrl,
+      );
       _response.tracks?.forEach((element) {
-        listQuality.add(QualityModel(
+        listQuality.add(
+          QualityModel(
             width: element.width ?? 0,
             height: element.height ?? 0,
             bitrate: element.bitrate ?? 0,
@@ -31,11 +36,14 @@ class FetchHlsMasterPlaylist {
             urlMovie: playerResource.videoUrl,
             titleMovie: "No title",
             trackIndex: element.id != "" ? int.parse(element.id!) : 0,
-            isSelected: false));
+            isSelected: false,
+          ),
+        );
       });
     }
     if (listQuality.isEmpty) {
-      listQuality.add(QualityModel(
+      listQuality.add(
+        QualityModel(
           width: 0,
           height: 0,
           bitrate: 0,
@@ -43,7 +51,9 @@ class FetchHlsMasterPlaylist {
           urlMovie: playerResource.videoUrl,
           titleMovie: "No title",
           trackIndex: 0,
-          isSelected: true));
+          isSelected: true,
+        ),
+      );
     }
     this.listQuality = listQuality;
     return listQuality;
@@ -70,8 +80,10 @@ class FetchHlsMasterPlaylist {
   ///Setup subtitles to be displayed from given subtitle source.
   ///If subtitles source is segmented then don't load videos at start. Videos
   ///will load with just in time policy.
-  Future<void> setupSubtitleSource(PlayerKidSubtitlesSource subtitlesSource,
-      {bool sourceInitialize = false}) async {
+  Future<void> setupSubtitleSource(
+    PlayerKidSubtitlesSource subtitlesSource, {
+    bool sourceInitialize = false,
+  }) async {
     betterPlayerSubtitlesSource = subtitlesSource;
     subtitlesLines.clear();
     _asmsSegmentsLoaded.clear();
@@ -81,8 +93,9 @@ class FetchHlsMasterPlaylist {
       if (subtitlesSource.asmsIsSegmented == true) {
         return;
       }
-      final subtitlesParsed =
-          await PlayerKidSubtitlesFactory.parseSubtitles(subtitlesSource);
+      final subtitlesParsed = await PlayerKidSubtitlesFactory.parseSubtitles(
+        subtitlesSource,
+      );
       subtitlesLines.addAll(subtitlesParsed);
     }
 
@@ -93,15 +106,24 @@ class FetchHlsMasterPlaylist {
   }
 
   List<PlayerKidSubtitlesSource> getSubtitleDataSource(
-      List<PlayerSubtitleResource>? listSubtitleVideo) {
+    List<PlayerSubtitleResource>? listSubtitleVideo,
+  ) {
     List<PlayerKidSubtitlesSource> listSubtitle = [];
     listSubtitleVideo?.forEach((element) {
-      listSubtitle.add(PlayerKidSubtitlesSource(
+      listSubtitle.add(
+        PlayerKidSubtitlesSource(
           type: PlayerKidSubtitlesSourceType.network,
           name: element.language,
           urls: [element.subtitleUrl],
-          selectedByDefault: false));
+          selectedByDefault: false,
+        ),
+      );
     });
     return listSubtitle;
+  }
+
+  /// Get available subtitle sources from the player resource
+  List<PlayerKidSubtitlesSource> getSubtitleSources() {
+    return getSubtitleDataSource(playerResource.playerSubtitleResources);
   }
 }

@@ -82,6 +82,35 @@ class PlayerView: UIView,FlutterStreamHandler {
             }
             }
     }
+    
+    func releasePlayer() {
+        avplayer?.pause()
+        
+        // Remove observers before releasing
+        avplayer?.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status))
+        avplayer?.removeObserver(self, forKeyPath: "rate")
+        
+        // Remove notification observers
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: avplayer?.currentItem)
+        
+        // Invalidate buffer observers
+        playerItemBufferEmptyObserver?.invalidate()
+        playerItemBufferEmptyObserver = nil
+        
+        playerItemBufferKeepUpObserver?.invalidate()
+        playerItemBufferKeepUpObserver = nil
+        
+        playerItemBufferFullObserver?.invalidate()
+        playerItemBufferFullObserver = nil
+        
+        // Clear event sink
+        eventChannelPlayerSink = nil
+        
+        // Release player
+        avplayer?.replaceCurrentItem(with: nil)
+        avplayer = nil
+    }
+    
     func setPlaybackSpeed(to speed:Double) {
         avplayer?.rate = Float(speed)
         if wasPlaying == false {
@@ -126,9 +155,7 @@ class PlayerView: UIView,FlutterStreamHandler {
         if self.avplayer?.isPlaying == true{
             self.sendEvent(eventType: Constant.EVENT_PLAY, valueOfEvent: nil)
         }else{
-            if avplayer?.currentItem?.isPlaybackBufferFull == false{
-                self.sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
-            }
+            self.sendEvent(eventType: Constant.EVENT_PAUSE, valueOfEvent: nil)
         }
     }
     func methodHandler(call: FlutterMethodCall, result: @escaping FlutterResult) -> Void{
@@ -145,6 +172,11 @@ class PlayerView: UIView,FlutterStreamHandler {
         case Constant.METHOD_RESTART:
             restart()
             break
+            
+        case Constant.METHOD_RELEASE_PLAYER:
+            releasePlayer()
+            break
+            
         case Constant.METHOD_SEEK_TO:
             let positionMs = call.arguments as! Int
             seek(to: positionMs)
@@ -183,6 +215,11 @@ class PlayerView: UIView,FlutterStreamHandler {
         case Constant.METHOD_IS_PLAYING:
             result(avplayer?.isPlaying)
             break
+            
+        case Constant.METHOD_SHOW_DEVICES:
+            // Empty implementation - reserved for future casting feature
+            break
+            
         default:
             break
         }
@@ -213,11 +250,13 @@ class PlayerView: UIView,FlutterStreamHandler {
         playerItemBufferKeepUpObserver = avplayer?.currentItem?.observe(\AVPlayerItem.isPlaybackLikelyToKeepUp, options: [.new]) { [weak self] (_, _) in
             guard let self = self else { return }
             self.sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
+            validateEventIsPlay()
         }
             
         playerItemBufferFullObserver = avplayer?.currentItem?.observe(\AVPlayerItem.isPlaybackBufferFull, options: [.new]) { [weak self] (_, _) in
             guard let self = self else { return }
             self.sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
+            validateEventIsPlay()
         
         }
      
@@ -230,6 +269,8 @@ class PlayerView: UIView,FlutterStreamHandler {
         if eventChannelPlayerSink == nil {
             eventChannelPlayerSink = events
         }
+        // Send download not yet event to match Android behavior
+        sendEvent(eventType: Constant.EVENT_DOWNLOAD_NOT_YET, valueOfEvent: nil)
         validateEventIsPlay()
         return nil
     }
@@ -245,6 +286,8 @@ class PlayerView: UIView,FlutterStreamHandler {
             switch avplayer?.status {
             case .readyToPlay:
                 sendEvent(eventType: Constant.EVENT_READY_TO_PLAY, valueOfEvent: nil)
+                // Send play or pause event after ready, matching Android behavior
+                validateEventIsPlay()
                 break
             case .failed:
                 
@@ -273,6 +316,12 @@ class PlayerView: UIView,FlutterStreamHandler {
 
     // Remove Observer
     deinit {
+        // Clean up if not already released
+        if avplayer != nil {
+            avplayer?.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.status), context: nil)
+            avplayer?.removeObserver(self, forKeyPath: "rate", context: nil)
+        }
+        
         NotificationCenter.default.removeObserver(self)
         playerItemBufferEmptyObserver?.invalidate()
         playerItemBufferEmptyObserver = nil

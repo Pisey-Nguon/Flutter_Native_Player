@@ -14,7 +14,7 @@ String playerResourceToJson(PlayerResource data) => json.encode(data.toJson());
 class PlayerResource {
   PlayerResource({
     required this.videoUrl,
-    required this.playerSubtitleResources,
+    this.playerSubtitleResources,
   });
 
   String videoUrl;

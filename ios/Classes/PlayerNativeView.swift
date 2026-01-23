@@ -17,6 +17,7 @@ class PlayerNativeView: NSObject,FlutterPlatformView {
     let messenger:FlutterBinaryMessenger
     var playerItem: AVPlayerItem!
     var playWhenReady:Bool = true
+    var playerView: PlayerView?
     let playerMethodManager = PlayerMethodManager()
 
 
@@ -34,15 +35,21 @@ class PlayerNativeView: NSObject,FlutterPlatformView {
     
     }
     
-    
     func view() -> UIView {
         let frameLayout = CGRect()
         let player = PlayerView(frame: frameLayout, playerItem: playerItem!,playerMethodManager: playerMethodManager, binaryMessenger: messenger)
         player.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         player.playerLayer?.videoGravity = AVLayerVideoGravity.resizeAspect
+        playerView = player
         if playWhenReady{
             player.play()
         }
         return player
+    }
+    
+    func dispose() {
+        playerView?.releasePlayer()
+        playerView = nil
+        playerItem = nil
     }
 }
