@@ -14,7 +14,7 @@ import Foundation
 // MARK: - PlayerResource
 struct PlayerResource: Codable {
     let videoUrl: String
-    let playerSubtitleResources: [PlayerSubtitleResource]
+    let playerSubtitleResources: [PlayerSubtitleResource]?
 
 
 }

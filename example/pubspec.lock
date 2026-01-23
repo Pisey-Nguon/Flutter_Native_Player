@@ -84,7 +84,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.6"
+    version: "2.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -98,14 +98,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.17.0"
-  get:
-    dependency: transitive
-    description:
-      name: get
-      sha256: "5ed34a7925b85336e15d472cc4cfe7d9ebf4ab8e8b9f688585bf6b50f4c3d79a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.7.3"
   html:
     dependency: transitive
     description:
@@ -263,14 +255,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.0.2"
-  web:
-    dependency: transitive
-    description:
-      name: web
-      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
 sdks:
   dart: ">=3.10.7 <4.0.0"
   flutter: ">=3.32.0"

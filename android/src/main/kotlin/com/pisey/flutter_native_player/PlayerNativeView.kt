@@ -68,16 +68,6 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
         override fun onPlayerError(error: PlaybackException) {
             player.prepare()
         }
-
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-            if (isPlaying){
-                sendEvent(Constant.EVENT_PLAY,null)
-            }else{
-                if(player.currentPosition < player.duration){
-                    sendEvent(Constant.EVENT_PAUSE,null)
-                }
-            }
-        }
     }
     private fun sendEvent(eventType:String,valueOfEvent:Any?){
         val data = HashMap<String,Any?>()
@@ -119,13 +109,21 @@ class PlayerNativeView(private val context: Context,private val binaryMessenger:
     private fun releasePlayer(){
         player.release()
     }
+    private fun pausePlayer(){
+        player.pause()
+        sendEvent(Constant.EVENT_PAUSE,null)
+    }
+    private fun playPlayer(){
+        player.play()
+        sendEvent(Constant.EVENT_PLAY,null)
+    }
 
 
     private fun implementEventFromFlutter(){
         playerMethodManager.methodChannel(binaryMessenger, MethodChannel.MethodCallHandler { call, result ->
             when (call.method) {
-                Constant.METHOD_PLAY -> player.play()
-                Constant.METHOD_PAUSE -> player.pause()
+                Constant.METHOD_PLAY -> playPlayer()
+                Constant.METHOD_PAUSE -> pausePlayer()
                 Constant.METHOD_SEEK_TO -> player.seekTo((call.arguments as Int).toLong())
                 Constant.METHOD_RELEASE_PLAYER -> releasePlayer()
                 Constant.METHOD_CHANGE_PLAYBACK_SPEED -> setSpeed((call.arguments as Double))

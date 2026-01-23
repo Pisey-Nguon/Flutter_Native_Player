@@ -31,6 +31,8 @@ class PlayerMethodManager {
 
   PlayerResource? _playerResource;
   int? _trackIndex;
+  bool _isDisposed = false;
+  StreamSubscription? _eventChannelSubscription;
 
   final StreamController<DurationState> _streamControllerDurationState =
       StreamController.broadcast();
@@ -52,9 +54,10 @@ class PlayerMethodManager {
 
   Function(PlayerKidSubtitlesSource source)? _subtitleSelectedListener;
 
-  PlayerMethodManager(
-      {required this.fetchHlsMasterPlaylist, required this.playWhenReady})
-      : super() {
+  PlayerMethodManager({
+    required this.fetchHlsMasterPlaylist,
+    required this.playWhenReady,
+  }) : super() {
     initPlayerListener();
     initCurrentUrlQuality();
   }
@@ -69,7 +72,9 @@ class PlayerMethodManager {
   }
 
   Future<void> startDownload(
-      PlayerResource playerResource, int trackIndex) async {
+    PlayerResource playerResource,
+    int trackIndex,
+  ) async {
     _playerResource = playerResource;
     _trackIndex = trackIndex;
     final map = HashMap();
@@ -170,7 +175,9 @@ class PlayerMethodManager {
     _currentSpeed = speed;
     try {
       await methodChannel.invokeMethod(
-          Constant.METHOD_CHANGE_PLAYBACK_SPEED, speed);
+        Constant.METHOD_CHANGE_PLAYBACK_SPEED,
+        speed,
+      );
     } on PlatformException catch (_) {}
   }
 
@@ -201,12 +208,15 @@ class PlayerMethodManager {
       itemQualitySelectedHashMap[Constant.KEY_URL_QUALITY] =
           itemQualitySelected.urlQuality;
       await methodChannel.invokeMethod(
-          Constant.METHOD_CHANGE_QUALITY, itemQualitySelectedHashMap);
+        Constant.METHOD_CHANGE_QUALITY,
+        itemQualitySelectedHashMap,
+      );
     } on PlatformException catch (_) {}
   }
 
   Future<void> changeSubtitle(
-      PlayerKidSubtitlesSource itemSubtitleSelected) async {
+    PlayerKidSubtitlesSource itemSubtitleSelected,
+  ) async {
     try {
       final itemSubtitleSelectedHashMap = HashMap();
       itemSubtitleSelectedHashMap[Constant.KEY_SUBTITLE_LABEL] =
@@ -214,7 +224,9 @@ class PlayerMethodManager {
       itemSubtitleSelectedHashMap[Constant.KEY_SUBTITLE_INDEX] =
           itemSubtitleSelected.type?.index;
       await methodChannel.invokeMethod(
-          Constant.METHOD_CHANGE_SUBTITLE, itemSubtitleSelectedHashMap);
+        Constant.METHOD_CHANGE_SUBTITLE,
+        itemSubtitleSelectedHashMap,
+      );
       _subtitleSelectedListener?.call(itemSubtitleSelected);
     } on PlatformException catch (_) {}
   }
@@ -282,7 +294,10 @@ class PlayerMethodManager {
 
   Future<void> _startPlayerStateListener() async {
     _listQuality = await fetchHlsMasterPlaylist.getListQuality();
-    eventChannel.receiveBroadcastStream().listen((event) {
+    _eventChannelSubscription = eventChannel.receiveBroadcastStream().listen((
+      event,
+    ) {
+      if (_isDisposed) return;
       final data = event as LinkedHashMap;
       final eventType = data[Constant.KEY_EVENT_TYPE] as String;
       switch (eventType) {
@@ -329,50 +344,58 @@ class PlayerMethodManager {
           break;
         case Constant.EVENT_DOWNLOAD_QUEUED:
           {
-            _streamControllerDownloadState.sink
-                .add(DownloadState.downloadQueued);
+            _streamControllerDownloadState.sink.add(
+              DownloadState.downloadQueued,
+            );
           }
           break;
         case Constant.EVENT_DOWNLOAD_STARTED:
           {
-            _streamControllerDownloadState.sink
-                .add(DownloadState.downloadStarted);
+            _streamControllerDownloadState.sink.add(
+              DownloadState.downloadStarted,
+            );
           }
           break;
         case Constant.EVENT_DOWNLOAD_CANCELED:
           {
-            _streamControllerDownloadState.sink
-                .add(DownloadState.downloadCanceled);
+            _streamControllerDownloadState.sink.add(
+              DownloadState.downloadCanceled,
+            );
           }
           break;
         case Constant.EVENT_DOWNLOAD_COMPLETED:
           {
-            _streamControllerDownloadState.sink
-                .add(DownloadState.downloadCompleted);
+            _streamControllerDownloadState.sink.add(
+              DownloadState.downloadCompleted,
+            );
           }
           break;
         case Constant.EVENT_DOWNLOAD_FAILED:
           {
-            _streamControllerDownloadState.sink
-                .add(DownloadState.downloadFailed);
+            _streamControllerDownloadState.sink.add(
+              DownloadState.downloadFailed,
+            );
           }
           break;
         case Constant.EVENT_DOWNLOAD_PAUSED:
           {
-            _streamControllerDownloadState.sink
-                .add(DownloadState.downloadPaused);
+            _streamControllerDownloadState.sink.add(
+              DownloadState.downloadPaused,
+            );
           }
           break;
         case Constant.EVENT_DOWNLOAD_RESUMED:
           {
-            _streamControllerDownloadState.sink
-                .add(DownloadState.downloadResumed);
+            _streamControllerDownloadState.sink.add(
+              DownloadState.downloadResumed,
+            );
           }
           break;
         case Constant.EVENT_DOWNLOAD_NOT_YET:
           {
-            _streamControllerDownloadState.sink
-                .add(DownloadState.downloadNotYet);
+            _streamControllerDownloadState.sink.add(
+              DownloadState.downloadNotYet,
+            );
           }
           break;
       }
@@ -380,9 +403,12 @@ class PlayerMethodManager {
   }
 
   Future<void> _setPositionListener() async {
+    if (_isDisposed) return;
     try {
-      final result = await methodChannel
-          .invokeMethod(Constant.METHOD_GET_DURATION_STATE) as LinkedHashMap;
+      final result =
+          await methodChannel.invokeMethod(Constant.METHOD_GET_DURATION_STATE)
+              as LinkedHashMap;
+      if (_isDisposed) return;
       _currentPosition = result[Constant.KEY_CURRENT_POSITION] as int;
       final totalDuration = result[Constant.KEY_TOTAL_DURATION] as int;
       if (totalDuration != -1) {
@@ -390,28 +416,51 @@ class PlayerMethodManager {
       }
       final bufferUpdate = result[Constant.KEY_BUFFER_UPDATE] as int;
       final DurationState durationState = DurationState(
-          progress: Duration(milliseconds: _currentPosition ?? 0),
-          buffered: Duration(milliseconds: bufferUpdate),
-          total: Duration(milliseconds: _totalDuration ?? 0));
+        progress: Duration(milliseconds: _currentPosition ?? 0),
+        buffered: Duration(milliseconds: bufferUpdate),
+        total: Duration(milliseconds: _totalDuration ?? 0),
+      );
       _streamControllerDurationState.sink.add(durationState);
     } on PlatformException catch (_) {}
   }
 
   Future<void> isDownloadCompleted(
-      String url, void Function(bool isDownloadCompleted) onData) async {
+    String url,
+    void Function(bool isDownloadCompleted) onData,
+  ) async {
     try {
       final bool result = await methodChannel.invokeMethod(
-          Constant.METHOD_CHECK_IS_DOWNLOAD, url);
+        Constant.METHOD_CHECK_IS_DOWNLOAD,
+        url,
+      );
       onData.call(result);
     } on PlatformException catch (_) {}
   }
 
   void setSubtitleSelectedListener(
-      void Function(PlayerKidSubtitlesSource source) onData) {
+    void Function(PlayerKidSubtitlesSource source) onData,
+  ) {
     _subtitleSelectedListener = onData;
   }
 
   void dispose() {
+    if (_isDisposed) return;
+    _isDisposed = true;
+
+    // Release player on native side
+    try {
+      methodChannel.invokeMethod(Constant.METHOD_RELEASE_PLAYER);
+    } catch (_) {}
+
+    // Cancel timer first
+    _timer?.cancel();
+    _timer = null;
+
+    // Cancel event channel subscription
+    _eventChannelSubscription?.cancel();
+    _eventChannelSubscription = null;
+
+    // Then close stream controllers
     _streamControllerDurationState.close();
     _streamControllerDownloadState.close();
     _streamControllerPlaybackState.close();
