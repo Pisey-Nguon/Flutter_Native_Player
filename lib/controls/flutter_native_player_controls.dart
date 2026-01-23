@@ -39,7 +39,7 @@ class MinimalControls extends StatelessWidget {
       onTap: () => controller.playOrPause(),
       behavior: HitTestBehavior.opaque,
       child: Container(
-        color: effectiveTheme.backgroundColor.withOpacity(0.3),
+        color: effectiveTheme.backgroundColor.withValues(alpha: 0.3),
         child: Center(
           child: Icon(
             _getIcon(),
